@@ -2,43 +2,62 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class TitleManager : MonoBehaviour
 {
-	[SerializeField] private Transform tBlock_0;
-	[SerializeField] private Transform tBlock_1;
-	[SerializeField] private Transform tBlock_2;
+	[SerializeField] private List<movementBlock> arrBlock;
 	[SerializeField] private Image imgLogo;
 	[SerializeField] private Image imgBackground;
 	[SerializeField] private Image imgTouchToStart;
+	[SerializeField] private GameObject btnStart;
 	private bool bGameStart = false;
+	private Coroutine coFade;
 
-    void Start()
-    {
-		FadeInOut();
-	}
-    void Update()
-    {
-		if (!bGameStart)
-		{
-
-		}
-    }
-	private void FadeInOut()
+	private void Awake()
 	{
 		imgLogo.gameObject.SetActive(true);
 		imgBackground.gameObject.SetActive(true);
 		imgTouchToStart.gameObject.SetActive(true);
+		btnStart.SetActive(false);
 		imgLogo.color = new Color(1f, 1f, 1f, 0);
 		imgBackground.color = Color.white;
 		imgTouchToStart.color = new Color(1f, 1f, 1f, 0);
-		StartCoroutine(ImgFadeInOut());
+	}
+	private void Start()
+	{
+		coFade = StartCoroutine(ImgFadeInOut());
+	}
+	private void Update()
+    {
+		if (!bGameStart)
+		{
+			foreach (movementBlock item in arrBlock)
+			{
+				item.MoveBlock();
+			}
+		}
+    }
+	public void GameStart() 
+	{
+		if (!bGameStart)
+		{
+			print("Ω√¿€");
+			bGameStart = true;
+			StopCoroutine(coFade);
+			StartCoroutine(TouchToStartFadeOutAll());
+		}
+		else
+		{
+
+		}
 	}
 	private IEnumerator ImgFadeInOut()
 	{
 		yield return StartCoroutine(LogoFadeIn());
 		StartCoroutine(BackgroundFadeOut());
 		yield return StartCoroutine(LogoFadeOut());
+		btnStart.SetActive(true);
 		while (true)
 		{
 			yield return StartCoroutine(TouchToStartFadeIn());
@@ -74,6 +93,7 @@ public class TitleManager : MonoBehaviour
 	{
 		while (imgTouchToStart.color.a < 1f)
 		{
+			if (bGameStart) break;
 			imgTouchToStart.color = new Color(1f, 1f, 1f, imgTouchToStart.color.a + Time.deltaTime * 0.33f);
 			yield return null;
 		}
@@ -82,8 +102,30 @@ public class TitleManager : MonoBehaviour
 	{
 		while (imgTouchToStart.color.a > 0.5f)
 		{
+			if (bGameStart) break;
 			imgTouchToStart.color = new Color(1f, 1f, 1f, imgTouchToStart.color.a - Time.deltaTime * 0.33f);
 			yield return null;
+		}
+	}
+	private IEnumerator TouchToStartFadeOutAll()
+	{
+		while (imgTouchToStart.color.a > 0.01f)
+		{
+			imgTouchToStart.color = new Color(1f, 1f, 1f, imgTouchToStart.color.a - Time.deltaTime * 1f);
+			yield return null;
+		}
+	}
+	[Serializable]
+	private class movementBlock
+	{
+		[SerializeField] private Transform tBlock;
+		public void MoveBlock() 
+		{
+			tBlock.localPosition -= Vector3.forward * Time.deltaTime;
+			if (tBlock.localPosition.z <= -51.6f)
+			{
+				tBlock.localPosition += Vector3.forward * 154.8f;
+			}
 		}
 	}
 }
