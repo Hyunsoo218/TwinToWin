@@ -10,7 +10,8 @@ public abstract class Character : MonoBehaviour
 	protected Animator cAnimator;
 	public abstract void Move();
 	public abstract void Attack();
-	public abstract void Damage();
+	public abstract void Damage(float fAmount);
 	public abstract void Die();
-	public abstract void ChangeState();
+	public abstract void ChangeState(State cNextState);
+	public abstract void ChangeAnumation(string strTrigger);
 }

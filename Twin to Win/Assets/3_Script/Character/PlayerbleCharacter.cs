@@ -9,12 +9,17 @@ public class PlayerbleCharacter : Character
 		throw new System.NotImplementedException();
 	}
 
-	public override void ChangeState()
+	public override void ChangeAnumation(string strTrigger)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public override void Damage()
+	public override void ChangeState(State cNextState)
+	{
+		throw new System.NotImplementedException();
+	}
+
+	public override void Damage(float fAmount)
 	{
 		throw new System.NotImplementedException();
 	}
