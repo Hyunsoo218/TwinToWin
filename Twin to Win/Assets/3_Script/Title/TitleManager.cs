@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Cinemachine;
 
 public class TitleManager : MonoBehaviour
 {
+	[SerializeField] private List<CinemachineVirtualCamera> arrCamPos;
 	[SerializeField] private List<movementBlock> arrBlock;
+	[SerializeField] private GameObject btnStart;
 	[SerializeField] private Image imgLogo;
 	[SerializeField] private Image imgBackground;
 	[SerializeField] private Image imgTouchToStart;
-	[SerializeField] private GameObject btnStart;
-	private bool bGameStart = false;
 	private Coroutine coFade;
+	private Coroutine coMoveCamPos;
+	private bool bGameStart = false;
+	private int nCamPosCount = 10;
 
 	private void Awake()
 	{
@@ -45,11 +49,26 @@ public class TitleManager : MonoBehaviour
 			print("Ω√¿€");
 			bGameStart = true;
 			StopCoroutine(coFade);
+			StopCoroutine(coMoveCamPos);
 			StartCoroutine(TouchToStartFadeOutAll());
+			arrCamPos[0].Priority = nCamPosCount;
 		}
 		else
 		{
 
+		}
+	}
+	private IEnumerator MoveCamPos() 
+	{
+		int nCamPosIdx = 0;
+		while (true)
+		{
+			arrCamPos[nCamPosIdx].Priority = nCamPosCount;
+			nCamPosCount++;
+			nCamPosIdx++;
+
+			nCamPosIdx = (arrCamPos.Count == nCamPosIdx) ? 0 : nCamPosIdx;
+			yield return new WaitForSeconds(5f);
 		}
 	}
 	private IEnumerator ImgFadeInOut()
@@ -58,6 +77,7 @@ public class TitleManager : MonoBehaviour
 		StartCoroutine(BackgroundFadeOut());
 		yield return StartCoroutine(LogoFadeOut());
 		btnStart.SetActive(true);
+		coMoveCamPos = StartCoroutine(MoveCamPos());
 		while (true)
 		{
 			yield return StartCoroutine(TouchToStartFadeIn());
