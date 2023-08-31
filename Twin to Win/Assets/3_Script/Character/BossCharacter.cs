@@ -9,7 +9,7 @@ public class BossCharacter : Character
 		throw new System.NotImplementedException();
 	}
 
-	public override void ChangeAnumation(string strTrigger)
+	public override void ChangeAnimation(string strTrigger)
 	{
 		throw new System.NotImplementedException();
 	}

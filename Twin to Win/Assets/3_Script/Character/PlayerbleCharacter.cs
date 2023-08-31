@@ -1,36 +1,81 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public class PlayerbleCharacter : Character
 {
-	public override void Attack()
-	{
-		throw new System.NotImplementedException();
-	}
+	private Vector3 vecTarget;
+	private NavMeshAgent navAgent;
 
-	public override void ChangeAnumation(string strTrigger)
-	{
-		throw new System.NotImplementedException();
-	}
+	private bool isRightButtonDown = false;
 
-	public override void ChangeState(State cNextState)
+    private State cIdleState = new State("idleState");
+    private State cMoveState = new State("moveState");
+
+    private void Awake()
+    {
+        cStateMachine = GetComponent<StateMachine>();
+        cAnimator = GetComponent<Animator>();
+        navAgent = GetComponent<NavMeshAgent>();
+        cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
+        cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
+        cStateMachine.ChangeState(cIdleState);
+    }
+
+    private void Update()
+    {
+        Move();
+        if (cStateMachine.GetCurrentState() == cMoveState)
+        {
+            cStateMachine.ChangeState(cIdleState);
+        }
+    }
+
+    public override void Attack()
 	{
-		throw new System.NotImplementedException();
+		
 	}
 
 	public override void Damage(float fAmount)
 	{
-		throw new System.NotImplementedException();
 	}
 
 	public override void Die()
 	{
-		throw new System.NotImplementedException();
 	}
 
-	public override void Move()
+    public override void ChangeState(State cNextState)
+    {
+    }
+
+    public override void ChangeAnimation(string strTrigger)
+    {
+        cAnimator.ResetTrigger(cStateMachine.GetCurrentState().strStateName);
+        cAnimator.SetTrigger(strTrigger);
+    }
+
+    public override void Move()
 	{
-		throw new System.NotImplementedException();
-	}
+        if (isRightButtonDown)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                vecTarget = hit.point;
+                navAgent.SetDestination(vecTarget);
+            }
+        }
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        cStateMachine.ChangeState(cMoveState);
+        isRightButtonDown = context.ReadValueAsButton();
+    }
+
+
 }

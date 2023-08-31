@@ -20,19 +20,19 @@ public class MonsterCharacter : Character
 	private void StateInitializeOnEnter()
 	{
 		cStateIdle.onEnter = () => {
-			ChangeAnumation(cStateIdle.strStateName);
+			ChangeAnimation(cStateIdle.strStateName);
 		};
 		cStateMove.onEnter = () => {
-			ChangeAnumation(cStateMove.strStateName);
+			ChangeAnimation(cStateMove.strStateName);
 		};
 		cStateAttack.onEnter = () => {
-			ChangeAnumation(cStateAttack.strStateName);
+			ChangeAnimation(cStateAttack.strStateName);
 		};
 		cStateDamage.onEnter = () => {
-			ChangeAnumation(cStateDamage.strStateName);
+			ChangeAnimation(cStateDamage.strStateName);
 		};
 		cStateDie.onEnter = () => {
-			ChangeAnumation(cStateDie.strStateName);
+			ChangeAnimation(cStateDie.strStateName);
 		};
 	}
 	private void StateInitializeOnStay()
@@ -64,7 +64,7 @@ public class MonsterCharacter : Character
 	{
 
 	}
-	public override void ChangeAnumation(string strTrigger)
+	public override void ChangeAnimation(string strTrigger)
 	{
 		cAnimator.ResetTrigger(cStateMachine.GetCurrentState()?.strStateName);
 		cAnimator.SetTrigger(strTrigger);

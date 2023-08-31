@@ -13,5 +13,5 @@ public abstract class Character : MonoBehaviour
 	public abstract void Damage(float fAmount);
 	public abstract void Die();
 	public abstract void ChangeState(State cNextState);
-	public abstract void ChangeAnumation(string strTrigger);
+	public abstract void ChangeAnimation(string strTrigger);
 }
