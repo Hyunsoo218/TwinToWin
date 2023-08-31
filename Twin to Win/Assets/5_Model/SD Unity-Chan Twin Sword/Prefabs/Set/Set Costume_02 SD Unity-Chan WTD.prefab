@@ -961,8 +961,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Character, Assembly-CSharp
+      - m_Target: {fileID: 4887823194180791463}
+        m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -984,7 +984,19 @@ MonoBehaviour:
     m_ActionId: 9285e18f-4b89-4cfe-9e81-e34663eb094e
     m_ActionName: PlayerActions/Switching[/Keyboard/tab]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4887823194180791463}
+        m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: ee8dc9e6-a513-4421-97d3-91df78e97f7b
     m_ActionName: PlayerActions/Dash[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0

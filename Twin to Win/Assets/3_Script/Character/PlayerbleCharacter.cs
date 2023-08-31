@@ -7,30 +7,34 @@ using UnityEngine.InputSystem;
 public class PlayerbleCharacter : Character
 {
 	private Vector3 vecTarget;
-	private NavMeshAgent navAgent;
 
 	private bool isRightButtonDown = false;
 
     private State cIdleState = new State("idleState");
     private State cMoveState = new State("moveState");
+    private State cDashState = new State("dashState");
 
     private void Awake()
     {
         cStateMachine = GetComponent<StateMachine>();
         cAnimator = GetComponent<Animator>();
         navAgent = GetComponent<NavMeshAgent>();
-        cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
-        cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
-        cStateMachine.ChangeState(cIdleState);
+        StateInitalizeOnEnter();
+
     }
 
     private void Update()
     {
         Move();
-        if (cStateMachine.GetCurrentState() == cMoveState)
-        {
-            cStateMachine.ChangeState(cIdleState);
-        }
+        ReturnToIdle();
+    }
+
+    private void StateInitalizeOnEnter()
+    {
+        cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
+        cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
+        cDashState.onEnter += () => { ChangeAnimation(cDashState.strStateName); };
+        cStateMachine.ChangeState(cIdleState);
     }
 
     public override void Attack()
@@ -58,6 +62,8 @@ public class PlayerbleCharacter : Character
 
     public override void Move()
 	{
+
+
         if (isRightButtonDown)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -66,15 +72,38 @@ public class PlayerbleCharacter : Character
             if (Physics.Raycast(ray, out hit))
             {
                 vecTarget = hit.point;
-                navAgent.SetDestination(vecTarget);
+
+                
+
+                if (cStateMachine.GetCurrentState().strStateName == "idleState")
+                {
+                    cStateMachine.ChangeState(cMoveState);
+                }
             }
+
+
+
         }
+
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        cStateMachine.ChangeState(cMoveState);
         isRightButtonDown = context.ReadValueAsButton();
+    }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        cStateMachine.ChangeState(cDashState);
+    }
+
+    private void ReturnToIdle()
+    {
+        if (isRightButtonDown == false && cStateMachine.GetCurrentState() == cMoveState)
+        {
+            cStateMachine.ChangeState(cIdleState);
+        }
     }
 
 
