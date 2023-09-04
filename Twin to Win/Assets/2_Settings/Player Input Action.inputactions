@@ -12,7 +12,7 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Skill",
@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Dash",
+                    "name": "Dodge",
                     "type": "Button",
                     "id": "ee8dc9e6-a513-4421-97d3-91df78e97f7b",
                     "expectedControlType": "Button",
@@ -47,7 +47,7 @@
                     "name": "",
                     "id": "9390b48e-3371-455c-a887-c87294621abe",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Hold(duration=0.1,pressPoint=0.1)",
+                    "interactions": "Hold(duration=0.2)",
                     "processors": "",
                     "groups": "Game",
                     "action": "Move",
@@ -116,7 +116,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Game",
-                    "action": "Dash",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

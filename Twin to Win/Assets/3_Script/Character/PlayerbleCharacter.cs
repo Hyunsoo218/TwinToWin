@@ -1,54 +1,105 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using Input = UnityEngine.Input;
+enum mouseState
+{
+    None,
+    Click,
+    Hold
+};
 
 public class PlayerbleCharacter : Character
 {
-	private Vector3 vecTarget;
+    [Header("Character Info")]
+    [SerializeField] private float fMoveSpeed = 3f;
+    [SerializeField] private float fDodgeSpeed = 30f;
+    [SerializeField] private float fDodgeDistance = 5f;
 
-	private bool isRightButtonDown = false;
+    private float fTimer = 0f;
+    private float fDistanceToPlane;
 
+    private bool isMoving = false;
+
+    #region State
     private State cIdleState = new State("idleState");
     private State cMoveState = new State("moveState");
-    private State cDashState = new State("dashState");
+    private State cDodgeState = new State("dodgeState");
+    #endregion
+
+    Coroutine moveCoroutine;
+    InputAction moveAction;
+    mouseState eMouseState;
+
+    Plane virtualGround = new Plane(Vector3.up, 0);
+    private Vector3 mousePosOnVirtualGround;
+    private Vector3 mousePosOnGround;
+
+    private Rigidbody characterRid;
 
     private void Awake()
     {
+        moveAction = GetComponent<PlayerInput>().actions["Move"];
         cStateMachine = GetComponent<StateMachine>();
         cAnimator = GetComponent<Animator>();
-        navAgent = GetComponent<NavMeshAgent>();
+        characterRid = GetComponent<Rigidbody>();
         StateInitalizeOnEnter();
-
+        MouseStateInlitalize();
     }
 
-    private void Update()
+
+    private void FixedUpdate()
     {
+        if (moveAction.IsPressed())
+        {
+            fTimer += Time.deltaTime;
+        }
         Move();
-        ReturnToIdle();
+        Dodge();
     }
 
     private void StateInitalizeOnEnter()
     {
         cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
         cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
-        cDashState.onEnter += () => { ChangeAnimation(cDashState.strStateName); };
+        cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
         cStateMachine.ChangeState(cIdleState);
     }
 
+    private void MouseStateInlitalize()
+    {
+        moveAction.performed += ctx =>
+        {
+            if (fTimer >= 0.1f && eMouseState == mouseState.None)
+                eMouseState = mouseState.Hold;
+        };
+        moveAction.canceled += ctx =>
+        {
+            if (eMouseState == mouseState.Hold == false && eMouseState == mouseState.None)
+                eMouseState = mouseState.Click;
+
+            if (eMouseState == mouseState.Hold)
+            {
+                fTimer = 0f;
+                eMouseState = mouseState.None;
+                cStateMachine.ChangeState(cIdleState);
+            }
+        };
+    }
+
     public override void Attack()
-	{
-		
-	}
+    {
 
-	public override void Damage(float fAmount)
-	{
-	}
+    }
 
-	public override void Die()
-	{
-	}
+    public override void Damage(float fAmount)
+    {
+    }
+
+    public override void Die()
+    {
+    }
 
     public override void ChangeState(State cNextState)
     {
@@ -60,51 +111,128 @@ public class PlayerbleCharacter : Character
         cAnimator.SetTrigger(strTrigger);
     }
 
+
     public override void Move()
-	{
-
-
-        if (isRightButtonDown)
+    {
+        switch (eMouseState)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            case mouseState.Click:
+                mousePosOnGround = GetPositionOnGround();
+                transform.localRotation = GetMouseAngle();
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                vecTarget = hit.point;
+                if (isMoving)
+                    StopCoroutine(moveCoroutine);
+                moveCoroutine = StartCoroutine(StartMoveToTarget(mousePosOnGround));
 
-                
-
-                if (cStateMachine.GetCurrentState().strStateName == "idleState")
-                {
+                fTimer = 0f;
+                eMouseState = mouseState.None;
+                break;
+            case mouseState.Hold:
+                mousePosOnVirtualGround = GetPositionOnVirtualGround();
+                if (cStateMachine.GetCurrentState() != cMoveState)
                     cStateMachine.ChangeState(cMoveState);
-                }
-            }
 
-
-
+                transform.localRotation = GetMouseAngle();
+                transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
+                break;
         }
-
-
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    public void Dodge()
     {
-        isRightButtonDown = context.ReadValueAsButton();
+        if (cStateMachine.GetCurrentState() == cDodgeState)
+        {
+            //transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fDodgeSpeed);
+        }
+    }
+
+    private Vector3 GetPositionOnVirtualGround()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 pos = Vector3.one;
+        if (virtualGround.Raycast(ray, out fDistanceToPlane))
+        {
+            pos = ray.GetPoint(fDistanceToPlane);
+        }
+
+        return pos;
+    }
+    private Vector3 GetPositionOnGround()
+    {
+        Ray ray;
+        RaycastHit hit;
+        Vector3 worldPosition = Vector3.zero;
+
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, 100f, 1 << 6))
+            worldPosition = hit.point;
+        else
+            worldPosition = transform.position;
+
+        return worldPosition;
+    }
+    private Quaternion GetMouseAngle()
+    {
+        double angle = Math.Atan2(GetMouseNormalizedXPosition(), GetMouseNormalizedYPosition()) * 180 / Math.PI;
+        double targetAngle = angle < 0f ? angle + 360f : angle;
+
+        return Quaternion.Euler(new Vector3(transform.rotation.x, (float)targetAngle + Camera.main.transform.localEulerAngles.y, transform.rotation.z));
+    }
+    private IEnumerator StartMoveToTarget(Vector3 _mousePosOnGround)
+    {
+        isMoving = true;
+        cStateMachine.ChangeState(cMoveState);
+        while (eMouseState != mouseState.Hold && cStateMachine.GetCurrentState() == cMoveState)
+        { 
+            if (Vector3.Distance(transform.position, _mousePosOnGround) <= 0.1f)
+            {
+                cStateMachine.ChangeState(cIdleState);
+                isMoving = false;
+                yield break;
+            }
+            transform.position = Vector3.MoveTowards(transform.position, _mousePosOnGround, Time.deltaTime * fMoveSpeed);
+
+            yield return null;
+        }
+        isMoving = false;
     }
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        cStateMachine.ChangeState(cDashState);
+        cStateMachine.ChangeState(cDodgeState);
+        mousePosOnVirtualGround = GetPositionOnVirtualGround();
+        transform.localRotation = GetMouseAngle();
     }
 
-    private void ReturnToIdle()
+    private float GetMouseNormalizedXPosition()
     {
-        if (isRightButtonDown == false && cStateMachine.GetCurrentState() == cMoveState)
-        {
-            cStateMachine.ChangeState(cIdleState);
-        }
+        float xNormalized = 2 * (Input.mousePosition.x - 0f) / (Screen.width - 0f) - 1f;
+        float mouseNormalizedXPosition;
+
+        if (xNormalized > 1f)
+            mouseNormalizedXPosition = 1f;
+        else if (xNormalized < -1f)
+            mouseNormalizedXPosition = -1f;
+        else
+            mouseNormalizedXPosition = xNormalized;
+
+        return mouseNormalizedXPosition;
     }
 
+    private float GetMouseNormalizedYPosition()
+    {
+        float yNormalized = 2 * (Input.mousePosition.y - 0f) / (Screen.height - 0f) - 1f;
+        float mouseNormalizedYPosition;
+
+        if (yNormalized > 1f)
+            mouseNormalizedYPosition = 1f;
+        else if (yNormalized < -1f)
+            mouseNormalizedYPosition = -1f;
+        else
+            mouseNormalizedYPosition = yNormalized;
+
+        return mouseNormalizedYPosition;
+    }
 
 }
