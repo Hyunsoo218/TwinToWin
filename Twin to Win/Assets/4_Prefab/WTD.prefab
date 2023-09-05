@@ -718,8 +718,8 @@ GameObject:
   - component: {fileID: 4560357962080528831}
   - component: {fileID: 8938096214070046875}
   - component: {fileID: 9077109073580241485}
-  m_Layer: 0
-  m_Name: Set Costume_02 SD Unity-Chan WTD
+  m_Layer: 8
+  m_Name: WTD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -733,7 +733,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2321357186625340115}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.000000119209275, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.8, y: 2.27, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -895,7 +895,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
+  m_Speed: 8
   m_Acceleration: 300
   avoidancePriority: 50
   m_AngularSpeed: 720
@@ -921,7 +921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fHealthPoint: 0
   fPower: 0
-  fMoveSpeed: 3
+  fMoveSpeed: 5
   fDodgeSpeed: 30
   fDodgeDistance: 5
 --- !u!114 &9077109073580241485
