@@ -36,14 +36,11 @@ public class PlayerbleCharacter : Character
     private Vector3 mousePosOnVirtualGround;
     private Vector3 mousePosOnGround;
 
-    private Rigidbody characterRid;
-
     private void Awake()
     {
         moveAction = GetComponent<PlayerInput>().actions["Move"];
         cStateMachine = GetComponent<StateMachine>();
         cAnimator = GetComponent<Animator>();
-        characterRid = GetComponent<Rigidbody>();
         StateInitalizeOnEnter();
         MouseStateInlitalize();
     }
@@ -142,7 +139,7 @@ public class PlayerbleCharacter : Character
     {
         if (cStateMachine.GetCurrentState() == cDodgeState)
         {
-            //transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fDodgeSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fDodgeSpeed);
         }
     }
 
@@ -150,11 +147,21 @@ public class PlayerbleCharacter : Character
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Vector3 pos = Vector3.one;
-        if (virtualGround.Raycast(ray, out fDistanceToPlane))
-        {
-            pos = ray.GetPoint(fDistanceToPlane);
-        }
-
+        //if (cStateMachine.GetCurrentState() == cDodgeState)
+        //{
+        //    if (virtualGround.Raycast(ray, out fDistanceToPlane))
+        //    {
+        //        pos = ray.origin + ray.direction * fDodgeDistance;
+        //    }
+        //}
+        //else
+        //{
+            if (virtualGround.Raycast(ray, out fDistanceToPlane))
+            {
+                pos = ray.GetPoint(fDistanceToPlane);
+            }
+       // }
+        //print(ray.origin + ray.direction * fDodgeDistance);
         return pos;
     }
     private Vector3 GetPositionOnGround()
