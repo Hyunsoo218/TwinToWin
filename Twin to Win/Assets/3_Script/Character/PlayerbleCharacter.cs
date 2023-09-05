@@ -14,19 +14,21 @@ public class PlayerbleCharacter : Character
 {
     [Header("Character Info")]
     [SerializeField] private float fMoveSpeed = 3f;
-    [SerializeField] private float fDodgeSpeed = 30f;
-    [SerializeField] private float fDodgeDistance = 5f;
-
-    private float fTimer = 0f;
-    private float fDistanceToPlane;
-
-    private bool isMoving = false;
+    [SerializeField] private float fDodgePower = 30f;
+    [SerializeField] private float fDodgePlayTime = 0.1f;
+    [SerializeField] private float fDodgeCoolTime = 3f;
 
     #region State
     private State cIdleState = new State("idleState");
     private State cMoveState = new State("moveState");
     private State cDodgeState = new State("dodgeState");
     #endregion
+
+    #region Move
+    private float fMouseTimer = 0f;
+    private float fDistanceToPlane;
+
+    private bool isMoving = false;
 
     Coroutine moveCoroutine;
     InputAction moveAction;
@@ -35,14 +37,15 @@ public class PlayerbleCharacter : Character
     Plane virtualGround = new Plane(Vector3.up, 0);
     private Vector3 mousePosOnVirtualGround;
     private Vector3 mousePosOnGround;
+    #endregion
+
+    private float fDodgeTimer;
 
     private void Awake()
     {
-        moveAction = GetComponent<PlayerInput>().actions["Move"];
-        cStateMachine = GetComponent<StateMachine>();
-        cAnimator = GetComponent<Animator>();
+        Initialize();
         StateInitalizeOnEnter();
-        MouseStateInlitalize();
+        MouseStateInitialize();
     }
 
 
@@ -50,10 +53,17 @@ public class PlayerbleCharacter : Character
     {
         if (moveAction.IsPressed())
         {
-            fTimer += Time.deltaTime;
+            fMouseTimer += Time.deltaTime;
         }
         Move();
         Dodge();
+    }
+    private void Initialize()
+    {
+        moveAction = GetComponent<PlayerInput>().actions["Move"];
+        cStateMachine = GetComponent<StateMachine>();
+        cAnimator = GetComponent<Animator>();
+        fDodgeTimer = fDodgeCoolTime;
     }
 
     private void StateInitalizeOnEnter()
@@ -61,14 +71,13 @@ public class PlayerbleCharacter : Character
         cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
         cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
         cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
-        cStateMachine.ChangeState(cIdleState);
     }
 
-    private void MouseStateInlitalize()
+    private void MouseStateInitialize()
     {
         moveAction.performed += ctx =>
         {
-            if (fTimer >= 0.1f && eMouseState == mouseState.None)
+            if (fMouseTimer >= 0.1f && eMouseState == mouseState.None)
                 eMouseState = mouseState.Hold;
         };
         moveAction.canceled += ctx =>
@@ -78,9 +87,9 @@ public class PlayerbleCharacter : Character
 
             if (eMouseState == mouseState.Hold)
             {
-                fTimer = 0f;
+                fMouseTimer = 0f;
                 eMouseState = mouseState.None;
-                cStateMachine.ChangeState(cIdleState);
+                ChangeAnimation("toStand");
             }
         };
     }
@@ -92,7 +101,6 @@ public class PlayerbleCharacter : Character
 
     public override void Damage(float fAmount)
     {
-		print($"{fAmount}의 데미지를 받았다.");
     }
 
     public override void Die()
@@ -105,8 +113,14 @@ public class PlayerbleCharacter : Character
 
     public override void ChangeAnimation(string strTrigger)
     {
-        cAnimator.ResetTrigger(cStateMachine.GetCurrentState().strStateName);
+        if (cStateMachine.GetPrevState() != null)
+            cAnimator.ResetTrigger(cStateMachine.GetPrevState().strStateName);
         cAnimator.SetTrigger(strTrigger);
+    }
+
+    private  void ReturnToIdle()
+    {
+        cStateMachine.ChangeState(cIdleState);
     }
 
 
@@ -115,87 +129,42 @@ public class PlayerbleCharacter : Character
         switch (eMouseState)
         {
             case mouseState.Click:
+                if (cStateMachine.GetCurrentState() != cMoveState && cStateMachine.GetCurrentState() != cDodgeState)
+                {
+                    cStateMachine.ChangeState(cMoveState);
+                }
                 mousePosOnGround = GetPositionOnGround();
                 transform.localRotation = GetMouseAngle();
 
                 if (isMoving)
+                {
                     StopCoroutine(moveCoroutine);
-                moveCoroutine = StartCoroutine(StartMoveToTarget(mousePosOnGround));
+                }
+                moveCoroutine = StartCoroutine(DoMove(mousePosOnGround));
 
-                fTimer = 0f;
+                fMouseTimer = 0f;
                 eMouseState = mouseState.None;
                 break;
             case mouseState.Hold:
-                mousePosOnVirtualGround = GetPositionOnVirtualGround();
-                if (cStateMachine.GetCurrentState() != cMoveState)
+                if (cStateMachine.GetCurrentState() != cMoveState && cStateMachine.GetCurrentState() != cDodgeState)
+                {
                     cStateMachine.ChangeState(cMoveState);
+                }
+                mousePosOnVirtualGround = GetPositionOnVirtualGround();
 
                 transform.localRotation = GetMouseAngle();
                 transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
                 break;
         }
     }
-
-    public void Dodge()
-    {
-        if (cStateMachine.GetCurrentState() == cDodgeState)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fDodgeSpeed);
-        }
-    }
-
-    private Vector3 GetPositionOnVirtualGround()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Vector3 pos = Vector3.one;
-        //if (cStateMachine.GetCurrentState() == cDodgeState)
-        //{
-        //    if (virtualGround.Raycast(ray, out fDistanceToPlane))
-        //    {
-        //        pos = ray.origin + ray.direction * fDodgeDistance;
-        //    }
-        //}
-        //else
-        //{
-            if (virtualGround.Raycast(ray, out fDistanceToPlane))
-            {
-                pos = ray.GetPoint(fDistanceToPlane);
-            }
-       // }
-        //print(ray.origin + ray.direction * fDodgeDistance);
-        return pos;
-    }
-    private Vector3 GetPositionOnGround()
-    {
-        Ray ray;
-        RaycastHit hit;
-        Vector3 worldPosition = Vector3.zero;
-
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, 100f, 1 << 6))
-            worldPosition = hit.point;
-        else
-            worldPosition = transform.position;
-
-        return worldPosition;
-    }
-    private Quaternion GetMouseAngle()
-    {
-        double angle = Math.Atan2(GetMouseNormalizedXPosition(), GetMouseNormalizedYPosition()) * 180 / Math.PI;
-        double targetAngle = angle < 0f ? angle + 360f : angle;
-
-        return Quaternion.Euler(new Vector3(transform.rotation.x, (float)targetAngle + Camera.main.transform.localEulerAngles.y, transform.rotation.z));
-    }
-    private IEnumerator StartMoveToTarget(Vector3 _mousePosOnGround)
+    private IEnumerator DoMove(Vector3 _mousePosOnGround)
     {
         isMoving = true;
-        cStateMachine.ChangeState(cMoveState);
         while (eMouseState != mouseState.Hold && cStateMachine.GetCurrentState() == cMoveState)
-        { 
+        {
             if (Vector3.Distance(transform.position, _mousePosOnGround) <= 0.1f)
             {
-                cStateMachine.ChangeState(cIdleState);
+                ChangeAnimation("toStand");
                 isMoving = false;
                 yield break;
             }
@@ -205,12 +174,73 @@ public class PlayerbleCharacter : Character
         }
         isMoving = false;
     }
+    public void Dodge()
+    {
+        // 여기가 반복됨
+        if (cStateMachine.GetCurrentState() == cDodgeState && fDodgeTimer >= fDodgeCoolTime)
+        {
+            StartCoroutine(DoDodge());
+        }
+    }
+
+    private IEnumerator DoDodge()
+    {
+        transform.position += transform.forward * Time.deltaTime * fDodgePower;
+        yield return new WaitForSeconds(fDodgePlayTime);
+        ChangeAnimation("toStand");
+    }
+
+    private IEnumerator DodgeCoolDown()
+    {
+        cStateMachine.ChangeState(cDodgeState);
+        while (fDodgeTimer >= 0)
+        {
+            fDodgeTimer -= Time.deltaTime;
+            yield return null;
+        }
+        fDodgeTimer = fDodgeCoolTime;
+    }
+
+    private Vector3 GetPositionOnVirtualGround()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 pos = Vector3.one;
+        if (virtualGround.Raycast(ray, out fDistanceToPlane))
+        {
+            pos = ray.GetPoint(fDistanceToPlane);
+        }
+        return pos;
+    }
+    private Vector3 GetPositionOnGround()
+    {
+        Ray ray;
+        RaycastHit hit;
+        Vector3 pos = Vector3.zero;
+
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, 100f, 1 << 6))
+            pos = hit.point;
+        else
+            pos = transform.position;
+
+        return pos;
+    }
+    private Quaternion GetMouseAngle()
+    {
+        double angle = Math.Atan2(GetMouseNormalizedXPosition(), GetMouseNormalizedYPosition()) * 180 / Math.PI;
+        double targetAngle = angle < 0f ? angle + 360f : angle;
+
+        return Quaternion.Euler(new Vector3(transform.rotation.x, (float)targetAngle + Camera.main.transform.localEulerAngles.y, transform.rotation.z));
+    }
+
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        cStateMachine.ChangeState(cDodgeState);
-        mousePosOnVirtualGround = GetPositionOnVirtualGround();
-        transform.localRotation = GetMouseAngle();
+        if (cStateMachine.GetCurrentState() != cDodgeState && fDodgeTimer >= fDodgeCoolTime)
+        {
+            StartCoroutine(DodgeCoolDown());
+        }
     }
 
     private float GetMouseNormalizedXPosition()
