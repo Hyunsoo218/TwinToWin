@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(StateMachine))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class MonsterCharacter : Character
 {
 	[SerializeField] private float fAttackDistance;
+	[SerializeField] private float fAttackDelayTime = 3f;
+
 	private NavMeshAgent cAgent;
 	private State cStateIdle = new State("Idle");
 	private State cStateMove = new State("Move");
 	private State cStateAttack = new State("Attack");
 	private State cStateDamage = new State("Damage");
 	private State cStateDie = new State("Die");
+	private bool bCanAttack = true;
+	private Vector3 vTargetPos;
+	private float fTargetDist = 99f;
 
 	private void Awake()
 	{
@@ -23,26 +31,22 @@ public class MonsterCharacter : Character
 		StateInitializeOnExit();
 		ChangeState(cStateIdle);
 	}
-	private void Update()
+	private void Start()
 	{
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			cAgent.SetDestination(new Vector3(Random.Range(-20f, 20f), 0, Random.Range(-20f, 20f)));
-			ChangeState(cStateMove);
-		}
+		StartCoroutine(SetTarget());
 	}
-
 	private void StateInitializeOnEnter()
 	{
 		cStateIdle.onEnter = () => {
 			ChangeAnimation(cStateIdle.strStateName);
 		};
 		cStateMove.onEnter = () => {
-			cAgent.isStopped = false;
 			ChangeAnimation(cStateMove.strStateName);
+			cAgent.isStopped = false;
 		};
 		cStateAttack.onEnter = () => {
 			ChangeAnimation(cStateAttack.strStateName);
+			Attack();
 		};
 		cStateDamage.onEnter = () => {
 			ChangeAnimation(cStateDamage.strStateName);
@@ -53,11 +57,30 @@ public class MonsterCharacter : Character
 	}
 	private void StateInitializeOnStay()
 	{
-		cStateMove.onStay = () => {
-			float fDist = Vector3.Distance(transform.position, cAgent.destination);
-			if (fDist <= fAttackDistance)
+		cStateIdle.onStay = () => {
+			if (fTargetDist >= fAttackDistance)
 			{
-				ChangeState(cStateAttack);
+				ChangeState(cStateMove);
+			}
+			else
+			{
+				if (bCanAttack)
+				{
+					ChangeState(cStateAttack);
+				}
+			}
+		};
+		cStateMove.onStay = () => {
+			if (fTargetDist < fAttackDistance)
+			{
+				if (bCanAttack)
+				{
+					ChangeState(cStateAttack);
+				}
+				else
+				{
+					ChangeState(cStateIdle);
+				}
 			}
 		};
 	}
@@ -67,14 +90,35 @@ public class MonsterCharacter : Character
 			cAgent.isStopped = true;
 		};
 	}
+
 	public void ResetState()
 	{
 		ChangeState(cStateIdle);
 	}
 
+	private IEnumerator SetTarget()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(0.05f);
+			vTargetPos = Player.instance.cCurrentCharacter.transform.position;
+			cAgent.SetDestination(vTargetPos);
+			fTargetDist = Vector3.Distance(transform.position, vTargetPos);
+		}
+	}
+	private IEnumerator AttackDelay()
+	{
+		bCanAttack = false;
+		float fWaitTime = Random.Range(fAttackDelayTime - 1f , fAttackDelayTime + 1f);
+		yield return new WaitForSeconds(fWaitTime);
+		bCanAttack = true;
+	}
 	public override void Attack()
 	{
-
+		StartCoroutine(AttackDelay());
+		transform.LookAt(vTargetPos);
+		transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
+		// ¿À¹ö·¾ ÇÏ±â
 	}
 	public override void ChangeState(State cNextState)
 	{
