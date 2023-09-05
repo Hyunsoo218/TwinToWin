@@ -477,6 +477,54 @@ Transform:
   - {fileID: 1924232340}
   m_Father: {fileID: 1068814583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &322954014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 322954016}
+  - component: {fileID: 322954015}
+  m_Layer: 0
+  m_Name: EffectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &322954015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322954014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10a556533413dc4ea8be79aa882a4bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrPoolingEffect:
+  - {fileID: -4814111431669396841, guid: 6c2c99d198ba3004192d4feb4b62ca23, type: 3}
+  - {fileID: -4814111431669396841, guid: c619950943347b24e98901d020582d63, type: 3}
+  - {fileID: -4814111431669396841, guid: 01e7965eb18c62741ae9970e6302150e, type: 3}
+--- !u!4 &322954016
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322954014}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,13 +1482,13 @@ GameObject:
   - component: {fileID: 677457972}
   - component: {fileID: 677457976}
   - component: {fileID: 677457975}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &677457970
 Animator:
   serializedVersion: 5
@@ -1495,6 +1543,7 @@ MonoBehaviour:
   fPower: 0
   fAttackDistance: 25
   fAttackDelayTime: 3
+  objAttackEffectPrefab: {fileID: 0}
 --- !u!195 &677457973
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1505,7 +1554,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2
+  m_Speed: 1
   m_Acceleration: 80
   avoidancePriority: 50
   m_AngularSpeed: 720
@@ -2245,7 +2294,7 @@ GameObject:
   - component: {fileID: 865195000}
   - component: {fileID: 865195002}
   - component: {fileID: 865195001}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Turnipa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2306,6 +2355,8 @@ MonoBehaviour:
   fPower: 0
   fAttackDistance: 4
   fAttackDelayTime: 3
+  objAttackEffectPrefab: {fileID: 7777573416650849465, guid: 01e7965eb18c62741ae9970e6302150e,
+    type: 3}
 --- !u!195 &865194999
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2315,10 +2366,10 @@ NavMeshAgent:
   m_GameObject: {fileID: 865194995}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 4
+  m_Radius: 0.6
+  m_Speed: 2.5
   m_Acceleration: 80
-  avoidancePriority: 50
+  avoidancePriority: 0
   m_AngularSpeed: 720
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -2386,8 +2437,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.6
+  m_Height: 1.9144428
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &867146292
@@ -2593,13 +2644,13 @@ GameObject:
   - component: {fileID: 983642776}
   - component: {fileID: 983642780}
   - component: {fileID: 983642779}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Planta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &983642774
 Animator:
   serializedVersion: 5
@@ -2631,7 +2682,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.12, y: 0.00000011920929, z: -1.4545836}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 856627325}
@@ -2652,8 +2703,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fHealthPoint: 0
   fPower: 0
-  fAttackDistance: 4
-  fAttackDelayTime: 3
+  fAttackDistance: 2.5
+  fAttackDelayTime: 2.2
+  objAttackEffectPrefab: {fileID: 7777573416650849465, guid: c619950943347b24e98901d020582d63,
+    type: 3}
 --- !u!195 &983642777
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2663,10 +2716,10 @@ NavMeshAgent:
   m_GameObject: {fileID: 983642773}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 6
+  m_Radius: 0.25
+  m_Speed: 5
   m_Acceleration: 80
-  avoidancePriority: 50
+  avoidancePriority: 0
   m_AngularSpeed: 720
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -2734,8 +2787,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.25
+  m_Height: 1.6209035
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1008888796
@@ -3335,13 +3388,13 @@ GameObject:
   - component: {fileID: 1315701346}
   - component: {fileID: 1315701350}
   - component: {fileID: 1315701349}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Beez
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &1315701344
 Animator:
   serializedVersion: 5
@@ -3373,7 +3426,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.9902795, z: -0, w: 0.13909231}
   m_LocalPosition: {x: 2.1, y: -0.000000029802322, z: 2.2}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2056078319}
@@ -3395,7 +3448,9 @@ MonoBehaviour:
   fHealthPoint: 0
   fPower: 0
   fAttackDistance: 2
-  fAttackDelayTime: 3
+  fAttackDelayTime: 1.2
+  objAttackEffectPrefab: {fileID: 7777573416650849465, guid: 6c2c99d198ba3004192d4feb4b62ca23,
+    type: 3}
 --- !u!195 &1315701347
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3405,10 +3460,10 @@ NavMeshAgent:
   m_GameObject: {fileID: 1315701343}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.2
   m_Speed: 8
   m_Acceleration: 80
-  avoidancePriority: 50
+  avoidancePriority: 0
   m_AngularSpeed: 720
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -3476,7 +3531,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.18380082
+  m_Radius: 0.2
   m_Height: 1.0000005
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -4849,10 +4904,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: WTD
       objectReference: {fileID: 0}
+    - target: {fileID: 2321357186625340115, guid: 9e67e752b6a4ee24282ba8ed158c258b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2707308020640122022, guid: 9e67e752b6a4ee24282ba8ed158c258b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.7031987
+      value: -4.36
       objectReference: {fileID: 0}
     - target: {fileID: 2707308020640122022, guid: 9e67e752b6a4ee24282ba8ed158c258b,
         type: 3}
@@ -4862,7 +4922,7 @@ PrefabInstance:
     - target: {fileID: 2707308020640122022, guid: 9e67e752b6a4ee24282ba8ed158c258b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.380311
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: 2707308020640122022, guid: 9e67e752b6a4ee24282ba8ed158c258b,
         type: 3}
@@ -5887,3 +5947,4 @@ SceneRoots:
   - {fileID: 2099522781}
   - {fileID: 639744103}
   - {fileID: 1890007551}
+  - {fileID: 322954016}

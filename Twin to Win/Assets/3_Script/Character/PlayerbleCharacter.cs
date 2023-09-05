@@ -92,6 +92,7 @@ public class PlayerbleCharacter : Character
 
     public override void Damage(float fAmount)
     {
+		print($"{fAmount}의 데미지를 받았다.");
     }
 
     public override void Die()
