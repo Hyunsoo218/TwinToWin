@@ -22,6 +22,7 @@ public class PlayerbleCharacter : Character
     private State cIdleState = new State("idleState");
     private State cMoveState = new State("moveState");
     private State cDodgeState = new State("dodgeState");
+    private State[] cNormalAttack = new State[3] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3") };
     #endregion
 
     #region Move
@@ -39,28 +40,39 @@ public class PlayerbleCharacter : Character
     private Vector3 mousePosOnGround;
     #endregion
 
+    #region Dodge
     private float fDodgeTimer;
+    private float fDodgePlayTimer;
+    private bool isDodging = false;
+    #endregion
+
+    #region NormalAttack
+    private int nNormalAttackCount = 0;
+    private float fNormalAttackCancelTime = 2f;
+    private float fNormalAttackCancelTimer = 0f;
+
+    private InputAction normalAttackAction;
+    #endregion
 
     private void Awake()
     {
         Initialize();
         StateInitalizeOnEnter();
-        MouseStateInitialize();
+        RightMouseStateInitialize();
+        LeftMouseStateInitalize();
     }
 
 
     private void FixedUpdate()
     {
-        if (moveAction.IsPressed())
-        {
-            fMouseTimer += Time.deltaTime;
-        }
         Move();
         Dodge();
+        NormalAttack();
     }
     private void Initialize()
     {
         moveAction = GetComponent<PlayerInput>().actions["Move"];
+        normalAttackAction = GetComponent<PlayerInput>().actions["NormalAttack"];
         cStateMachine = GetComponent<StateMachine>();
         cAnimator = GetComponent<Animator>();
         fDodgeTimer = fDodgeCoolTime;
@@ -71,9 +83,12 @@ public class PlayerbleCharacter : Character
         cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
         cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
         cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
+        cNormalAttack[0].onEnter += () => { ChangeAnimation(cNormalAttack[0].strStateName); };
+        cNormalAttack[1].onEnter += () => { ChangeAnimation(cNormalAttack[1].strStateName); };
+        cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); };
     }
 
-    private void MouseStateInitialize()
+    private void RightMouseStateInitialize()
     {
         moveAction.performed += ctx =>
         {
@@ -91,6 +106,22 @@ public class PlayerbleCharacter : Character
                 eMouseState = mouseState.None;
                 ChangeAnimation("toStand");
             }
+        };
+    }
+
+    private void LeftMouseStateInitalize()
+    {
+        normalAttackAction.started += ctx =>
+        {
+            if (cStateMachine.GetCurrentState() != cNormalAttack[nNormalAttackCount] && cStateMachine.GetCurrentState() != cDodgeState)
+            {
+                cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
+                nNormalAttackCount = nNormalAttackCount < cNormalAttack.Length - 1 ? ++nNormalAttackCount : 0;
+            }
+        };
+        normalAttackAction.canceled += ctx =>
+        {
+            
         };
     }
 
@@ -126,6 +157,11 @@ public class PlayerbleCharacter : Character
 
     public override void Move()
     {
+        if (moveAction.IsPressed())
+        {
+            fMouseTimer += Time.deltaTime;
+        }
+
         switch (eMouseState)
         {
             case mouseState.Click:
@@ -140,7 +176,7 @@ public class PlayerbleCharacter : Character
                 {
                     StopCoroutine(moveCoroutine);
                 }
-                moveCoroutine = StartCoroutine(DoMove(mousePosOnGround));
+                moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
 
                 fMouseTimer = 0f;
                 eMouseState = mouseState.None;
@@ -150,25 +186,29 @@ public class PlayerbleCharacter : Character
                 {
                     cStateMachine.ChangeState(cMoveState);
                 }
-                mousePosOnVirtualGround = GetPositionOnVirtualGround();
 
-                transform.localRotation = GetMouseAngle();
-                transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
+                if (cStateMachine.GetCurrentState() == cMoveState)
+                {
+                    mousePosOnVirtualGround = GetPositionOnVirtualGround();
+
+                    transform.localRotation = GetMouseAngle();
+                    transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
+                }
                 break;
         }
     }
-    private IEnumerator DoMove(Vector3 _mousePosOnGround)
+    private IEnumerator MoveCoroutine(Vector3 mousePosOnGround)
     {
         isMoving = true;
         while (eMouseState != mouseState.Hold && cStateMachine.GetCurrentState() == cMoveState)
         {
-            if (Vector3.Distance(transform.position, _mousePosOnGround) <= 0.1f)
+            if (Vector3.Distance(transform.position, mousePosOnGround) <= 0.1f)
             {
                 ChangeAnimation("toStand");
                 isMoving = false;
                 yield break;
             }
-            transform.position = Vector3.MoveTowards(transform.position, _mousePosOnGround, Time.deltaTime * fMoveSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
 
             yield return null;
         }
@@ -176,29 +216,65 @@ public class PlayerbleCharacter : Character
     }
     public void Dodge()
     {
-        // 여기가 반복됨
-        if (cStateMachine.GetCurrentState() == cDodgeState && fDodgeTimer >= fDodgeCoolTime)
+        if (isDodging && cStateMachine.GetCurrentState() == cDodgeState)
         {
-            StartCoroutine(DoDodge());
+            fDodgePlayTimer = fDodgePlayTime;
+            StartCoroutine(DodgeCoroutine());
+            isDodging = false;
         }
     }
 
-    private IEnumerator DoDodge()
+    private IEnumerator DodgeCoroutine()
+    {
+        yield return new WaitUntil(() => DoDodge() <= 0f);
+        fDodgePlayTimer = fDodgePlayTime;
+        ChangeAnimation("toStand");
+    }
+
+    private float DoDodge()
     {
         transform.position += transform.forward * Time.deltaTime * fDodgePower;
-        yield return new WaitForSeconds(fDodgePlayTime);
-        ChangeAnimation("toStand");
+        return fDodgePlayTimer -= Time.deltaTime;
     }
 
     private IEnumerator DodgeCoolDown()
     {
-        cStateMachine.ChangeState(cDodgeState);
         while (fDodgeTimer >= 0)
         {
             fDodgeTimer -= Time.deltaTime;
             yield return null;
         }
         fDodgeTimer = fDodgeCoolTime;
+    }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (cStateMachine.GetCurrentState() != cDodgeState && fDodgeTimer >= fDodgeCoolTime)
+        {
+            cStateMachine.ChangeState(cDodgeState);
+            StartCoroutine(DodgeCoolDown());
+            isDodging = true;
+        }
+    }
+
+
+
+    public void NormalAttack()
+    {
+        print(cStateMachine.GetCurrentState().strStateName + " " + cNormalAttack[nNormalAttackCount].strStateName);
+        // 공격 후 2초 안에 마우스 공격하면 다음 공격
+        // 2초 안에 안하면 idle 상태로 돌아감
+        if (cStateMachine.GetCurrentState() == cNormalAttack[nNormalAttackCount])
+        {
+            if (Timer(fNormalAttackCancelTime, ref fNormalAttackCancelTimer) == true)
+            {
+
+            }
+            else if (Timer(fNormalAttackCancelTime, ref fNormalAttackCancelTimer) == false)
+            {
+                ReturnToIdle();
+            }
+        }
     }
 
     private Vector3 GetPositionOnVirtualGround()
@@ -234,15 +310,6 @@ public class PlayerbleCharacter : Character
         return Quaternion.Euler(new Vector3(transform.rotation.x, (float)targetAngle + Camera.main.transform.localEulerAngles.y, transform.rotation.z));
     }
 
-
-    public void OnDash(InputAction.CallbackContext context)
-    {
-        if (cStateMachine.GetCurrentState() != cDodgeState && fDodgeTimer >= fDodgeCoolTime)
-        {
-            StartCoroutine(DodgeCoolDown());
-        }
-    }
-
     private float GetMouseNormalizedXPosition()
     {
         float xNormalized = 2 * (Input.mousePosition.x - 0f) / (Screen.width - 0f) - 1f;
@@ -271,6 +338,19 @@ public class PlayerbleCharacter : Character
             mouseNormalizedYPosition = yNormalized;
 
         return mouseNormalizedYPosition;
+    }
+
+    private bool Timer(float originalTime, ref float timerVar)
+    {
+        for (; timerVar <= originalTime; timerVar += Time.deltaTime)
+        {
+            if (timerVar >= originalTime)
+            {
+                timerVar = 0f;
+                return true;
+            }
+        }
+        return false;
     }
 
 }
