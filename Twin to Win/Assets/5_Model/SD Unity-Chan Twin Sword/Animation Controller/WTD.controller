@@ -521,12 +521,6 @@ AnimatorController:
   m_Name: WTD
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: OnSkill1
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
   - m_Name: OnSkill2
     m_Type: 9
     m_DefaultFloat: 0
@@ -540,12 +534,6 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: OnFinisher
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: OnDash
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -925,9 +913,9 @@ AnimatorStateMachine:
   - {fileID: -3024201075480184611}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 2815135113450791268}
-    second: []
   - first: {fileID: -9214723935116971016}
+    second: []
+  - first: {fileID: 2815135113450791268}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 290, y: 150, z: 0}

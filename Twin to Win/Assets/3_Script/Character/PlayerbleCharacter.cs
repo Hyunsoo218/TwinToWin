@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Input = UnityEngine.Input;
@@ -17,16 +19,17 @@ public class PlayerbleCharacter : Character
     [SerializeField] private float fDodgePower = 30f;
     [SerializeField] private float fDodgePlayTime = 0.1f;
     [SerializeField] private float fDodgeCoolTime = 3f;
-
+    
     #region State
     private State cIdleState = new State("idleState");
     private State cMoveState = new State("moveState");
     private State cDodgeState = new State("dodgeState");
+    private State cToStand = new State("toStand");
     private State[] cNormalAttack = new State[3] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3") };
     #endregion
 
     #region Move
-    private float fMouseTimer = 0f;
+    private float fMouseTimer;
     private float fDistanceToPlane;
 
     private bool isMoving = false;
@@ -48,9 +51,13 @@ public class PlayerbleCharacter : Character
 
     #region NormalAttack
     private int nNormalAttackCount = 0;
-    private float fNormalAttackCancelTime = 2f;
     private float fNormalAttackCancelTimer = 0f;
+    private float fNormalAttackCancelTime = 2f;
+    private bool isWaitForNextAttack = false;
+    private bool canNextAttack = true;
+    private bool isNotNormalAttackState;
 
+    private Coroutine normalAttackCancelTimer;
     private InputAction normalAttackAction;
     #endregion
 
@@ -61,7 +68,9 @@ public class PlayerbleCharacter : Character
         RightMouseStateInitialize();
         LeftMouseStateInitalize();
     }
-
+    private void Update()
+    {
+    }
 
     private void FixedUpdate()
     {
@@ -75,7 +84,6 @@ public class PlayerbleCharacter : Character
         normalAttackAction = GetComponent<PlayerInput>().actions["NormalAttack"];
         cStateMachine = GetComponent<StateMachine>();
         cAnimator = GetComponent<Animator>();
-        fDodgeTimer = fDodgeCoolTime;
     }
 
     private void StateInitalizeOnEnter()
@@ -83,6 +91,7 @@ public class PlayerbleCharacter : Character
         cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
         cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
         cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
+        cToStand.onEnter += () => { ChangeAnimation(cToStand.strStateName); };
         cNormalAttack[0].onEnter += () => { ChangeAnimation(cNormalAttack[0].strStateName); };
         cNormalAttack[1].onEnter += () => { ChangeAnimation(cNormalAttack[1].strStateName); };
         cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); };
@@ -92,7 +101,7 @@ public class PlayerbleCharacter : Character
     {
         moveAction.performed += ctx =>
         {
-            if (fMouseTimer >= 0.1f && eMouseState == mouseState.None)
+            if (fMouseTimer >= 0.1f && eMouseState == mouseState.None )
                 eMouseState = mouseState.Hold;
         };
         moveAction.canceled += ctx =>
@@ -104,24 +113,28 @@ public class PlayerbleCharacter : Character
             {
                 fMouseTimer = 0f;
                 eMouseState = mouseState.None;
-                ChangeAnimation("toStand");
+                cStateMachine.ChangeState(cToStand);
             }
         };
     }
-
+    // Hold 상태일 때 Attack하면 멈춘 다음 Attack 다 끝나고 다시 Hold로 돌아갈건지 의논
     private void LeftMouseStateInitalize()
     {
         normalAttackAction.started += ctx =>
         {
-            if (cStateMachine.GetCurrentState() != cNormalAttack[nNormalAttackCount] && cStateMachine.GetCurrentState() != cDodgeState)
+            if (fNormalAttackCancelTimer > 0f)
+            {
+                isWaitForNextAttack = true;
+            }
+
+            if (eMouseState != mouseState.Hold && cStateMachine.GetCurrentState() != cNormalAttack[nNormalAttackCount] && cStateMachine.GetCurrentState() != cDodgeState && canNextAttack)
             {
                 cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
-                nNormalAttackCount = nNormalAttackCount < cNormalAttack.Length - 1 ? ++nNormalAttackCount : 0;
             }
         };
         normalAttackAction.canceled += ctx =>
         {
-            
+
         };
     }
 
@@ -161,10 +174,7 @@ public class PlayerbleCharacter : Character
 
     public override void Move()
     {
-        if (moveAction.IsPressed())
-        {
-            fMouseTimer += Time.deltaTime;
-        }
+        IncreaseMousePressTime();
 
         switch (eMouseState)
         {
@@ -186,7 +196,8 @@ public class PlayerbleCharacter : Character
                 eMouseState = mouseState.None;
                 break;
             case mouseState.Hold:
-                if (cStateMachine.GetCurrentState() != cMoveState && cStateMachine.GetCurrentState() != cDodgeState)
+                // 홀드로 이동하다가 바로 공격키 누르면 toStand가 계속 켜져있음
+                if (cStateMachine.GetCurrentState() != cMoveState && cStateMachine.GetCurrentState() != cDodgeState )
                 {
                     cStateMachine.ChangeState(cMoveState);
                 }
@@ -201,6 +212,13 @@ public class PlayerbleCharacter : Character
                 break;
         }
     }
+    private void IncreaseMousePressTime()
+    {
+        if (moveAction.IsPressed())
+        {
+            fMouseTimer += Time.deltaTime;
+        }
+    }
     private IEnumerator MoveCoroutine(Vector3 mousePosOnGround)
     {
         isMoving = true;
@@ -208,7 +226,7 @@ public class PlayerbleCharacter : Character
         {
             if (Vector3.Distance(transform.position, mousePosOnGround) <= 0.1f)
             {
-                ChangeAnimation("toStand");
+                cStateMachine.ChangeState(cToStand);
                 isMoving = false;
                 yield break;
             }
@@ -232,7 +250,7 @@ public class PlayerbleCharacter : Character
     {
         yield return new WaitUntil(() => DoDodge() <= 0f);
         fDodgePlayTimer = fDodgePlayTime;
-        ChangeAnimation("toStand");
+        cStateMachine.ChangeState(cToStand);
     }
 
     private float DoDodge()
@@ -241,44 +259,86 @@ public class PlayerbleCharacter : Character
         return fDodgePlayTimer -= Time.deltaTime;
     }
 
-    private IEnumerator DodgeCoolDown()
+    private IEnumerator StartDodgeCoolDown()
     {
-        while (fDodgeTimer >= 0)
+        while (fDodgeTimer <= fDodgeCoolTime)
         {
-            fDodgeTimer -= Time.deltaTime;
+            fDodgeTimer += Time.deltaTime;
             yield return null;
         }
-        fDodgeTimer = fDodgeCoolTime;
+        fDodgeTimer = 0f;
     }
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (cStateMachine.GetCurrentState() != cDodgeState && fDodgeTimer >= fDodgeCoolTime)
+        if (cStateMachine.GetCurrentState() != cDodgeState && fDodgeTimer <= 0f)
         {
             cStateMachine.ChangeState(cDodgeState);
-            StartCoroutine(DodgeCoolDown());
+            StartCoroutine(StartDodgeCoolDown());
             isDodging = true;
         }
     }
 
-
-
     public void NormalAttack()
     {
-        print(cStateMachine.GetCurrentState().strStateName + " " + cNormalAttack[nNormalAttackCount].strStateName);
-        // 공격 후 2초 안에 마우스 공격하면 다음 공격
-        // 2초 안에 안하면 idle 상태로 돌아감
-        if (cStateMachine.GetCurrentState() == cNormalAttack[nNormalAttackCount])
-        {
-            if (Timer(fNormalAttackCancelTime, ref fNormalAttackCancelTimer) == true)
-            {
+        isNotNormalAttackState = cStateMachine.GetCurrentState() != cNormalAttack[0] && cStateMachine.GetCurrentState() != cNormalAttack[1] && cStateMachine.GetCurrentState() != cNormalAttack[2];
+        IncreaseAttackCount();
+        ResetAttackCount();
+        ExceededCancelTime();
+    }
 
-            }
-            else if (Timer(fNormalAttackCancelTime, ref fNormalAttackCancelTimer) == false)
-            {
-                ReturnToIdle();
-            }
+    private void IncreaseAttackCount()
+    {
+        if (cStateMachine.GetCurrentState() == cNormalAttack[nNormalAttackCount] && fNormalAttackCancelTimer < fNormalAttackCancelTime)
+        {
+            nNormalAttackCount = nNormalAttackCount < cNormalAttack.Length - 1 ? ++nNormalAttackCount : 0;
         }
+    }
+
+    private void ResetAttackCount()
+    {
+        if (isNotNormalAttackState)
+        {
+            canNextAttack = true;
+            nNormalAttackCount = 0;
+        }
+    }
+
+    private void ExceededCancelTime()
+    {
+        if (fNormalAttackCancelTimer >= fNormalAttackCancelTime - 0.05f)
+        {
+            ReturnToIdle();
+        }
+    }
+
+    private void DisableNextAttack()
+    {
+        canNextAttack = false;
+    }
+
+    private void ActiveNextAttack()
+    {
+        normalAttackCancelTimer = StartCoroutine(StartNormalAttackCancelTimer());
+        canNextAttack = true;
+    }
+
+    private IEnumerator StartNormalAttackCancelTimer()
+    {
+        while (fNormalAttackCancelTimer < fNormalAttackCancelTime)
+        {
+            if (isWaitForNextAttack == true)
+            {
+                fNormalAttackCancelTimer = 0f;
+                isWaitForNextAttack = false;
+                yield break;
+            }
+            fNormalAttackCancelTimer += Time.deltaTime;
+            yield return null;
+        }
+        
+        fNormalAttackCancelTimer = 0f;
+        isWaitForNextAttack = false;
     }
 
     private Vector3 GetPositionOnVirtualGround()
@@ -342,19 +402,6 @@ public class PlayerbleCharacter : Character
             mouseNormalizedYPosition = yNormalized;
 
         return mouseNormalizedYPosition;
-    }
-
-    private bool Timer(float originalTime, ref float timerVar)
-    {
-        for (; timerVar <= originalTime; timerVar += Time.deltaTime)
-        {
-            if (timerVar >= originalTime)
-            {
-                timerVar = 0f;
-                return true;
-            }
-        }
-        return false;
     }
 
 }
