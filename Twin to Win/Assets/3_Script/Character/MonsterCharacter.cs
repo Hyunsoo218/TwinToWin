@@ -8,21 +8,21 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class MonsterCharacter : Character
 {
-	[SerializeField] private float fAttackDistance;
-	[SerializeField] private float fAttackDelayTime = 3f;
-	[SerializeField] private GameObject objAttackEffectPrefab;
+	[SerializeField] protected float fAttackDistance;
+	[SerializeField] protected float fAttackDelayTime = 3f;
+	[SerializeField] protected GameObject objAttackEffectPrefab;
+	
+	protected NavMeshAgent cAgent;
+	protected State cStateIdle = new State("Idle");
+	protected State cStateMove = new State("Move");
+	protected State cStateAttack = new State("Attack");
+	protected State cStateDamage = new State("Damage");
+	protected State cStateDie = new State("Die");
+	protected bool bCanAttack = true;
+	protected Vector3 vTargetPos;
+	protected float fTargetDist = 99f;
 
-	private NavMeshAgent cAgent;
-	private State cStateIdle = new State("Idle");
-	private State cStateMove = new State("Move");
-	private State cStateAttack = new State("Attack");
-	private State cStateDamage = new State("Damage");
-	private State cStateDie = new State("Die");
-	private bool bCanAttack = true;
-	private Vector3 vTargetPos;
-	private float fTargetDist = 99f;
-
-	private void Awake()
+	protected void Awake()
 	{
 		cStateMachine = GetComponent<StateMachine>();
 		cAnimator = GetComponent<Animator>();
@@ -31,19 +31,20 @@ public class MonsterCharacter : Character
 		StateInitializeOnStay();
 		StateInitializeOnExit();
 		ChangeState(cStateIdle);
+		cAgent.isStopped = true;
 	}
-	private void Start()
+	protected void Start()
 	{
 		StartCoroutine(SetTarget());
 	}
-	private void StateInitializeOnEnter()
+	protected virtual void StateInitializeOnEnter()
 	{
 		cStateIdle.onEnter = () => {
 			ChangeAnimation(cStateIdle.strStateName);
 		};
 		cStateMove.onEnter = () => {
 			ChangeAnimation(cStateMove.strStateName);
-			cAgent.isStopped = false;
+			Move();
 		};
 		cStateAttack.onEnter = () => {
 			ChangeAnimation(cStateAttack.strStateName);
@@ -56,7 +57,7 @@ public class MonsterCharacter : Character
 			ChangeAnimation(cStateDie.strStateName);
 		};
 	}
-	private void StateInitializeOnStay()
+	protected virtual void StateInitializeOnStay()
 	{
 		cStateIdle.onStay = () => {
 			if (fTargetDist >= fAttackDistance)
@@ -85,7 +86,7 @@ public class MonsterCharacter : Character
 			}
 		};
 	}
-	private void StateInitializeOnExit()
+	protected void StateInitializeOnExit()
 	{
 		cStateMove.onExit = () => {
 			cAgent.isStopped = true;
@@ -104,8 +105,13 @@ public class MonsterCharacter : Character
 			ChangeState(cStateMove);
 		}
 	}
+	public void EnableEffect()
+	{
+		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
+		objEffect.GetComponent<Effect>().OverlapBox(transform, fPower, 1 << 8);
+	}
 
-	private IEnumerator SetTarget()
+	protected IEnumerator SetTarget()
 	{
 		while (true)
 		{
@@ -115,7 +121,7 @@ public class MonsterCharacter : Character
 			yield return new WaitForSeconds(0.25f);
 		}
 	}
-	private IEnumerator AttackDelay()
+	protected IEnumerator AttackDelay()
 	{
 		bCanAttack = false;
 		float fWaitTime = Random.Range(fAttackDelayTime - 1f , fAttackDelayTime + 1f);
@@ -127,8 +133,6 @@ public class MonsterCharacter : Character
 		StartCoroutine(AttackDelay());
 		transform.LookAt(vTargetPos);
 		transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
-		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
-		objEffect.GetComponent<Effect>().OverlapBox(transform, fPower, 1 << 8);
 	}
 	public override void ChangeState(State cNextState)
 	{
@@ -144,7 +148,7 @@ public class MonsterCharacter : Character
 	}
 	public override void Move()
 	{
-
+		cAgent.isStopped = false;
 	}
 	public override void ChangeAnimation(string strTrigger)
 	{

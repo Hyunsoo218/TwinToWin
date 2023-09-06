@@ -16,20 +16,19 @@ public class Effect : MonoBehaviour
 		transform.localEulerAngles = Vector3.zero;
 		transform.SetParent(EffectManager.instance.transform);
 
-		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward) * vAttackAreaCenter + transform.position;
+		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
 
 		Collider[] arrOverlapObj = Physics.OverlapBox(vOverlapPos, vAttackAreaSize, transform.rotation, nTargetLayer);
 
-		foreach (Collider cItem in arrOverlapObj)
-		{
-			Character cTarget;
-			if (cItem.TryGetComponent<Character>(out cTarget))
-			{
-				cTarget.Damage(fDamage);
-			}
-		}
-
-
+		foreach (Collider cItem in arrOverlapObj)						  
+		{																  		   
+			Character cTarget;											  		   
+			if (cItem.TryGetComponent<Character>(out cTarget))			  		   
+			{															  		   
+				cTarget.Damage(fDamage);								  		   
+			}															  		   
+		}																  		   
+																								   
 		if (bPreviewOverlapArea)
 		{
 			GameObject objPreviewBox = Resources.Load<GameObject>("AttackAreaPreviewCube");
