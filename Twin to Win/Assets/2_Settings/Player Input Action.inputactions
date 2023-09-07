@@ -15,9 +15,36 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Skill",
+                    "name": "QSkill",
                     "type": "Button",
                     "id": "0eb4271c-dd28-4d73-bc2f-daf325fadd65",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WSkill",
+                    "type": "Button",
+                    "id": "1a622c6f-facc-44f2-8a0e-5406d14e7a35",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ESkill",
+                    "type": "Button",
+                    "id": "13a11b06-c19e-439a-bcea-d5209bb56a7b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RSkill",
+                    "type": "Button",
+                    "id": "531634d6-8345-4e9a-b2aa-0550b2c05995",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -67,43 +94,10 @@
                     "name": "",
                     "id": "928fb58b-5199-4509-88ed-93231f5870d8",
                     "path": "<Keyboard>/q",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "Game",
-                    "action": "Skill",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6c46d874-d8f2-475d-8918-2de5c95a2a3b",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Game",
-                    "action": "Skill",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2f306edb-2d8a-48df-ba31-84ef9b935fe7",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Game",
-                    "action": "Skill",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "de014eff-0354-4b40-b7bb-aedf57b55a96",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Game",
-                    "action": "Skill",
+                    "action": "QSkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -137,6 +131,39 @@
                     "processors": "",
                     "groups": "Game",
                     "action": "NormalAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "746cb694-b10f-482d-ae76-c6a52e2a5b22",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3b6fb3b-bef7-45dd-a437-ea1d99ed3a49",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ESkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "04925281-eec8-4f50-92df-870eb02b339a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RSkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

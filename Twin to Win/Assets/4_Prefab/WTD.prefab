@@ -857,6 +857,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ee8dc9e6-a513-4421-97d3-91df78e97f7b
     m_ActionName: PlayerActions/Dash[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b1226d63-86f2-417a-9607-6c531d3336b3
+    m_ActionName: PlayerActions/NormalAttack[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Game
   m_DefaultActionMap: PlayerActions
@@ -920,11 +924,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fHealthPoint: 0
-  fPower: 0
+  fPower: 3
   fMoveSpeed: 5
   fDodgePower: 30
   fDodgePlayTime: 0.1
   fDodgeCoolTime: 3
+  objAttackEffect: {fileID: 7777573416650849465, guid: aca93ad936975a34081c49b472a3c715,
+    type: 3}
 --- !u!114 &9077109073580241485
 MonoBehaviour:
   m_ObjectHideFlags: 0
