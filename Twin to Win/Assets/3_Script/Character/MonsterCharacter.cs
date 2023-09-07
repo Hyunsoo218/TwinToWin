@@ -66,6 +66,7 @@ public class MonsterCharacter : Character
 		cStateDamage.onEnter = () => {
 			ChangeAnimation(cStateDamage.strStateName);
 			cSMR.material = EffectManager.instance.mHitEffectRed;
+			//cSMR.material.SetTexture("_Texture", mDefaultMaterial.mainTexture);
 		};
 		cStateDie.onEnter = () => {
 			ChangeAnimation(cStateDie.strStateName);
