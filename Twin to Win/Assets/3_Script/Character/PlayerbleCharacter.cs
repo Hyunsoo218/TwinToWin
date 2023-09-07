@@ -182,7 +182,7 @@ public class PlayerbleCharacter : Character
     private void EnableEffect()
     {
         GameObject obj = EffectManager.instance.GetEffect(objAttackEffect);
-        obj.GetComponent<Effect>().OverlapBox(transform, fPower, 1 << 7);
+        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
     }
 
     public override void Attack()

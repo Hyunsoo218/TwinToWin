@@ -7,7 +7,6 @@ public class EffectManager : MonoBehaviour
 	public static EffectManager instance;
 
 	public Material mHitEffectRed;
-	public Material mHitEffectBlue;
 
 	[SerializeField] private List<Effect> arrPoolingEffect;
 

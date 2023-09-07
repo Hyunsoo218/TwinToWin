@@ -139,7 +139,7 @@ public class MonsterCharacter : Character
 	{
 		if (cStateMachine.GetCurrentState() != cStateAttack) return;
 		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
-		objEffect.GetComponent<Effect>().OverlapBox(transform, fPower, 1 << 8);
+		objEffect.GetComponent<Effect>().OnAction(transform, fPower, 1 << 8);
 	}
 
 	protected IEnumerator SetTarget()

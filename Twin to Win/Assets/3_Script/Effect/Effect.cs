@@ -4,45 +4,8 @@ using UnityEngine;
 
 public class Effect : MonoBehaviour
 {
-	[SerializeField] protected bool bPreviewOverlapArea;
 	[SerializeField] protected float fRunTime = 3f;
-	[SerializeField] protected Vector3 vAttackAreaCenter;
-	[SerializeField] protected Vector3 vAttackAreaSize;
-	public virtual void OverlapBox(Transform tUser, float fDamage, int nTargetLayer)
-	{
-		Invoke("InPool", fRunTime);
-		transform.SetParent(tUser);
-		transform.localPosition = Vector3.zero;
-		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
-
-		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
-
-		Collider[] arrOverlapObj = Physics.OverlapBox(vOverlapPos, vAttackAreaSize, transform.rotation, nTargetLayer);
-
-		foreach (Collider cItem in arrOverlapObj)						  
-		{																  		   
-			Character cTarget;											  		   
-			if (cItem.TryGetComponent<Character>(out cTarget))			  		   
-			{															  		   
-				cTarget.Damage(fDamage);
-				print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
-				// 지우지 마영 - 디버그용							  		   
-			}
-		}																  		   
-																								   
-		if (bPreviewOverlapArea)
-		{
-			GameObject objPreviewBox = Resources.Load<GameObject>("AttackAreaPreviewCube");
-			GameObject obj = Instantiate(objPreviewBox);
-			obj.transform.position = vOverlapPos;
-			obj.transform.rotation = transform.rotation;
-			obj.transform.localScale = vAttackAreaSize * 2f;
-			Destroy(obj, 1f);
-		}
-	}
-	protected virtual void InPool()
-	{
-		gameObject.SetActive(false);
-	}
+	protected void OnEnable() => Invoke("InPool", fRunTime); 
+	protected virtual void InPool() => gameObject.SetActive(false);
+	public virtual void OnAction(Transform tUser, float fDamage, int nTargetLayer) => print("함수를 오버라이드 하세요");
 }
