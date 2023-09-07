@@ -11,7 +11,8 @@ public class MonsterCharacter : Character
 	[SerializeField] protected float fAttackDistance;
 	[SerializeField] protected float fAttackDelayTime = 3f;
 	[SerializeField] protected GameObject objAttackEffectPrefab;
-	
+
+	protected SkinnedMeshRenderer cSMR;
 	protected NavMeshAgent cAgent;
 	protected State cStateIdle = new State("Idle");
 	protected State cStateMove = new State("Move");
@@ -21,9 +22,20 @@ public class MonsterCharacter : Character
 	protected bool bCanAttack = true;
 	protected Vector3 vTargetPos;
 	protected float fTargetDist = 99f;
+	protected Material mDefaultMaterial;
+	protected Coroutine coAttackDelay;
+
+	protected void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.I))
+		{
+			Damage(1f);
+		}
+	}
 
 	protected void Awake()
 	{
+		cSMR = GetComponentInChildren<SkinnedMeshRenderer>();
 		cStateMachine = GetComponent<StateMachine>();
 		cAnimator = GetComponent<Animator>();
 		cAgent = GetComponent<NavMeshAgent>();
@@ -31,10 +43,11 @@ public class MonsterCharacter : Character
 		StateInitializeOnStay();
 		StateInitializeOnExit();
 		ChangeState(cStateIdle);
-		cAgent.isStopped = true;
+		mDefaultMaterial = cSMR.material;
 	}
 	protected void Start()
 	{
+		cAgent.isStopped = true;
 		StartCoroutine(SetTarget());
 	}
 	protected virtual void StateInitializeOnEnter()
@@ -52,6 +65,7 @@ public class MonsterCharacter : Character
 		};
 		cStateDamage.onEnter = () => {
 			ChangeAnimation(cStateDamage.strStateName);
+			cSMR.material = EffectManager.instance.mHitEffectRed;
 		};
 		cStateDie.onEnter = () => {
 			ChangeAnimation(cStateDie.strStateName);
@@ -86,11 +100,26 @@ public class MonsterCharacter : Character
 			}
 		};
 	}
-	protected void StateInitializeOnExit()
+	protected virtual void StateInitializeOnExit()
 	{
 		cStateMove.onExit = () => {
 			cAgent.isStopped = true;
 			cAgent.velocity = Vector3.zero;
+		};
+		cStateDamage.onExit = () => {
+			cSMR.material = mDefaultMaterial;
+			if (coAttackDelay != null)
+			{
+				StopCoroutine(coAttackDelay);
+			}
+			coAttackDelay = StartCoroutine(AttackDelay());
+		};
+		cStateAttack.onExit = () => {
+			if (coAttackDelay != null)
+			{
+				StopCoroutine(coAttackDelay);
+			}
+			coAttackDelay = StartCoroutine(AttackDelay());
 		};
 	}
 
@@ -107,6 +136,7 @@ public class MonsterCharacter : Character
 	}
 	public void EnableEffect()
 	{
+		if (cStateMachine.GetCurrentState() != cStateAttack) return;
 		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
 		objEffect.GetComponent<Effect>().OverlapBox(transform, fPower, 1 << 8);
 	}
@@ -130,7 +160,6 @@ public class MonsterCharacter : Character
 	}
 	public override void Attack()
 	{
-		StartCoroutine(AttackDelay());
 		transform.LookAt(vTargetPos);
 		transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 	}
@@ -140,11 +169,21 @@ public class MonsterCharacter : Character
 	}
 	public override void Damage(float fAmount)
 	{
+		if (cStateMachine.GetCurrentState() == cStateDie) return;
 
+		fHealthPoint -= fAmount;
+		if (fHealthPoint <= 0)
+		{
+			Die();
+		}
+		else
+		{
+			ChangeState(cStateDamage);
+		}
 	}
 	public override void Die()
 	{
-
+		ChangeState(cStateDie);
 	}
 	public override void Move()
 	{

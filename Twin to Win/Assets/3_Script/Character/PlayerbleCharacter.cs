@@ -145,8 +145,7 @@ public class PlayerbleCharacter : Character
 
     public override void Damage(float fAmount)
     {
-		print($"{fAmount} 데미지 받음");
-		// 지우지 마영 - 디버그용
+
     }
 
     public override void Die()

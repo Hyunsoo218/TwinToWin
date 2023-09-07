@@ -6,6 +6,7 @@ public class RangedMonsterCharacter : MonsterCharacter
 {
 	[SerializeField] protected GameObject objCastingEffect;
 	protected State cStateCasting = new State("Idle");
+	protected Coroutine coCasting;
 
 	protected override void StateInitializeOnEnter()
 	{
@@ -13,7 +14,8 @@ public class RangedMonsterCharacter : MonsterCharacter
 
 		cStateCasting.onEnter = () => {
 			ChangeAnimation(cStateCasting.strStateName);
-			StartCoroutine(AttackCasting());
+			coCasting = StartCoroutine(AttackCasting());
+			objCastingEffect.SetActive(true);
 		};
 	}
 	protected override void StateInitializeOnStay()
@@ -49,11 +51,18 @@ public class RangedMonsterCharacter : MonsterCharacter
 			transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 		};
 	}
+	protected override void StateInitializeOnExit()
+	{
+		base.StateInitializeOnExit();
+
+		cStateCasting.onExit = () => {
+			objCastingEffect.SetActive(false);
+			StopCoroutine(coCasting);
+		};
+	}
 	private IEnumerator AttackCasting()
 	{
-		objCastingEffect.SetActive(true);
 		yield return new WaitForSeconds(3f);
-		objCastingEffect.SetActive(false);
 		ChangeState(cStateAttack);
 	}
 }
