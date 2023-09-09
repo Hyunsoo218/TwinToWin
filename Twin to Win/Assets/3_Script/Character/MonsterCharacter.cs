@@ -139,6 +139,7 @@ public class MonsterCharacter : Character
 	{
 		if (cStateMachine.GetCurrentState() != cStateAttack) return;
 		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
+		print(objEffect.GetComponent<Effect>());
 		objEffect.GetComponent<Effect>().OnAction(transform, fPower, 1 << 8);
 	}
 

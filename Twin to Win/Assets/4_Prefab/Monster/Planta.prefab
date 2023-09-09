@@ -350,7 +350,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7500100398300866363
 Transform:
   m_ObjectHideFlags: 0
@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dbedea37a24139499f0b585bd9e3c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fHealthPoint: 3
+  fHealthPoint: 100
   fPower: 1
   fAttackDistance: 2.5
   fAttackDelayTime: 2.2
