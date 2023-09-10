@@ -845,7 +845,28 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.3903509
+        functionName: EnableSkillEffect
+        data: QSkill
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.46052632
+        functionName: EnableSkillEffect
+        data: QSkill
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.53070176
+        functionName: EnableSkillEffect
+        data: QSkill
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -1129,6 +1150,13 @@ ModelImporter:
       events:
       - time: 1
         functionName: ReturnToIdle
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.11842101
+        functionName: EnableAttackEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
