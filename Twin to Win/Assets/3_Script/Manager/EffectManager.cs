@@ -6,8 +6,7 @@ public class EffectManager : MonoBehaviour
 {
 	public static EffectManager instance;
 
-	public Material mHitEffectRed;
-
+	[SerializeField] private Material mHitEffectRed;
 	[SerializeField] private List<Effect> arrPoolingEffect;
 
 	private Dictionary<GameObject, EffectPooler> dicPoolers = new Dictionary<GameObject, EffectPooler>();
@@ -29,5 +28,9 @@ public class EffectManager : MonoBehaviour
 			return dicPoolers[objPrefab].OutPool();
 		}
 		return Instantiate(objPrefab);
+	}
+	public Material GetHitEffect() 
+	{
+		return mHitEffectRed;
 	}
 }

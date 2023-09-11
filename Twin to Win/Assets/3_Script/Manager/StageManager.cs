@@ -7,20 +7,24 @@ using Unity.AI.Navigation;
 public class StageManager : MonoBehaviour
 {
 	public static StageManager instance;
-	[SerializeField] private NavMeshSurface cNMS;
+
+	[Header("런타입 맵 만들기")]
 	[SerializeField] private bool bMakeMapRuntime = false;
 	[SerializeField] private GameObject objMapTile;
 	[SerializeField] private float fTileStreets;
 	[SerializeField] private Vector2 vTileCount;
 	[SerializeField] private int nOneFrameCount;
-	private void Awake()
-	{
-		instance = this;
-		StartCoroutine(UpdateNavMesh());
-	}
+
+	[Header("런타입 맵 만들기")]
+	[SerializeField] private bool bUpdateNavMesh = false;
+	[SerializeField] private float fUpdateInterval = 0.5f;
+	[SerializeField] private NavMeshSurface cNMS;
+
+	private void Awake() => instance = this; 
 	private void Start()
 	{
 		if(bMakeMapRuntime) MakeMap();
+		if(bUpdateNavMesh) StartCoroutine(UpdateNavMesh());
 	}
 	private void MakeMap()
 	{
@@ -46,7 +50,11 @@ public class StageManager : MonoBehaviour
 		while (true)
 		{
 			cNMS.BuildNavMesh();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(fUpdateInterval);
 		}
+	}
+	public void UpdateNavMeshOne() 
+	{
+		cNMS.BuildNavMesh();
 	}
 }

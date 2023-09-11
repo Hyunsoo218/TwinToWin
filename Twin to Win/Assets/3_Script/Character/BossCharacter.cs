@@ -2,35 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossCharacter : Character
+public class BossCharacter : MonsterCharacter
 {
-	public override void Attack()
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public override void ChangeAnimation(string strTrigger)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public override void ChangeState(State cNextState)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public override void Damage(float fAmount)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public override void Die()
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public override void Move()
-	{
-		throw new System.NotImplementedException();
-	}
+	protected State cStateAttack2 = new State("Attack2");
+	protected State cStateAttack3 = new State("Attack3");
+	protected State cStateAttack4 = new State("Attack4");
 }
