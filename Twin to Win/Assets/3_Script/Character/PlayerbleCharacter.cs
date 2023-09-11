@@ -18,7 +18,7 @@ public enum mouseState
     버그 리스트
     =E스킬 사용하고 Q 광클하면 Q 두 번 실행 : 쿨타임 주면 해결
     =마우스 클릭 Hold 이동 절묘하게 느림
-    =정말 가끔 MoveCoroutine이 Null로 뜸 / Null이 뜨는 조건 모름 / 일단 null이면 모든 코루틴 정지시키고 idleState로 전환
+    =정말 가끔 MoveCoroutine이 Null로 뜸 / Null이 뜨는 조건 모름
     =W하고 E스킬 끝날 때 쯤 우클릭을 하면 스킬이 다시 안 써지는 버그 180번째 줄에 W스킬, E스킬 아닐 때를 지우면 되긴 하는데 대신 스킬 도중 이동이 가능함
 **/
 
@@ -32,6 +32,7 @@ public class PlayerbleCharacter : Character
 
     [Header("Attack Type Info")]
     public GameObject objAttackEffect;
+    public GameObject objRotationAttackEffect;
     public Skill srtQSkill;
     public Skill srtWSkill;
     public Skill srtESkill;
@@ -185,23 +186,24 @@ public class PlayerbleCharacter : Character
                 mousePosOnGround = GetPositionOnGround();
                 transform.localRotation = GetMouseAngle();
 
-                if (isMoving)
+                try
                 {
-                    StopCoroutine(moveCoroutine);
+                    if (isMoving)
+                    {
+                        StopCoroutine(moveCoroutine);
+                    }
+                }
+                catch (Exception e)
+                {
+                    moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
                 }
                 moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
 
-                if (moveCoroutine == null)
-                {
-                    StopAllCoroutines();
-                    cStateMachine.ChangeState(cIdleState);
-                }
                 fMouseTimer = 0f;
                 eMouseState = mouseState.None;
                 break;
             case mouseState.Hold:
                 isMoving = true;
-
                 if (cStateMachine.GetCurrentState() == cMoveState && 
                     cStateMachine.GetCurrentState() != cWSkill &&
                     cStateMachine.GetCurrentState() != cESkill)

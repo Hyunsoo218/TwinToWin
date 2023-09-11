@@ -253,15 +253,51 @@ MonoBehaviour:
     m_ActionId: fc1f8cdc-cf83-4f1d-a1bf-4d7eacfd17cf
     m_ActionName: PlayerActions/Move[/Mouse/rightButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 606726620310084395}
+        m_TargetAssemblyTypeName: WGSPlayableCharacter, Assembly-CSharp
+        m_MethodName: OnQSkill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 0eb4271c-dd28-4d73-bc2f-daf325fadd65
     m_ActionName: PlayerActions/QSkill[/Keyboard/q]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 606726620310084395}
+        m_TargetAssemblyTypeName: WGSPlayableCharacter, Assembly-CSharp
+        m_MethodName: OnWSkill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 1a622c6f-facc-44f2-8a0e-5406d14e7a35
     m_ActionName: PlayerActions/WSkill[/Keyboard/w]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 606726620310084395}
+        m_TargetAssemblyTypeName: WGSPlayableCharacter, Assembly-CSharp
+        m_MethodName: OnESkill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 13a11b06-c19e-439a-bcea-d5209bb56a7b
     m_ActionName: PlayerActions/ESkill[/Keyboard/e]
   - m_PersistentCalls:
@@ -394,20 +430,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fHealthPoint: 0
-  fPower: 0
+  fPower: 3
   fMoveSpeed: 3
   fDodgePower: 30
   fDodgePlayTime: 0.1
   fDodgeCoolTime: 3
-  objAttackEffect: {fileID: 0}
+  objAttackEffect: {fileID: 7777573416650849465, guid: d05e0fcf47b191c45bf784f0717dad6b,
+    type: 3}
+  objRotationAttackEffect: {fileID: 7777573416650849465, guid: b6b8143a30683f2469e4153318f661e3,
+    type: 3}
   srtQSkill:
-    objSkillEffect: {fileID: 0}
+    objSkillEffect: {fileID: 7777573416650849465, guid: a469e878a67a7f345baa80a738bfd066,
+      type: 3}
     fSkillCoolDown: 0
     fMoveTimeOnBySkill: 0
   srtWSkill:
-    objSkillEffect: {fileID: 0}
+    objSkillEffect: {fileID: 7777573416650849465, guid: 87b856fa9bc0bfa42919f2ec05de56b5,
+      type: 3}
     fSkillCoolDown: 0
-    fMoveTimeOnBySkill: 0
+    fMoveTimeOnBySkill: 0.2
   srtESkill:
     objSkillEffect: {fileID: 0}
     fSkillCoolDown: 0

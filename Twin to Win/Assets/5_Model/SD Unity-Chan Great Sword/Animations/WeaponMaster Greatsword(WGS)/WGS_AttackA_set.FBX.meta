@@ -837,6 +837,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.5117188
+        functionName: EnableAttackEffect
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -1127,6 +1134,13 @@ ModelImporter:
         messageOptions: 0
       - time: 1
         functionName: EnableNextAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4440104
+        functionName: EnableAttackEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -1427,6 +1441,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.5690103
+        functionName: EnableAttackEffect
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -1722,6 +1743,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.6028646
+        functionName: EnableAttackEffect
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -2005,6 +2033,13 @@ ModelImporter:
       events:
       - time: 0
         functionName: DisableNextAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5940594
+        functionName: EnableRotationAttackEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -12,6 +12,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         base.Awake();
         InitalizeLeftMouseState();
+        InitalizeESkillButton();
+        Initialize();
     }
     protected override void FixedUpdate()
     {
@@ -20,6 +22,10 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     }
 
     #region init
+    private new void Initialize()
+    {
+        eSkillAction = GetComponent<PlayerInput>().actions["ESkill"];
+    }
     protected override void StateInitalizeOnEnter()
     {
         base.StateInitalizeOnEnter();
@@ -54,6 +60,30 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             }
         };
     }
+
+    private void InitalizeESkillButton()
+    {
+        eSkillAction.started += ctx =>
+        {
+            if (fESkillTimer <= 0f && cStateMachine.GetCurrentState() != cESkill && cStateMachine.GetCurrentState() != cDodgeState)
+            {
+                cStateMachine.ChangeState(cESkill);
+                StartCoroutine(StartESkillCoolDown());
+            }
+        };
+        eSkillAction.performed += ctx =>
+        {
+            if (cStateMachine.GetCurrentState() == cESkill)
+            {
+                isDoingESkill = true;
+            }
+            
+        };
+        eSkillAction.canceled += ctx =>
+        {
+            isDoingESkill = false;
+        };
+    }
     #endregion
 
     #region QSkill
@@ -67,9 +97,10 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     #region ESKill
     private float fESkillTimer = 0f;
-    private float fParabolaTimer = 0f;
-    private float fFreeFallTimer = 0f;
-    private float parabolaHeight = 0f;
+    private float fESkillHoldTime = 5f;
+    private bool isDoingESkill = false;
+
+    InputAction eSkillAction;
     #endregion
 
     #region Normal Attack Part
@@ -84,6 +115,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     private void EnableAttackEffect()
     {
         GameObject obj = EffectManager.instance.GetEffect(objAttackEffect);
+        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
+    }
+
+    private void EnableRotationAttackEffect()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(objRotationAttackEffect);
         obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
     }
 
@@ -103,10 +140,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (cStateMachine.GetCurrentState() == cNormalAttack[nNormalAttackCount] && fNormalAttackCancelTimer < fNormalAttackCancelTime)
         {
-            EnableAttackEffect();
-            print(nNormalAttackCount);
             nNormalAttackCount = nNormalAttackCount < cNormalAttack.Length - 1 ? ++nNormalAttackCount : 0;
-            
         }
     }
 
@@ -137,6 +171,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         normalAttackCancelTimer = StartCoroutine(StartNormalAttackCancelTimer());
         canNextAttack = true;
     }
+
+
 
     private IEnumerator StartNormalAttackCancelTimer()
     {
@@ -209,17 +245,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #endregion
 
     #region ESkill Part
-    public void OnESkill(InputAction.CallbackContext context)
-    {
-        if (context.started && fESkillTimer <= 0f &&
-            cStateMachine.GetCurrentState() != cESkill &&
-            cStateMachine.GetCurrentState() != cDodgeState)
-        {
-            eMouseState = mouseState.None;
-            cStateMachine.ChangeState(cESkill);
-            StartCoroutine(StartESkillCoolDown());
-        }
-    }
 
     private IEnumerator StartESkillCoolDown()
     {
