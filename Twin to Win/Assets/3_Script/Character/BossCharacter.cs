@@ -194,6 +194,12 @@ public class BossCharacter : MonsterCharacter
 	public override void EnableEffect()
 	{
 		State cCurrentState = cStateMachine.GetCurrentState();
+
+		if (cCurrentState == cStateAttack3)
+		{
+			StartCoroutine(Attack3Move());
+		}
+
 		GameObject objEffect = EffectManager.instance.GetEffect(dAttackEffects[cCurrentState]);
 		objEffect.GetComponent<Effect>().OnAction(transform, fPower, 1 << 8);
 	}
@@ -205,5 +211,14 @@ public class BossCharacter : MonsterCharacter
 			tRoot.localEulerAngles = new Vector3(0, tRoot.localEulerAngles.y, 0);
 			yield return null;
 		}
+	}
+	private IEnumerator Attack3Move() 
+	{
+		float fDefaultSpeed = cAgent.speed;
+		cAgent.isStopped = false;
+		cAgent.speed = 2f;
+		yield return new WaitForSeconds(3.8f);
+		cAgent.isStopped = true;
+		cAgent.speed = fDefaultSpeed;
 	}
 }

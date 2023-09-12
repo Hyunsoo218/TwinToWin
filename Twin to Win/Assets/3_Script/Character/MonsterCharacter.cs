@@ -166,7 +166,6 @@ public class MonsterCharacter : Character
 	}
 	public override void ChangeState(State cNextState)
 	{
-		print(cNextState.strStateName + " 으로 변경");
 		cStateMachine.ChangeState(cNextState);
 	}
 	public override void Damage(float fAmount)

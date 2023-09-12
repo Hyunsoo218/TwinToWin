@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossAttackEffect : Effect
+public class BossAttackEffect2 : Effect
 {
-	[SerializeField] private Transform tProjectile;
-	[SerializeField] private float fSpeed = 1f;
+	[SerializeField] private bool bPreviewOverlapArea;
+	[SerializeField] private Vector3 vAttackAreaCenter;
+	[SerializeField] private Vector3 vAttackAreaSize;
 	[SerializeField] private List<Transform> arrExplosionPos;
+
 	private Animator cAnimator;
 	private int nExplosionCount = 0;
 	private Transform tUser;
@@ -29,31 +31,37 @@ public class BossAttackEffect : Effect
 		transform.SetParent(EffectManager.instance.transform);
 		transform.localScale = Vector3.one;
 
-		string strAnimationTrigger = "Action";
 		if (GameManager.instance.phase == Phase.Phase_3)
 		{
-			strAnimationTrigger += "Enhance";
+			cAnimator.SetTrigger("Action");
 		}
-		cAnimator.SetTrigger(strAnimationTrigger);
-		StartCoroutine(MoveToTarget());
-	}
-	private IEnumerator MoveToTarget()
-	{
-		Vector3 v3CurrtPos = tProjectile.position;
-		Vector3 v3TargetPos = Player.instance.cCurrentCharacter.transform.position;
 
-		float runTime = 0;
-		float duration = 0.5f;
+		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
 
-		while (runTime < duration)
+		Collider[] arrOverlapObj = Physics.OverlapBox(vOverlapPos, vAttackAreaSize, transform.rotation, nTargetLayer);
+
+		foreach (Collider cItem in arrOverlapObj)
 		{
-			runTime += Time.deltaTime * fSpeed;
+			Character cTarget;
+			if (cItem.TryGetComponent<Character>(out cTarget))
+			{
+				cTarget.Damage(fDamage);
+				print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
+				// 지우지 마영 - 디버그용							  		   
+			}
+		}
 
-			transform.position = Vector3.Lerp(v3CurrtPos, v3TargetPos, runTime / duration);
-
-			yield return null;
+		if (bPreviewOverlapArea)
+		{
+			GameObject objPreviewBox = Resources.Load<GameObject>("AttackAreaPreviewCube");
+			GameObject obj = Instantiate(objPreviewBox);
+			obj.transform.position = vOverlapPos;
+			obj.transform.rotation = transform.rotation;
+			obj.transform.localScale = vAttackAreaSize * 2f;
+			Destroy(obj, 1f);
 		}
 	}
+
 	public void Explosion()
 	{
 		nExplosionCount++;
@@ -76,7 +84,7 @@ public class BossAttackEffect : Effect
 				break;
 		}
 	}
-	private void Overlap(Collider[] colliders) 
+	private void Overlap(Collider[] colliders)
 	{
 		foreach (Collider cItem in colliders)
 		{

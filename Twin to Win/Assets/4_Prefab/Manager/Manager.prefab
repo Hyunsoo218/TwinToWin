@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48e47a7d4bc07842a832b542207b27b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phase: 2
 --- !u!1 &1011833673370785961
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,7 +250,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.1
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 098607ebed09179489303f90fa877b18, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 07f9ee6ce6bef5e40b5c145497587114, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &8159236477865806914
 GameObject:
@@ -305,6 +306,10 @@ MonoBehaviour:
   - {fileID: 2693961796067131716, guid: 01e7965eb18c62741ae9970e6302150e, type: 3}
   - {fileID: -8634980223408089325, guid: aca93ad936975a34081c49b472a3c715, type: 3}
   - {fileID: 8121968699358968873, guid: a60bcfa9ddb0b8c4ca68834a07217331, type: 3}
+  - {fileID: 2358189516344334462, guid: 1f0538cd171205941bb42071e60535bf, type: 3}
+  - {fileID: -3801076766836563789, guid: 39fc2f1769f0bf94cacb28eb14286e32, type: 3}
+  - {fileID: 787443662629142343, guid: 6d9b517b72a373d4fb5dab44f3aea870, type: 3}
+  - {fileID: 5473576151427780951, guid: 3f8b9941e7e420c4e9720c7e991131f9, type: 3}
 --- !u!1 &9105482457195319717
 GameObject:
   m_ObjectHideFlags: 0
