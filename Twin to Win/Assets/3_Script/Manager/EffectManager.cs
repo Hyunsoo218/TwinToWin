@@ -18,7 +18,7 @@ public class EffectManager : MonoBehaviour
 		{
 			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
 			dicPoolers.Add(item.gameObject, cAddPooler);
-			print(item.gameObject.name + " 熱君 持失");
+			//print(item.gameObject.name + " 熱君 持失");
 		}
 	}
 	public GameObject GetEffect(GameObject objPrefab)

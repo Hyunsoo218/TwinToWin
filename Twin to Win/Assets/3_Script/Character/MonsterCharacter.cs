@@ -33,7 +33,7 @@ public class MonsterCharacter : Character
 		}
 	}
 
-	protected void Awake()
+	protected virtual void Awake()
 	{
 		cSMR = GetComponentInChildren<SkinnedMeshRenderer>();
 		cStateMachine = GetComponent<StateMachine>();
@@ -134,21 +134,21 @@ public class MonsterCharacter : Character
 			ChangeState(cStateMove);
 		}
 	}
-	public void EnableEffect()
+	public virtual void EnableEffect()
 	{
 		if (cStateMachine.GetCurrentState() != cStateAttack) return;
 		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
-		print(objEffect.GetComponent<Effect>());
 		objEffect.GetComponent<Effect>().OnAction(transform, fPower, 1 << 8);
 	}
 
-	protected IEnumerator SetTarget()
+	protected virtual IEnumerator SetTarget()
 	{
 		while (true)
 		{
 			vTargetPos = Player.instance.cCurrentCharacter.transform.position;
 			cAgent.SetDestination(vTargetPos);
 			fTargetDist = Vector3.Distance(transform.position, vTargetPos);
+			UIManager.instance.DebugLog($"거리 - {fTargetDist}");
 			yield return new WaitForSeconds(0.25f);
 		}
 	}
@@ -166,6 +166,7 @@ public class MonsterCharacter : Character
 	}
 	public override void ChangeState(State cNextState)
 	{
+		print(cNextState.strStateName + " 으로 변경");
 		cStateMachine.ChangeState(cNextState);
 	}
 	public override void Damage(float fAmount)

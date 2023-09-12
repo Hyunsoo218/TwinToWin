@@ -6,6 +6,7 @@ using System;
 public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
+	public Phase phase;
 	private Queue<Action> qAsynchronousAction = new Queue<Action>();
 	private void Awake()
 	{
@@ -27,4 +28,11 @@ public class GameManager : MonoBehaviour
 			}
 		}
 	}
+}
+
+public enum Phase
+{
+	Phase_1,
+	Phase_2,
+	Phase_3
 }
