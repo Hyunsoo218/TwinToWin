@@ -11,9 +11,9 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     protected override void Awake()
     {
         base.Awake();
+        Initialize();
         InitalizeLeftMouseState();
         InitalizeESkillButton();
-        Initialize();
     }
     protected override void FixedUpdate()
     {
@@ -24,7 +24,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #region init
     private new void Initialize()
     {
-        eSkillAction = GetComponent<PlayerInput>().actions["ESkill"];
+        eSkillAction = GetComponent<PlayerInput>().actions["WGSESkill"];
     }
     protected override void StateInitalizeOnEnter()
     {
@@ -65,23 +65,26 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         eSkillAction.started += ctx =>
         {
-            if (fESkillTimer <= 0f && cStateMachine.GetCurrentState() != cESkill && cStateMachine.GetCurrentState() != cDodgeState)
+            if (fESkillTimer <= 0f && EnableESkill() == true)
             {
                 cStateMachine.ChangeState(cESkill);
-                StartCoroutine(StartESkillCoolDown());
             }
         };
         eSkillAction.performed += ctx =>
         {
-            if (cStateMachine.GetCurrentState() == cESkill)
+            if (cStateMachine.GetCurrentState() == cESkill && isDoingHoldESkill == false)
             {
-                isDoingESkill = true;
+                isDoingHoldESkill = true;
+                StartCoroutine(StartESkillHoldTimer());
             }
-            
         };
         eSkillAction.canceled += ctx =>
         {
-            isDoingESkill = false;
+            if (cStateMachine.GetCurrentState() == cESkill)
+            {
+                StartCoroutine(StartESkillCoolDown());
+                StopESkill();
+            }
         };
     }
     #endregion
@@ -97,8 +100,9 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     #region ESKill
     private float fESkillTimer = 0f;
-    private float fESkillHoldTime = 5f;
-    private bool isDoingESkill = false;
+    private float fESkillHoldTime = 3f;
+    private float fESkillHoldTimer = 0f;
+    private bool isDoingHoldESkill = false;
 
     InputAction eSkillAction;
     #endregion
@@ -198,10 +202,23 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     }
     #endregion
 
+    private bool EnableQSkill()
+    {
+        return cStateMachine.GetCurrentState() != cQSkill && cStateMachine.GetCurrentState() != cESkill;
+    }
+    private bool EnableWSkill()
+    {
+        return cStateMachine.GetCurrentState() != cWSkill && cStateMachine.GetCurrentState() != cESkill;
+    }
+    private bool EnableESkill()
+    {
+        return cStateMachine.GetCurrentState() != cESkill && cStateMachine.GetCurrentState() != cDodgeState;
+    }
+
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
     {
-        if (context.started && fQSkillTimer <= 0f && cStateMachine.GetCurrentState() != cQSkill)
+        if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
             eMouseState = mouseState.None;
             cStateMachine.ChangeState(cQSkill);
@@ -223,7 +240,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #region WSkill Part
     public void OnWSkill(InputAction.CallbackContext context)
     {
-        if (context.started && fWSkillTimer <= 0f && cStateMachine.GetCurrentState() != cWSkill)
+        if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
             eMouseState = mouseState.None;
             cStateMachine.ChangeState(cWSkill);
@@ -246,6 +263,26 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     #region ESkill Part
 
+    private IEnumerator StartESkillHoldTimer()
+    {
+        while (fESkillHoldTime > fESkillHoldTimer && isDoingHoldESkill == true)
+        {
+            Vector3 mousePosOnVirtualGround = GetPositionOnVirtualGround();
+            transform.localRotation = GetMouseAngle();
+            transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * 3f);
+            fESkillHoldTimer += Time.deltaTime;
+            yield return null;
+        }
+        StopESkill();
+    }
+
+    private void StopESkill()
+    {
+        isDoingHoldESkill = false;
+        cStateMachine.ChangeState(cToStand);
+        fESkillHoldTimer = 0f;
+    }
+
     private IEnumerator StartESkillCoolDown()
     {
         while (fESkillTimer < srtESkill.fSkillCoolDown)
@@ -255,8 +292,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         }
         fESkillTimer = 0f;
     }
-
-
     #endregion
 
 }

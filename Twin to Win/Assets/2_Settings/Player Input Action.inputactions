@@ -33,9 +33,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ESkill",
+                    "name": "WTDESkill",
                     "type": "Button",
                     "id": "13a11b06-c19e-439a-bcea-d5209bb56a7b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WGSESkill",
+                    "type": "Button",
+                    "id": "5960058a-f327-4ecb-809a-9c7a984dad08",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -149,10 +158,10 @@
                     "name": "",
                     "id": "b3b6fb3b-bef7-45dd-a437-ea1d99ed3a49",
                     "path": "<Keyboard>/e",
-                    "interactions": "Press,Hold(duration=0.1,pressPoint=0.1)",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
-                    "action": "ESkill",
+                    "action": "WTDESkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -164,6 +173,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "RSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e672abdd-4257-4f95-a035-9f161f152500",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WGSESkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

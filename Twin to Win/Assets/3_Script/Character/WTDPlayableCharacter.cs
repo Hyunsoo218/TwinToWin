@@ -154,10 +154,23 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     }
     #endregion
 
+    private bool EnableQSkill()
+    {
+        return cStateMachine.GetCurrentState() != cQSkill;
+    }
+    private bool EnableWSkill()
+    {
+        return cStateMachine.GetCurrentState() != cWSkill;
+    }
+    private bool EnableESkill()
+    {
+        return cStateMachine.GetCurrentState() != cESkill && cStateMachine.GetCurrentState() != cDodgeState;
+    }
+
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
     {
-        if (context.started && fQSkillTimer <= 0f && cStateMachine.GetCurrentState() != cQSkill)
+        if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
             eMouseState = mouseState.None;
             cStateMachine.ChangeState(cQSkill);
@@ -179,7 +192,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #region WSkill Part
     public void OnWSkill(InputAction.CallbackContext context)
     {
-        if (context.started && fWSkillTimer <= 0f && cStateMachine.GetCurrentState() != cWSkill)
+        if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
             eMouseState = mouseState.None;
             cStateMachine.ChangeState(cWSkill);
@@ -204,9 +217,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     public void OnESkill(InputAction.CallbackContext context)
     {
 
-        if (context.started && fESkillTimer <= 0f &&
-            cStateMachine.GetCurrentState() != cESkill &&
-            cStateMachine.GetCurrentState() != cDodgeState)
+        if (context.started && fESkillTimer <= 0f && EnableESkill() == true)
         {
             eMouseState = mouseState.None;
             cStateMachine.ChangeState(cESkill);

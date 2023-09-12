@@ -20,6 +20,8 @@ public enum mouseState
     =마우스 클릭 Hold 이동 절묘하게 느림
     =정말 가끔 MoveCoroutine이 Null로 뜸 / Null이 뜨는 조건 모름
     =W하고 E스킬 끝날 때 쯤 우클릭을 하면 스킬이 다시 안 써지는 버그 180번째 줄에 W스킬, E스킬 아닐 때를 지우면 되긴 하는데 대신 스킬 도중 이동이 가능함
+
+    !@#$ 땅바닥을 그냥 넓게 해서 움직이게 할건지 아니면 바닥을 분리해서 움직이게 할건지 결정해야 함
 **/
 
 public class PlayerbleCharacter : Character
@@ -46,12 +48,16 @@ public class PlayerbleCharacter : Character
         Initialize();
         StateInitalizeOnEnter();
         InitializeRightMouseState();
+
     }
 
     protected virtual void FixedUpdate()
     {
+        //print(cStateMachine.GetCurrentState().strStateName);
+        print("mouse : " + eMouseState);
         Move();
         Dodge();
+        print(fDistanceToPlane);
     }
 
     #region State
@@ -69,15 +75,14 @@ public class PlayerbleCharacter : Character
     private float fMouseTimer;
     private float fDistanceToPlane;
 
-    private bool isMoving = false;
+    protected bool isMoving = false;
 
     Coroutine moveCoroutine;
     InputAction moveAction;
     protected mouseState eMouseState;
 
-    Plane virtualGround = new Plane(Vector3.up, 0);
-    private Vector3 mousePosOnVirtualGround;
-    private Vector3 mousePosOnGround;
+    protected Vector3 mousePosOnVirtualGround;
+    protected Vector3 mousePosOnGround;
     #endregion
 
     #region Dodge
@@ -145,7 +150,7 @@ public class PlayerbleCharacter : Character
         };
         moveAction.performed += ctx =>
         {
-            if (fMouseTimer >= 0.1f && eMouseState == mouseState.None)
+            if (fMouseTimer >= 0.2f && eMouseState == mouseState.None)
             {
                 eMouseState = mouseState.Hold;
             }
@@ -171,31 +176,24 @@ public class PlayerbleCharacter : Character
     #region Move Part
     public override void Move()
     {
-        IncreaseMousePressTime();
+        StartMousePressTimer();
 
         switch (eMouseState)
         {
             case mouseState.Click:
-                if (cStateMachine.GetCurrentState() != cMoveState && 
-                    cStateMachine.GetCurrentState() != cDodgeState && 
+                mousePosOnGround = GetPositionOnGround();
+                transform.localRotation = GetMouseAngle();
+
+                if (cStateMachine.GetCurrentState() != cMoveState &&
+                    cStateMachine.GetCurrentState() != cDodgeState &&
                     cStateMachine.GetCurrentState() != cWSkill &&
                     cStateMachine.GetCurrentState() != cESkill)
                 {
                     cStateMachine.ChangeState(cMoveState);
                 }
-                mousePosOnGround = GetPositionOnGround();
-                transform.localRotation = GetMouseAngle();
-
-                try
+                if (isMoving)
                 {
-                    if (isMoving)
-                    {
-                        StopCoroutine(moveCoroutine);
-                    }
-                }
-                catch (Exception e)
-                {
-                    moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
+                    StopCoroutine(moveCoroutine);
                 }
                 moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
 
@@ -204,19 +202,18 @@ public class PlayerbleCharacter : Character
                 break;
             case mouseState.Hold:
                 isMoving = true;
-                if (cStateMachine.GetCurrentState() == cMoveState && 
+                if (cStateMachine.GetCurrentState() == cMoveState &&
                     cStateMachine.GetCurrentState() != cWSkill &&
                     cStateMachine.GetCurrentState() != cESkill)
                 {
                     mousePosOnVirtualGround = GetPositionOnVirtualGround();
-
                     transform.localRotation = GetMouseAngle();
                     transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
                 }
                 break;
         }
     }
-    private void IncreaseMousePressTime()
+    private void StartMousePressTimer()
     {
         if (moveAction.IsPressed())
         {
@@ -369,17 +366,20 @@ public class PlayerbleCharacter : Character
         }
     }
 
-    private Vector3 GetPositionOnVirtualGround()
+    protected Vector3 GetPositionOnVirtualGround()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Vector3 pos = Vector3.one;
-        if (virtualGround.Raycast(ray, out fDistanceToPlane))
-        {
-            pos = ray.GetPoint(fDistanceToPlane);
-        }
+        Ray ray;
+        RaycastHit hit;
+        Vector3 pos = Vector3.zero;
+
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, 100f, 1 << 9))
+            pos = hit.point;
+
         return pos;
     }
-    private Vector3 GetPositionOnGround()
+    protected Vector3 GetPositionOnGround()
     {
         Ray ray;
         RaycastHit hit;
@@ -394,7 +394,7 @@ public class PlayerbleCharacter : Character
 
         return pos;
     }
-    private Quaternion GetMouseAngle()
+    protected Quaternion GetMouseAngle()
     {
         double angle = Math.Atan2(GetMouseNormalizedXPosition(), GetMouseNormalizedYPosition()) * 180 / Math.PI;
         double targetAngle = angle < 0f ? angle + 360f : angle;
