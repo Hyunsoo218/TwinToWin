@@ -115,7 +115,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         if (fNormalAttackCancelTimer >= fNormalAttackCancelTime - 0.05f)
         {
-            ReturnToIdle();
+            ReturnToIdleWithHold();
         }
     }
 

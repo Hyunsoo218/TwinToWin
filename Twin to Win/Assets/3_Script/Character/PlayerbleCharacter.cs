@@ -54,10 +54,9 @@ public class PlayerbleCharacter : Character
     protected virtual void FixedUpdate()
     {
         //print(cStateMachine.GetCurrentState().strStateName);
-        print("mouse : " + eMouseState);
+        //print("mouse : " + eMouseState);
         Move();
         Dodge();
-        print(fDistanceToPlane);
     }
 
     #region State
@@ -72,9 +71,6 @@ public class PlayerbleCharacter : Character
     #endregion
 
     #region Move
-    private float fMouseTimer;
-    private float fDistanceToPlane;
-
     protected bool isMoving = false;
 
     Coroutine moveCoroutine;
@@ -141,29 +137,30 @@ public class PlayerbleCharacter : Character
 
     protected void InitializeRightMouseState()
     {
-        moveAction.started += ctx =>
-        {
-            if (eMouseState == mouseState.Hold == false && eMouseState == mouseState.None)
-            {
-                eMouseState = mouseState.Click;
-            }
-        };
         moveAction.performed += ctx =>
         {
-            if (fMouseTimer >= 0.2f && eMouseState == mouseState.None)
+            if (cStateMachine.GetCurrentState() != cWSkill &&
+                cStateMachine.GetCurrentState() != cESkill)
             {
+                isMoving = true;
+                cStateMachine.ChangeState(cMoveState);
                 eMouseState = mouseState.Hold;
             }
-
         };
         moveAction.canceled += ctx =>
         {
-            if (eMouseState == mouseState.Hold)
-                isMoving = false;
-
-            if (isMoving == false)
+            if (eMouseState == mouseState.None &&
+                cStateMachine.GetCurrentState() != cDodgeState &&
+                cStateMachine.GetCurrentState() != cWSkill &&
+                cStateMachine.GetCurrentState() != cESkill)
             {
-                fMouseTimer = 0f;
+                isMoving = true;
+                eMouseState = mouseState.Click;
+                cStateMachine.ChangeState(cMoveState);
+            }
+            if (eMouseState == mouseState.Hold)
+            {
+                isMoving = false;
                 eMouseState = mouseState.None;
                 cStateMachine.ChangeState(cToStand);
             }
@@ -176,67 +173,45 @@ public class PlayerbleCharacter : Character
     #region Move Part
     public override void Move()
     {
-        StartMousePressTimer();
-
         switch (eMouseState)
         {
             case mouseState.Click:
-                mousePosOnGround = GetPositionOnGround();
-                transform.localRotation = GetMouseAngle();
-
-                if (cStateMachine.GetCurrentState() != cMoveState &&
-                    cStateMachine.GetCurrentState() != cDodgeState &&
-                    cStateMachine.GetCurrentState() != cWSkill &&
-                    cStateMachine.GetCurrentState() != cESkill)
-                {
-                    cStateMachine.ChangeState(cMoveState);
-                }
-                if (isMoving)
+                if (moveCoroutine != null)
                 {
                     StopCoroutine(moveCoroutine);
                 }
+                mousePosOnGround = GetPositionOnGround();
+                transform.localRotation = GetMouseAngle();
                 moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
-
-                fMouseTimer = 0f;
                 eMouseState = mouseState.None;
                 break;
             case mouseState.Hold:
-                isMoving = true;
-                if (cStateMachine.GetCurrentState() == cMoveState &&
-                    cStateMachine.GetCurrentState() != cWSkill &&
-                    cStateMachine.GetCurrentState() != cESkill)
+                if (moveCoroutine != null)
                 {
-                    mousePosOnVirtualGround = GetPositionOnVirtualGround();
-                    transform.localRotation = GetMouseAngle();
-                    transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
+                    StopCoroutine(moveCoroutine);
                 }
+                mousePosOnVirtualGround = GetPositionOnVirtualGround();
+                transform.localRotation = GetMouseAngle();
+                transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
                 break;
-        }
-    }
-    private void StartMousePressTimer()
-    {
-        if (moveAction.IsPressed())
-        {
-            fMouseTimer += Time.deltaTime;
         }
     }
 
     private IEnumerator MoveCoroutine(Vector3 mousePosOnGround)
     {
-        isMoving = true;
-        while (eMouseState != mouseState.Hold && cStateMachine.GetCurrentState() == cMoveState)
+        while (cStateMachine.GetCurrentState() == cMoveState)
         {
             if (Vector3.Distance(transform.position, mousePosOnGround) <= 0.1f)
             {
-                cStateMachine.ChangeState(cToStand);
                 isMoving = false;
+                eMouseState = mouseState.None;
+                cStateMachine.ChangeState(cToStand);
                 yield break;
             }
             transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
 
             yield return null;
         }
-        isMoving = false;
     }
     #endregion
 
@@ -345,6 +320,10 @@ public class PlayerbleCharacter : Character
     }
 
     protected void ReturnToIdle()
+    {
+        cStateMachine.ChangeState(cIdleState);
+    }
+    protected void ReturnToIdleWithHold()
     {
         cStateMachine.ChangeState(cIdleState);
         KeepHoldMove();

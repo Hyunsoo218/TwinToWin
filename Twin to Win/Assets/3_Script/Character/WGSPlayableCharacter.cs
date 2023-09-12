@@ -161,7 +161,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (fNormalAttackCancelTimer >= fNormalAttackCancelTime - 0.05f)
         {
-            ReturnToIdle();
+            ReturnToIdleWithHold();
         }
     }
 
