@@ -1946,7 +1946,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.39915967
+        functionName: EnableSkillEffect
+        data: ESkill
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -2230,6 +2237,13 @@ ModelImporter:
       events:
       - time: 1
         functionName: ReturnToIdleWithHold
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.062992096
+        functionName: EnableAttackEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

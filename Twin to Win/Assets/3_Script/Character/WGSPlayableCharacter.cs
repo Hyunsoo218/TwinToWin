@@ -7,12 +7,10 @@ using UnityEngine.InputSystem;
 
 public class WGSPlayableCharacter : PlayerbleCharacter
 {
-    private State[] cNormalAttack = new State[5] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3"), new State("normalAttack4"), new State("normalAttack5") };
     protected override void Awake()
     {
         base.Awake();
         Initialize();
-        InitalizeLeftMouseState();
         InitalizeESkillButton();
     }
     protected override void FixedUpdate()
@@ -36,30 +34,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         cNormalAttack[4].onEnter += () => { ChangeAnimation(cNormalAttack[4].strStateName); };
     }
 
-    private void InitalizeLeftMouseState()
-    {
-        normalAttackAction.started += ctx =>
-        {
-            if (fNormalAttackCancelTimer > 0f)
-            {
-                fNormalAttackCancelTimer = 0f;
-                canResetDuringCancelTime = true;
-            }
 
-            if (eMouseState != mouseState.Hold &&
-                cStateMachine.GetCurrentState() != cNormalAttack[nNormalAttackCount] &&
-                cStateMachine.GetCurrentState() != cDodgeState &&
-                cStateMachine.GetCurrentState() != cQSkill &&
-                canNextAttack)
-            {
-                cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
-            }
-            else if (eMouseState == mouseState.Hold)
-            {
-                StartCoroutine(AttackDuringHoldMove());
-            }
-        };
-    }
 
     private void InitalizeESkillButton()
     {
@@ -108,25 +83,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #endregion
 
     #region Normal Attack Part
-    private IEnumerator AttackDuringHoldMove()
-    {
-        eMouseState = mouseState.None;
-        cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
-        yield return new WaitUntil(() => fNormalAttackCancelTimer > 0.2f || cStateMachine.GetCurrentState() == cIdleState);
-        KeepHoldMove();
-    }
-
-    private void EnableAttackEffect()
-    {
-        GameObject obj = EffectManager.instance.GetEffect(objAttackEffect);
-        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
-    }
-
-    private void EnableRotationAttackEffect()
-    {
-        GameObject obj = EffectManager.instance.GetEffect(objRotationAttackEffect);
-        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
-    }
 
     public override void Attack()
     {
@@ -140,79 +96,27 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         CheckExceededCancelTime();
     }
 
-    private void IncreaseAttackCount()
-    {
-        if (cStateMachine.GetCurrentState() == cNormalAttack[nNormalAttackCount] && fNormalAttackCancelTimer < fNormalAttackCancelTime)
-        {
-            nNormalAttackCount = nNormalAttackCount < cNormalAttack.Length - 1 ? ++nNormalAttackCount : 0;
-        }
-    }
-
-    private void ResetAttackCount()
-    {
-        if (isNotNormalAttackState)
-        {
-            canNextAttack = true;
-            nNormalAttackCount = 0;
-        }
-    }
-
-    private void CheckExceededCancelTime()
-    {
-        if (fNormalAttackCancelTimer >= fNormalAttackCancelTime - 0.05f)
-        {
-            ReturnToIdleWithHold();
-        }
-    }
-
-    private void DisableNextAttack()
-    {
-        canNextAttack = false;
-    }
-
-    private void EnableNextAttack()
-    {
-        normalAttackCancelTimer = StartCoroutine(StartNormalAttackCancelTimer());
-        canNextAttack = true;
-    }
-
-
-
-    private IEnumerator StartNormalAttackCancelTimer()
-    {
-        while (fNormalAttackCancelTimer < fNormalAttackCancelTime)
-        {
-            if (eMouseState == mouseState.Hold)
-            {
-                fNormalAttackCancelTimer = 0f;
-                yield break;
-            }
-            if (canResetDuringCancelTime == true)
-            {
-                fNormalAttackCancelTimer = 0f;
-                canResetDuringCancelTime = false;
-                yield break;
-            }
-            fNormalAttackCancelTimer += Time.deltaTime;
-            yield return null;
-        }
-
-        fNormalAttackCancelTimer = 0f;
-        canResetDuringCancelTime = false;
-    }
     #endregion
 
     private bool EnableQSkill()
     {
-        return cStateMachine.GetCurrentState() != cQSkill && cStateMachine.GetCurrentState() != cESkill;
+        return cStateMachine.GetCurrentState() != cQSkill 
+            && cStateMachine.GetCurrentState() != cESkill 
+            && cStateMachine.GetCurrentState() != cDodgeState 
+            && cStateMachine.GetCurrentState() != cToStand;
     }
     private bool EnableWSkill()
     {
-        return cStateMachine.GetCurrentState() != cWSkill && cStateMachine.GetCurrentState() != cESkill;
+        return cStateMachine.GetCurrentState() != cWSkill 
+            && cStateMachine.GetCurrentState() != cESkill 
+            && cStateMachine.GetCurrentState() != cDodgeState 
+            && cStateMachine.GetCurrentState() != cToStand;
     }
     private bool EnableESkill()
     {
-        return cStateMachine.GetCurrentState() != cESkill && cStateMachine.GetCurrentState() != cDodgeState;
+        return cStateMachine.GetCurrentState() != cESkill 
+            && cStateMachine.GetCurrentState() != cDodgeState
+            && cStateMachine.GetCurrentState() != cToStand;
     }
 
     #region QSkill Part
@@ -220,7 +124,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
-            eMouseState = mouseState.None;
             cStateMachine.ChangeState(cQSkill);
             StartCoroutine(StartQSkillCoolDown());
         }
@@ -242,7 +145,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
-            eMouseState = mouseState.None;
             cStateMachine.ChangeState(cWSkill);
             StartCoroutine(StartWSkillCoolDown());
         }
