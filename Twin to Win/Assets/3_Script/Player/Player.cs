@@ -17,4 +17,8 @@ public class Player : MonoBehaviour
 	{
 		cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
 	}
+	public string GetCurrentCharacterStateName()
+	{
+		return cCurrentCharacter.GetCurrentStateName();
+	}
 }

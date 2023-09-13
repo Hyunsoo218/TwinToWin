@@ -58,11 +58,11 @@ public class BossAttackEffect3 : Effect
 	}
 	private IEnumerator MakeParabolicBomb() 
 	{
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 30; i++)
 		{
 			GameObject objEffect = EffectManager.instance.GetEffect(objParabolicBomb);
 			objEffect.GetComponent<Effect>().OnAction(tUser, fDamage, nTargetLayer);
-			yield return new WaitForSeconds(0.165f);
+			yield return new WaitForSeconds(0.1f);
 		}
 	}
 	protected override void InPool()

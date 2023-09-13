@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class ParabolicBomb : Effect
 {
-	private Animator cAnimator;
+	[SerializeField] private TargetType eTargetType;
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
-	private void Awake()
-	{
-		cAnimator = GetComponent<Animator>();
-	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
 		this.tUser = tUser;
@@ -28,14 +24,53 @@ public class ParabolicBomb : Effect
 	}
 	private IEnumerator MoveToTarget()
 	{
-		Vector3 v3Target = Player.instance.cCurrentCharacter.transform.position;
-		float fX = Random.Range(v3Target.x - 3f, v3Target.x + 3f);
-		float fZ = Random.Range(v3Target.z - 3f, v3Target.z + 3f);
-		//float fX = Random.Range(tUser.position.x - 10f, tUser.position.x + 10f);
-		//float fZ = Random.Range(tUser.position.z - 10f, tUser.position.z + 10f);
-		Vector3 v3TargetPos = new Vector3(fX, 0, fZ);
-		Vector3 v3CurrtPos = transform.position;
+		Transform tPlayer = Player.instance.cCurrentCharacter.transform;
 
+		Vector3 v3TargetPos = Vector3.zero;
+		Vector3 v3Target;
+		float fZ;
+		float fX;
+
+		switch (eTargetType)
+		{
+			case TargetType.Player:
+				v3Target = tPlayer.position;
+				fZ = Random.Range(v3Target.z - 2f, v3Target.z + 2f);
+				fX = Random.Range(v3Target.x - 2f, v3Target.x + 2f);
+				v3TargetPos = new Vector3(fX, 0, fZ);
+				break;
+			case TargetType.Player_forward:
+				v3Target = tPlayer.forward * 4f + tPlayer.position;
+				fZ = Random.Range(v3Target.z - 2f, v3Target.z + 2f);
+				fX = Random.Range(v3Target.x - 2f, v3Target.x + 2f);
+				v3TargetPos = new Vector3(fX, 0, fZ);
+				break;
+			case TargetType.Player_look:
+				string strPlayerState = Player.instance.GetCurrentCharacterStateName();
+
+				if (strPlayerState.Equals("moveState"))
+				{
+					v3Target = tPlayer.forward * 4f + tPlayer.position;
+					fZ = Random.Range(v3Target.z - 3f, v3Target.z + 3f);
+					fX = Random.Range(v3Target.x - 3f, v3Target.x + 3f);
+					v3TargetPos = new Vector3(fX, 0, fZ);
+				}
+				else
+				{
+					v3Target = tPlayer.position;
+					fZ = Random.Range(v3Target.z - 1f, v3Target.z + 1f);
+					fX = Random.Range(v3Target.x - 1f, v3Target.x + 1f);
+					v3TargetPos = new Vector3(fX, 0, fZ);
+				}
+				break;
+			case TargetType.Boss_vicinity_Long:
+				Vector3 v3Direction = new Vector3(Random.Range(-1f, 1f) ,0 , Random.Range(-1f, 1f));
+				v3Target = Quaternion.LookRotation(v3Direction, Vector3.up) * Vector3.forward * Random.Range(6f, 15f) + tUser.position;
+				v3TargetPos = new Vector3(v3Target.x, 0, v3Target.z);
+				break;
+		}
+
+		Vector3 v3CurrtPos = transform.position;
 		float runTime = 0;
 		float duration = 1f;
 
@@ -61,5 +96,12 @@ public class ParabolicBomb : Effect
 				// 지우지 마영 - 디버그용							  		   
 			}
 		}
+	}
+	private enum TargetType
+	{
+		Player,
+		Player_forward,
+		Player_look,
+		Boss_vicinity_Long
 	}
 }

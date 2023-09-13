@@ -28,8 +28,10 @@ public class BossCharacter : MonsterCharacter
 		base.Awake();
 		arrAttackMelee.Add(cStateAttack3);
 		arrAttackMelee.Add(cStateAttack4);
+
 		arrAttackRanged.Add(cStateAttack5);
 		arrAttackRanged.Add(cStateAttack6);
+
 		dAttackEffects.Add(cStateAttack, objAttackEffectPrefab);
 		dAttackEffects.Add(cStateAttack2, objAttack2EffectPrefab);
 		dAttackEffects.Add(cStateAttack3, objAttack3EffectPrefab);

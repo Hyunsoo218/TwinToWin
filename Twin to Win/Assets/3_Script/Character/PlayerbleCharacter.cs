@@ -291,9 +291,15 @@ public class PlayerbleCharacter : Character
         transform.position += transform.forward * Time.deltaTime * power;
         return fMoveOnBySkillTimer -= Time.deltaTime;
     }
-    #endregion
+	#endregion
 
-    public override void Damage(float fAmount)
+	public string GetCurrentStateName()
+	{
+		return cStateMachine.GetCurrentState().strStateName;
+	}
+
+
+	public override void Damage(float fAmount)
     {
 
     }
