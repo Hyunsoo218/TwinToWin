@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4154383212772451617}
   - component: {fileID: 2563567995912054802}
   - component: {fileID: 787443662629142343}
-  - component: {fileID: 8139278578626282954}
   m_Layer: 0
   m_Name: Boss Effect Attack3
   m_TagString: Untagged
@@ -58,27 +57,6 @@ MonoBehaviour:
   fRunTime: 5
   objParabolicBomb: {fileID: 8706217858801063265, guid: 3f8b9941e7e420c4e9720c7e991131f9,
     type: 3}
---- !u!95 &8139278578626282954
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 790505907424516061}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3495606938105867501
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class ParabolicBomb : Effect
 {
 	[SerializeField] private TargetType eTargetType;
+	[SerializeField] private DamagableSpaceControl cDSC;
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
@@ -82,6 +83,8 @@ public class ParabolicBomb : Effect
 
 			yield return null;
 		}
+
+		cDSC.OnAction(0.33f, FillType.X_Y);
 	}
 	public void Explosion() 
 	{

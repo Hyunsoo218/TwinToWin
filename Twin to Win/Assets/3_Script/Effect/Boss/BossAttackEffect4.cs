@@ -36,7 +36,7 @@ public class BossAttackEffect4 : Effect
 		{
 			GameObject objEffect;
 
-			for (int j = 0; j < 5; j++)
+			for (int j = 0; j < 7; j++)
 			{
 				objEffect = EffectManager.instance.GetEffect(objParabolicBomb);
 				objEffect.GetComponent<Effect>().OnAction(tUser, fDamage, nTargetLayer);

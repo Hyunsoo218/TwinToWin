@@ -8,7 +8,7 @@ public class BossAttackEffect2 : Effect
 	[SerializeField] private Vector3 vAttackAreaCenter;
 	[SerializeField] private Vector3 vAttackAreaSize;
 	[SerializeField] private List<Transform> arrExplosionPos;
-
+	[SerializeField] private List<DamagableSpaceControl> arrDecalProjector;
 	private Animator cAnimator;
 	private int nExplosionCount = 0;
 	private Transform tUser;
@@ -83,6 +83,20 @@ public class BossAttackEffect2 : Effect
 				Overlap(Physics.OverlapSphere(arrExplosionPos[8].position, 1.5f, nTargetLayer));
 				break;
 		}
+	}
+	public void OnDamageAreaEnhance()
+	{
+		arrDecalProjector[0].OnAction(0.33f, FillType.X_Y);
+
+		arrDecalProjector[1].OnAction(0.33f * 2f, FillType.X_Y);
+		arrDecalProjector[2].OnAction(0.33f * 2f, FillType.X_Y);
+		arrDecalProjector[3].OnAction(0.33f * 2f, FillType.X_Y);
+		arrDecalProjector[4].OnAction(0.33f * 2f, FillType.X_Y);
+												
+		arrDecalProjector[5].OnAction(0.33f * 3f, FillType.X_Y);
+		arrDecalProjector[6].OnAction(0.33f * 3f, FillType.X_Y);
+		arrDecalProjector[7].OnAction(0.33f * 3f, FillType.X_Y);
+		arrDecalProjector[8].OnAction(0.33f * 3f, FillType.X_Y);
 	}
 	private void Overlap(Collider[] colliders)
 	{
