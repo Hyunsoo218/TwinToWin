@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 9077109073580241485}
   m_Layer: 8
   m_Name: WTD
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -838,14 +838,26 @@ MonoBehaviour:
     m_ActionId: 0eb4271c-dd28-4d73-bc2f-daf325fadd65
     m_ActionName: PlayerActions/Skill[/Keyboard/q,/Keyboard/w,/Keyboard/e,/Keyboard/r]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6280981427987442190}
+        m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
+        m_MethodName: OnTag
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 9285e18f-4b89-4cfe-9e81-e34663eb094e
     m_ActionName: PlayerActions/Switching[/Keyboard/tab]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6280981427987442190}
         m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
-        m_MethodName: OnDash
+        m_MethodName: OnDodge
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -897,6 +909,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 531634d6-8345-4e9a-b2aa-0550b2c05995
     m_ActionName: PlayerActions/RSkill[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5960058a-f327-4ecb-809a-9c7a984dad08
+    m_ActionName: PlayerActions/WGSESkill[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Game
   m_DefaultActionMap: PlayerActions
@@ -967,6 +983,7 @@ MonoBehaviour:
   fDodgeCoolTime: 3
   objAttackEffect: {fileID: 7777573416650849465, guid: aca93ad936975a34081c49b472a3c715,
     type: 3}
+  objRotationAttackEffect: {fileID: 0}
   srtQSkill:
     objSkillEffect: {fileID: 7777573416650849465, guid: 653a6ce455f29a744917c539ce1fff1a,
       type: 3}

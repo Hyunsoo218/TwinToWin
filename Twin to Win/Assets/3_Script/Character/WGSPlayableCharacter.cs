@@ -42,12 +42,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             if (fESkillTimer <= 0f && EnableESkill() == true)
             {
-                cStateMachine.ChangeState(cESkill);
+                cStateMachine.ChangeState(cESkillState);
             }
         };
         eSkillAction.performed += ctx =>
         {
-            if (cStateMachine.GetCurrentState() == cESkill && isDoingHoldESkill == false)
+            if (cStateMachine.GetCurrentState() == cESkillState && isDoingHoldESkill == false)
             {
                 isDoingHoldESkill = true;
                 StartCoroutine(StartESkillHoldTimer());
@@ -55,7 +55,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         };
         eSkillAction.canceled += ctx =>
         {
-            if (cStateMachine.GetCurrentState() == cESkill)
+            if (cStateMachine.GetCurrentState() == cESkillState)
             {
                 StartCoroutine(StartESkillCoolDown());
                 StopESkill();
@@ -64,19 +64,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     }
     #endregion
 
-    #region QSkill
-    private float fQSkillTimer = 0f;
-    #endregion
-
-    #region WSkill
-    private float fWSkillTimer = 0f;
-    
-    #endregion
-
-    #region ESKill
-    private float fESkillTimer = 0f;
+    #region E Skill
     private float fESkillHoldTime = 3f;
-    private float fESkillHoldTimer = 0f;
     private bool isDoingHoldESkill = false;
 
     InputAction eSkillAction;
@@ -100,23 +89,23 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     private bool EnableQSkill()
     {
-        return cStateMachine.GetCurrentState() != cQSkill 
-            && cStateMachine.GetCurrentState() != cESkill 
+        return cStateMachine.GetCurrentState() != cQSkillState 
+            && cStateMachine.GetCurrentState() != cESkillState 
             && cStateMachine.GetCurrentState() != cDodgeState 
-            && cStateMachine.GetCurrentState() != cToStand;
+            && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableWSkill()
     {
-        return cStateMachine.GetCurrentState() != cWSkill 
-            && cStateMachine.GetCurrentState() != cESkill 
+        return cStateMachine.GetCurrentState() != cWSkillState 
+            && cStateMachine.GetCurrentState() != cESkillState 
             && cStateMachine.GetCurrentState() != cDodgeState 
-            && cStateMachine.GetCurrentState() != cToStand;
+            && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableESkill()
     {
-        return cStateMachine.GetCurrentState() != cESkill 
+        return cStateMachine.GetCurrentState() != cESkillState 
             && cStateMachine.GetCurrentState() != cDodgeState
-            && cStateMachine.GetCurrentState() != cToStand;
+            && cStateMachine.GetCurrentState() != cToStandState;
     }
 
     #region QSkill Part
@@ -124,7 +113,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
-            cStateMachine.ChangeState(cQSkill);
+            cStateMachine.ChangeState(cQSkillState);
             StartCoroutine(StartQSkillCoolDown());
         }
     }
@@ -145,7 +134,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
-            cStateMachine.ChangeState(cWSkill);
+            cStateMachine.ChangeState(cWSkillState);
             StartCoroutine(StartWSkillCoolDown());
         }
     }
@@ -181,7 +170,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     private void StopESkill()
     {
         isDoingHoldESkill = false;
-        cStateMachine.ChangeState(cToStand);
+        cStateMachine.ChangeState(cToStandState);
         fESkillHoldTimer = 0f;
     }
 

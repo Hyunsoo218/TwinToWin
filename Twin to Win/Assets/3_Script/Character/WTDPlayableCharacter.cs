@@ -28,19 +28,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     #endregion
 
-    #region QSkill
-    private float fQSkillTimer = 0f;
-    #endregion
-
-    #region WSkill
-    private float fWSkillTimer = 0f;
-    
-    #endregion
-
     #region ESKill
-    private float fESkillTimer = 0f;
-    private float fParabolaTimer = 0f;
-    private float fFreeFallTimer = 0f;
     private float parabolaHeight = 0f;
     #endregion
 
@@ -60,23 +48,23 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     private bool EnableQSkill()
     {
-        return cStateMachine.GetCurrentState() != cQSkill 
-            && cStateMachine.GetCurrentState() != cESkill 
+        return cStateMachine.GetCurrentState() != cQSkillState 
+            && cStateMachine.GetCurrentState() != cESkillState 
             && cStateMachine.GetCurrentState() != cDodgeState 
-            && cStateMachine.GetCurrentState() != cToStand;
+            && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableWSkill()
     {
-        return cStateMachine.GetCurrentState() != cWSkill 
-            && cStateMachine.GetCurrentState() != cESkill 
+        return cStateMachine.GetCurrentState() != cWSkillState 
+            && cStateMachine.GetCurrentState() != cESkillState 
             && cStateMachine.GetCurrentState() != cDodgeState 
-            && cStateMachine.GetCurrentState() != cToStand;
+            && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableESkill()
     {
-        return cStateMachine.GetCurrentState() != cESkill 
+        return cStateMachine.GetCurrentState() != cESkillState 
             && cStateMachine.GetCurrentState() != cDodgeState
-            && cStateMachine.GetCurrentState() != cToStand;
+            && cStateMachine.GetCurrentState() != cToStandState;
     }
 
     #region QSkill Part
@@ -84,7 +72,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
-            cStateMachine.ChangeState(cQSkill);
+            cStateMachine.ChangeState(cQSkillState);
             StartCoroutine(StartQSkillCoolDown());
         }
     }
@@ -105,7 +93,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
-            cStateMachine.ChangeState(cWSkill);
+            cStateMachine.ChangeState(cWSkillState);
             StartCoroutine(StartWSkillCoolDown());
         }
     }
@@ -129,7 +117,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
         if (context.started && fESkillTimer <= 0f && EnableESkill() == true)
         {
-            cStateMachine.ChangeState(cESkill);
+            cStateMachine.ChangeState(cESkillState);
             StartCoroutine(StartJumpAndRotate());
             StartCoroutine(StartESkillCoolDown());
         }
@@ -160,7 +148,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed) == true);
-        cStateMachine.ChangeState(cToStand);
+        cStateMachine.ChangeState(cToStandState);
     }
 
     private bool DoJumpAndRotate(Vector3 startPos, Vector3 endPos, float parabolaHighestHeight, float parabolaSpeed)
@@ -185,6 +173,8 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
 
     #endregion
+
+
 
     private Vector3 Parabola(Vector3 start, Vector3 end, float height, float t)
     {

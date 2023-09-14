@@ -21,6 +21,8 @@ public enum mouseState
 
 public class PlayerbleCharacter : Character
 {
+
+
     [Header("Character Info")]
     [SerializeField] private float fMoveSpeed = 3f;
     [SerializeField] private float fDodgePower = 30f;
@@ -37,7 +39,6 @@ public class PlayerbleCharacter : Character
 
     protected Skill srtCurrentSkill;
     protected Dictionary<string, Skill> dicCurrentSkill = new Dictionary<string, Skill>();
-
     protected virtual void Awake()
     {
         Initialize();
@@ -58,11 +59,12 @@ public class PlayerbleCharacter : Character
     protected State cIdleState = new State("idleState");
     protected State cMoveState = new State("moveState");
     protected State cDodgeState = new State("dodgeState");
-    protected State cToStand = new State("toStand");
-    protected State cQSkill = new State("qSkill");
-    protected State cWSkill = new State("wSkill");
-    protected State cESkill = new State("eSkill");
-    protected State cRSkill = new State("rSkill");
+    protected State cToStandState = new State("toStand");
+    protected State cQSkillState = new State("qSkill");
+    protected State cWSkillState = new State("wSkill");
+    protected State cESkillState = new State("eSkill");
+    protected State cRSkillState = new State("rSkill");
+    protected State cTagState = new State("tagState");
     protected State[] cNormalAttack = new State[5] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3"), new State("normalAttack4"), new State("normalAttack5") };
     #endregion
 
@@ -71,7 +73,8 @@ public class PlayerbleCharacter : Character
 
     Coroutine moveCoroutine;
     InputAction moveAction;
-    protected mouseState eMouseState;
+    [HideInInspector]
+    public mouseState eMouseState { get; set; }
 
     protected Vector3 mousePosOnVirtualGround;
     protected Vector3 mousePosOnGround;
@@ -94,6 +97,27 @@ public class PlayerbleCharacter : Character
     protected float fMoveOnBySkillTimer;
     #endregion
 
+    #region QSkill
+    protected float fQSkillTimer = 0f;
+    #endregion
+
+    #region WSkill
+    protected float fWSkillTimer = 0f;
+    #endregion
+
+    #region ESkill
+    protected float fESkillTimer = 0f;
+    #endregion
+
+    #region WTD ESKill
+    protected float fParabolaTimer = 0f;
+    protected float fFreeFallTimer = 0f;
+    #endregion
+
+    #region WGS ESkill
+    protected float fESkillHoldTimer = 0f;
+    #endregion
+
     #region Normal Attack
     protected int nNormalAttackCount = 0;
     protected float fNormalAttackCancelTimer = 0f;
@@ -103,6 +127,12 @@ public class PlayerbleCharacter : Character
 
     private Coroutine corouAttackCancelCoroutine;
     protected InputAction normalAttackAction;
+    #endregion
+
+    #region Tag
+    protected static bool canTag = true;
+    protected static float fTagTimer = 0f;
+    protected static float fTagCoolTime = 2f;
     #endregion
 
     #region Init Part
@@ -123,20 +153,20 @@ public class PlayerbleCharacter : Character
         cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
         cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
         cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
-        cToStand.onEnter += () => { ChangeAnimation(cToStand.strStateName); };
-        cQSkill.onEnter += () => { ChangeAnimation(cQSkill.strStateName); };
-        cWSkill.onEnter += () => { ChangeAnimation(cWSkill.strStateName); };
-        cESkill.onEnter += () => { ChangeAnimation(cESkill.strStateName); };
-        cRSkill.onEnter += () => { ChangeAnimation(cRSkill.strStateName); };
+        cToStandState.onEnter += () => { ChangeAnimation(cToStandState.strStateName); };
+        cQSkillState.onEnter += () => { ChangeAnimation(cQSkillState.strStateName); };
+        cWSkillState.onEnter += () => { ChangeAnimation(cWSkillState.strStateName); };
+        cESkillState.onEnter += () => { ChangeAnimation(cESkillState.strStateName); };
+        cRSkillState.onEnter += () => { ChangeAnimation(cRSkillState.strStateName); };
     }
 
     private void InitializeRightMouseState()
     {
         moveAction.performed += ctx =>
         {
-            if (cStateMachine.GetCurrentState() != cQSkill &&
-                cStateMachine.GetCurrentState() != cWSkill &&
-                cStateMachine.GetCurrentState() != cESkill)
+            if (cStateMachine.GetCurrentState() != cQSkillState &&
+                cStateMachine.GetCurrentState() != cWSkillState &&
+                cStateMachine.GetCurrentState() != cESkillState)
             {
                 isMoving = true;
                 eMouseState = mouseState.Hold;
@@ -152,9 +182,9 @@ public class PlayerbleCharacter : Character
         {
             if (eMouseState == mouseState.None &&
                 cStateMachine.GetCurrentState() != cDodgeState &&
-                cStateMachine.GetCurrentState() != cQSkill &&
-                cStateMachine.GetCurrentState() != cWSkill &&
-                cStateMachine.GetCurrentState() != cESkill)
+                cStateMachine.GetCurrentState() != cQSkillState &&
+                cStateMachine.GetCurrentState() != cWSkillState &&
+                cStateMachine.GetCurrentState() != cESkillState)
             {
                 isMoving = true;
                 eMouseState = mouseState.Click;
@@ -164,7 +194,7 @@ public class PlayerbleCharacter : Character
             {
                 isMoving = false;
                 eMouseState = mouseState.None;
-                cStateMachine.ChangeState(cToStand);
+                cStateMachine.ChangeState(cToStandState);
             }
         };
     }
@@ -183,9 +213,10 @@ public class PlayerbleCharacter : Character
             if (eMouseState != mouseState.Hold &&
                 cStateMachine.GetCurrentState() != cNormalAttack[nNormalAttackCount] &&
                 cStateMachine.GetCurrentState() != cDodgeState &&
-                cStateMachine.GetCurrentState() != cQSkill &&
-                cStateMachine.GetCurrentState() != cWSkill &&
-                cStateMachine.GetCurrentState() != cESkill &&
+                cStateMachine.GetCurrentState() != cQSkillState &&
+                cStateMachine.GetCurrentState() != cWSkillState &&
+                cStateMachine.GetCurrentState() != cESkillState &&
+                Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
                 cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
@@ -193,9 +224,10 @@ public class PlayerbleCharacter : Character
             else if (eMouseState == mouseState.Hold &&
                 cStateMachine.GetCurrentState() != cNormalAttack[nNormalAttackCount] &&
                 cStateMachine.GetCurrentState() != cDodgeState &&
-                cStateMachine.GetCurrentState() != cQSkill &&
-                cStateMachine.GetCurrentState() != cWSkill &&
-                cStateMachine.GetCurrentState() != cESkill &&
+                cStateMachine.GetCurrentState() != cQSkillState &&
+                cStateMachine.GetCurrentState() != cWSkillState &&
+                cStateMachine.GetCurrentState() != cESkillState &&
+                Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
                 StartCoroutine(AttackDuringHoldMove());
@@ -227,9 +259,9 @@ public class PlayerbleCharacter : Character
                 {
                     StopCoroutine(moveCoroutine);
                 }
-                if (cStateMachine.GetCurrentState() != cQSkill &&
-                    cStateMachine.GetCurrentState() != cWSkill &&
-                    cStateMachine.GetCurrentState() != cESkill &&
+                if (cStateMachine.GetCurrentState() != cQSkillState &&
+                    cStateMachine.GetCurrentState() != cWSkillState &&
+                    cStateMachine.GetCurrentState() != cESkillState &&
                     cStateMachine.GetCurrentState() != cDodgeState &&
                     cStateMachine.GetCurrentState() != cNormalAttack[0] &&
                     cStateMachine.GetCurrentState() != cNormalAttack[1] &&
@@ -254,7 +286,7 @@ public class PlayerbleCharacter : Character
                 isMoving = false;
                 eMouseState = mouseState.None;
 
-                cStateMachine.ChangeState(cToStand);
+                cStateMachine.ChangeState(cToStandState);
                 yield break;
             }
             transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
@@ -279,7 +311,7 @@ public class PlayerbleCharacter : Character
     {
         yield return new WaitUntil(() => DoDodge() <= 0f);
         fDodgePlayTimer = fDodgePlayTime;
-        cStateMachine.ChangeState(cToStand);
+        cStateMachine.ChangeState(cToStandState);
     }
 
     private float DoDodge()
@@ -298,14 +330,15 @@ public class PlayerbleCharacter : Character
         fDodgeTimer = 0f;
     }
 
-    public void OnDash(InputAction.CallbackContext context)
+    public void OnDodge(InputAction.CallbackContext context)
     {
         if (context.started && fDodgeTimer <= 0f &&
             cStateMachine.GetCurrentState() != cDodgeState &&
-            cStateMachine.GetCurrentState() != cQSkill &&
-            cStateMachine.GetCurrentState() != cWSkill &&
-            cStateMachine.GetCurrentState() != cESkill &&
-            cStateMachine.GetCurrentState() != cRSkill)
+            cStateMachine.GetCurrentState() != cTagState &&
+            cStateMachine.GetCurrentState() != cQSkillState &&
+            cStateMachine.GetCurrentState() != cWSkillState &&
+            cStateMachine.GetCurrentState() != cESkillState &&
+            cStateMachine.GetCurrentState() != cRSkillState)
         {
             cStateMachine.ChangeState(cDodgeState);
             StartCoroutine(StartDodgeCoolDown());
@@ -381,9 +414,9 @@ public class PlayerbleCharacter : Character
     protected void CheckExceededCancelTime()
     {
         if (fNormalAttackCancelTimer >= fNormalAttackCancelTime - 0.05f
-            && cStateMachine.GetCurrentState() != cQSkill
-            && cStateMachine.GetCurrentState() != cWSkill
-            && cStateMachine.GetCurrentState() != cESkill)
+            && cStateMachine.GetCurrentState() != cQSkillState
+            && cStateMachine.GetCurrentState() != cWSkillState
+            && cStateMachine.GetCurrentState() != cESkillState)
         {
             ReturnToIdleWithHold();
         }
@@ -411,9 +444,45 @@ public class PlayerbleCharacter : Character
     }
     #endregion
 
+    #region Tag Part
+    public void OnTag(InputAction.CallbackContext ctx)
+    {
+        if (canTag == true)
+        {
+            canTag = false;
+            cStateMachine.ChangeState(cTagState);
+            Player.instance.ConvertCharacter();
+        }
+    }
+    public IEnumerator StartTagCoolDown()
+    {
+        while (fTagTimer <= fTagCoolTime)
+        {
+            fTagTimer += Time.deltaTime;
+            yield return null;
+        }
+        fTagTimer = 0f;
+        canTag = true;
+    }
+    #endregion
+
     public string GetCurrentStateName()
     {
         return cStateMachine.GetCurrentState().strStateName;
+    }
+
+    public void ResetAllTimer()
+    {
+        fDodgeTimer = 0f;
+        fMoveOnBySkillTimer = 0f;
+        fNormalAttackCancelTimer = 0f;
+        nNormalAttackCount = 0;
+        fESkillHoldTimer = 0f;
+        fESkillTimer = 0f;
+        fWSkillTimer = 0f;
+        fQSkillTimer = 0f;
+        fParabolaTimer = 0f;
+        fFreeFallTimer = 0f;
     }
 
     public override void Damage(float fAmount)
@@ -453,14 +522,14 @@ public class PlayerbleCharacter : Character
     }
     protected void ChangeToStand()
     {
-        cStateMachine.ChangeState(cToStand);
+        cStateMachine.ChangeState(cToStandState);
     }
     protected void KeepHoldMove()
     {
         if (isMoving == true && eMouseState == mouseState.Hold
-            && cStateMachine.GetCurrentState() != cQSkill
-            && cStateMachine.GetCurrentState() != cWSkill
-            && cStateMachine.GetCurrentState() != cESkill)
+            && cStateMachine.GetCurrentState() != cQSkillState
+            && cStateMachine.GetCurrentState() != cWSkillState
+            && cStateMachine.GetCurrentState() != cESkillState)
         {
             cStateMachine.ChangeState(cMoveState);
             eMouseState = mouseState.Hold;

@@ -1324,9 +1324,9 @@ GameObject:
   - component: {fileID: 1074779632376350497}
   - component: {fileID: 1366059285219458084}
   - component: {fileID: 8684553731372817573}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WGS
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1433,10 +1433,18 @@ MonoBehaviour:
     m_ActionId: 1a622c6f-facc-44f2-8a0e-5406d14e7a35
     m_ActionName: PlayerActions/WSkill[/Keyboard/w]
   - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 13a11b06-c19e-439a-bcea-d5209bb56a7b
+    m_ActionName: PlayerActions/ESkill[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 531634d6-8345-4e9a-b2aa-0550b2c05995
+    m_ActionName: PlayerActions/RSkill[/Keyboard/r]
+  - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8684553731372817573}
-        m_TargetAssemblyTypeName: WGSPlayableCharacter, Assembly-CSharp
-        m_MethodName: OnESkill
+        m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
+        m_MethodName: OnTag
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1446,21 +1454,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 13a11b06-c19e-439a-bcea-d5209bb56a7b
-    m_ActionName: PlayerActions/ESkill[/Keyboard/e]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 531634d6-8345-4e9a-b2aa-0550b2c05995
-    m_ActionName: PlayerActions/RSkill[/Keyboard/r]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: 9285e18f-4b89-4cfe-9e81-e34663eb094e
     m_ActionName: PlayerActions/Switching[/Keyboard/tab]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8684553731372817573}
         m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
-        m_MethodName: OnDash
+        m_MethodName: OnDodge
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
