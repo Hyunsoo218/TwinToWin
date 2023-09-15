@@ -36,8 +36,8 @@ public class ParabolicBomb : Effect
 		{
 			case TargetType.Player:
 				v3Target = tPlayer.position;
-				fZ = Random.Range(v3Target.z - 2f, v3Target.z + 2f);
-				fX = Random.Range(v3Target.x - 2f, v3Target.x + 2f);
+				fZ = Random.Range(v3Target.z, v3Target.z);
+				fX = Random.Range(v3Target.x, v3Target.x);
 				v3TargetPos = new Vector3(fX, 0, fZ);
 				break;
 			case TargetType.Player_forward:
@@ -52,8 +52,8 @@ public class ParabolicBomb : Effect
 				if (strPlayerState.Equals("moveState"))
 				{
 					v3Target = tPlayer.forward * 4f + tPlayer.position;
-					fZ = Random.Range(v3Target.z - 3f, v3Target.z + 3f);
-					fX = Random.Range(v3Target.x - 3f, v3Target.x + 3f);
+					fZ = Random.Range(v3Target.z - 2f, v3Target.z + 2f);
+					fX = Random.Range(v3Target.x - 2f, v3Target.x + 2f);
 					v3TargetPos = new Vector3(fX, 0, fZ);
 				}
 				else

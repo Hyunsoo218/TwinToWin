@@ -312,6 +312,8 @@ MonoBehaviour:
   - {fileID: 5473576151427780951, guid: 3f8b9941e7e420c4e9720c7e991131f9, type: 3}
   - {fileID: 978512666556915250, guid: 64022e516394d1140bb8a020862e9eed, type: 3}
   - {fileID: 5473576151427780951, guid: 77e477deac8167f43b50cf94f77521f6, type: 3}
+  - {fileID: 4548849215987824268, guid: 660a7651390ea6b4496fac5f1c41771c, type: 3}
+  - {fileID: 5473576151427780951, guid: f065f9a0e6a66ed43b1c5f8ee46ebe4c, type: 3}
 --- !u!1 &9105482457195319717
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cCurrentCharacter: {fileID: 0}
+  cWaitingCharacter: {fileID: 0}
   cGreatSword: {fileID: 0}
   cTwinSword: {fileID: 0}
 --- !u!1001 &573962146659764949

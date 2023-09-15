@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
@@ -46,7 +46,6 @@ public class PlayerbleCharacter : Character
         InitializeRightMouseState();
         InitalizeLeftMouseState();
     }
-
     protected virtual void FixedUpdate()
     {
         //print(cStateMachine.GetCurrentState().strStateName);

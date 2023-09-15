@@ -27,7 +27,7 @@ public class BossCharacter : MonsterCharacter
 	{
 		base.Awake();
 		arrAttackMelee.Add(cStateAttack3);
-		arrAttackMelee.Add(cStateAttack4);
+		//arrAttackMelee.Add(cStateAttack4);
 
 		arrAttackRanged.Add(cStateAttack5);
 		arrAttackRanged.Add(cStateAttack6);

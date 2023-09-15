@@ -31,7 +31,7 @@ public class StageManager : MonoBehaviour
 		for (float i = 0; i < vTileCount.x; i++)
 		{
 			Queue<Action> qActions = new Queue<Action>();
-			for (float j = 0; j < vTileCount.y; j++)
+			for (float j = 0; j < vTileCount.y; j++) 
 			{
 				float nX = i;
 				float nZ = j;

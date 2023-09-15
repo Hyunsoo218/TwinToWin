@@ -14,8 +14,8 @@ public class Player : MonoBehaviour
 	{
 		instance = this;
 		cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
-		cWaitingCharacter = cGreatSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
-		cWaitingCharacter.GetComponent<PlayerbleCharacter>().enabled = false;
+		cWaitingCharacter = cCurrentCharacter == cTwinSword ? cGreatSword : cTwinSword;
+		cWaitingCharacter.gameObject.SetActive(false);
     }
 	public void ConvertCharacter()
 	{
@@ -45,7 +45,6 @@ public class Player : MonoBehaviour
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
     }
-	
 	public string GetCurrentCharacterStateName()
 	{
 		return cCurrentCharacter.GetCurrentStateName();

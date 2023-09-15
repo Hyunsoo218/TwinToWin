@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
 	{
 		instance = this;
 	}
+	public void AsynchronousExecution(IEnumerator enumerator) 
+	{
+		StartCoroutine(enumerator);
+	}
 	public void AsynchronousExecution(Queue<Action> qAsynchronousAction, int nOneFrameActionCount)
 	{
 		StartCoroutine(AsynchronousExecutors(qAsynchronousAction, nOneFrameActionCount));

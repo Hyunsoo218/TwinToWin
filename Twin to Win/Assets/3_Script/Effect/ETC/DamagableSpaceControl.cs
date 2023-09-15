@@ -9,16 +9,14 @@ public class DamagableSpaceControl : MonoBehaviour
 	private DecalProjector cFill;
 	private void Awake()
 	{
+		gameObject.SetActive(false);
 		DecalProjector[] decalProjectors = GetComponents<DecalProjector>();
 		cArea = decalProjectors[0];
 		cFill = decalProjectors[1];
-		cArea.gameObject.SetActive(false);
-		cFill.gameObject.SetActive(false);
 	}
 	public void OnAction(float fTime, FillType eType)
 	{
-		cArea.gameObject.SetActive(true);
-		cFill.gameObject.SetActive(true);
+		gameObject.SetActive(true);
 		switch (eType)
 		{
 			case FillType.X:
@@ -44,8 +42,8 @@ public class DamagableSpaceControl : MonoBehaviour
 	{
 		float fRunTime = 0;
 
-		float fFadeInTime = 0.8f;
-		float fFadeOutTime = 0.2f;
+		float fFadeInTime = fTime * 0.9f;
+		float fFadeOutTime = fTime * 0.1f;
 
 		while (fRunTime < fFadeInTime)
 		{
@@ -60,7 +58,7 @@ public class DamagableSpaceControl : MonoBehaviour
 			fRunTime += Time.deltaTime;
 			cArea.fadeFactor = 1f - fRunTime / fFadeOutTime;
 		}
-		cArea.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 	private IEnumerator FillingY(float fTime)
 	{
@@ -77,8 +75,7 @@ public class DamagableSpaceControl : MonoBehaviour
 			cFill.size = v3Current;
 		}
 
-		cArea.gameObject.SetActive(false);
-		cFill.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 	private IEnumerator FillingX(float fTime)
 	{
@@ -95,8 +92,7 @@ public class DamagableSpaceControl : MonoBehaviour
 			cFill.size = v3Current;
 		}
 
-		cArea.gameObject.SetActive(false);
-		cFill.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 	private IEnumerator FillingX_Y(float fTime)
 	{
@@ -112,8 +108,7 @@ public class DamagableSpaceControl : MonoBehaviour
 			cFill.size = v3Current;
 		}
 
-		cArea.gameObject.SetActive(false);
-		cFill.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 }
 public enum FillType
