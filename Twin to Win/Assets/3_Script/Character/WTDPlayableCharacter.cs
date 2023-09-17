@@ -17,6 +17,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         Attack();
     }
 
+
     #region init
     protected override void StateInitalizeOnEnter()
     {
@@ -72,8 +73,10 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
+            srtCurrentSkill = srtQSkill;
+            canDodge = false;
             cStateMachine.ChangeState(cQSkillState);
-            StartCoroutine(StartQSkillCoolDown());
+            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
         }
     }
 
@@ -93,8 +96,10 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
+            srtCurrentSkill = srtWSkill;
+            canDodge = false;
             cStateMachine.ChangeState(cWSkillState);
-            StartCoroutine(StartWSkillCoolDown());
+            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
     }
 
@@ -117,9 +122,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
         if (context.started && fESkillTimer <= 0f && EnableESkill() == true)
         {
+            srtCurrentSkill = srtESkill;
+            canDodge = false;
             cStateMachine.ChangeState(cESkillState);
-            StartCoroutine(StartJumpAndRotate());
-            StartCoroutine(StartESkillCoolDown());
+            GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
+            GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
         }
     }
 
@@ -133,21 +140,18 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fESkillTimer = 0f;
     }
 
-    private void OnJumpAndRotate(AnimationEvent skillEvent)
-    {
-        srtCurrentSkill = dicCurrentSkill[(skillEvent.stringParameter)];
-    }
 
     private IEnumerator StartJumpAndRotate()
     {
         Vector3 startPos = transform.position;
-        Vector3 endPos = transform.position + transform.forward * 3f;
+        Vector3 endPos = transform.position + transform.forward * 7f;
         float parabolaHighestHeight = 3f;
         float parabolaSpeed = 2f;
 
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed) == true);
+        canDodge = true;
         cStateMachine.ChangeState(cToStandState);
     }
 

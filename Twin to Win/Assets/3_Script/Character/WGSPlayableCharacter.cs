@@ -19,6 +19,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         Attack();
     }
 
+
     #region init
     private new void Initialize()
     {
@@ -42,6 +43,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             if (fESkillTimer <= 0f && EnableESkill() == true)
             {
+                srtCurrentSkill = srtESkill;
+                canDodge = false;
                 cStateMachine.ChangeState(cESkillState);
             }
         };
@@ -50,14 +53,14 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             if (cStateMachine.GetCurrentState() == cESkillState && isDoingHoldESkill == false)
             {
                 isDoingHoldESkill = true;
-                StartCoroutine(StartESkillHoldTimer());
+                GameManager.instance.AsynchronousExecution(StartESkillHoldTimer());
             }
         };
         eSkillAction.canceled += ctx =>
         {
             if (cStateMachine.GetCurrentState() == cESkillState)
             {
-                StartCoroutine(StartESkillCoolDown());
+                GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
                 StopESkill();
             }
         };
@@ -113,8 +116,10 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
         {
+            srtCurrentSkill = srtQSkill;
+            canDodge = false;
             cStateMachine.ChangeState(cQSkillState);
-            StartCoroutine(StartQSkillCoolDown());
+            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
         }
     }
 
@@ -134,8 +139,10 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
         {
+            srtCurrentSkill = srtWSkill;
+            canDodge = false;
             cStateMachine.ChangeState(cWSkillState);
-            StartCoroutine(StartWSkillCoolDown());
+            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
     }
 

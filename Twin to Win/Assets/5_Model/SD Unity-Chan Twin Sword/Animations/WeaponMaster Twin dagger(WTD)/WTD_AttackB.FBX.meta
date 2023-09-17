@@ -825,7 +825,7 @@ ModelImporter:
       name: WTD_AttackB1
       takeName: Take 001
       internalID: 7400002
-      firstFrame: 10
+      firstFrame: 20
       lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
@@ -848,21 +848,35 @@ ModelImporter:
       events:
       - time: 0.3903509
         functionName: EnableSkillEffect
-        data: QSkill
+        data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.46052632
         functionName: EnableSkillEffect
-        data: QSkill
+        data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.53070176
         functionName: EnableSkillEffect
-        data: QSkill
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.7310606
+        functionName: CanDodge
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: ReturnToIdleWithHold
+        data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0

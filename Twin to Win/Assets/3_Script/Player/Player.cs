@@ -7,46 +7,56 @@ public class Player : MonoBehaviour
 {
 	public static Player instance;
 	public PlayerbleCharacter cCurrentCharacter;
-	public PlayerbleCharacter cWaitingCharacter;
 	[SerializeField] private PlayerbleCharacter cGreatSword;
 	[SerializeField] private PlayerbleCharacter cTwinSword;
+
+    private Transform tCurrentTrans;
+    private bool isHoldingState = false;
 	private void Awake()
 	{
 		instance = this;
 		cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
-		cWaitingCharacter = cCurrentCharacter == cTwinSword ? cGreatSword : cTwinSword;
-		cWaitingCharacter.gameObject.SetActive(false);
     }
 	public void ConvertCharacter()
 	{
-		Transform tmpTransform;
-		bool isHoldingState = false;
+        InActiveCurrentCharacter();
+        cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
+        ActiveNextCharacter();
 
-        cWaitingCharacter = cCurrentCharacter;
-        tmpTransform = cWaitingCharacter.transform;
+        StartCoroutine(cCurrentCharacter.StartTagCoolDown());
+    }
+
+    private void InActiveCurrentCharacter()
+	{
+        tCurrentTrans = cCurrentCharacter.transform;
         if (cCurrentCharacter.eMouseState == mouseState.Hold)
         {
             isHoldingState = true;
         }
-		cCurrentCharacter.ResetAllTimer();
-        cCurrentCharacter.GetComponent<PlayerbleCharacter>().enabled = false;
         cCurrentCharacter.gameObject.SetActive(false);
-
-
-		cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
-
-		cCurrentCharacter.transform.position = tmpTransform.position;
-		if (isHoldingState == true)
-		{
+    }
+	private void ActiveNextCharacter()
+    {
+        cCurrentCharacter.transform.position = tCurrentTrans.position;
+        if (isHoldingState == true)
+        {
             cCurrentCharacter.eMouseState = mouseState.Hold;
+            isHoldingState = false;
         }
-        cCurrentCharacter.GetComponent<PlayerbleCharacter>().enabled = true;
         cCurrentCharacter.gameObject.SetActive(true);
-
-        StartCoroutine(cCurrentCharacter.StartTagCoolDown());
     }
 	public string GetCurrentCharacterStateName()
 	{
 		return cCurrentCharacter.GetCurrentStateName();
 	}
+
+    public PlayerbleCharacter GetTwinSword()
+    {
+        return cTwinSword;
+    }
+
+    public PlayerbleCharacter GetGreatSword()
+    {
+        return cGreatSword;
+    }
 }

@@ -1,12 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-//using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 using Input = UnityEngine.Input;
 public enum mouseState
 {
@@ -16,13 +11,16 @@ public enum mouseState
 };
 /** 
     버그 리스트
-    =마우스 클릭 Hold 이동 절묘하게 느림
+    =마우스 클릭 Hold 이동 절묘하게 느림 : 하
+    =우클릭 Click을 하면 가끔 멈춤 : 중
+    =Hold를 아주 살짝 했다가 떼면 toStand가 유지됨 : 하
+    =게임 시작 전 WGS, WTD 둘 다 켜놓으면 안 움직임 : 하
+    해야할 거
+    =마우스 이펙트를 쓸데없이 Inspector에서 둘 다 받음
 **/
 
 public class PlayerbleCharacter : Character
 {
-
-
     [Header("Character Info")]
     [SerializeField] private float fMoveSpeed = 3f;
     [SerializeField] private float fDodgePower = 30f;
@@ -38,13 +36,16 @@ public class PlayerbleCharacter : Character
     public Skill srtRSkill;
 
     protected Skill srtCurrentSkill;
-    protected Dictionary<string, Skill> dicCurrentSkill = new Dictionary<string, Skill>();
+
+    [Header("Move Info")]
+    public GameObject objWGSMouseIndicator;
+    public GameObject objWTDMouseIndicator;
     protected virtual void Awake()
     {
         Initialize();
         StateInitalizeOnEnter();
         InitializeRightMouseState();
-        InitalizeLeftMouseState();
+        InitializeLeftMouseState();
     }
     protected virtual void FixedUpdate()
     {
@@ -83,6 +84,7 @@ public class PlayerbleCharacter : Character
     private float fDodgeTimer;
     private float fDodgePlayTimer;
     private bool isDodging = false;
+    protected bool canDodge = true;
     #endregion
 
     #region Skill
@@ -141,10 +143,6 @@ public class PlayerbleCharacter : Character
         normalAttackAction = GetComponent<PlayerInput>().actions["NormalAttack"];
         cStateMachine = GetComponent<StateMachine>();
         cAnimator = GetComponent<Animator>();
-        dicCurrentSkill.Add("QSkill", srtQSkill);
-        dicCurrentSkill.Add("WSkill", srtWSkill);
-        dicCurrentSkill.Add("ESkill", srtESkill);
-        dicCurrentSkill.Add("RSkill", srtRSkill);
     }
 
     protected virtual void StateInitalizeOnEnter()
@@ -163,18 +161,18 @@ public class PlayerbleCharacter : Character
     {
         moveAction.performed += ctx =>
         {
+            ActiveMouseIndicator();
             if (cStateMachine.GetCurrentState() != cQSkillState &&
                 cStateMachine.GetCurrentState() != cWSkillState &&
                 cStateMachine.GetCurrentState() != cESkillState)
             {
                 isMoving = true;
                 eMouseState = mouseState.Hold;
-                cStateMachine.ChangeState(cMoveState);
+
             }
             else
             {
                 eMouseState = mouseState.Hold;
-                cStateMachine.ChangeState(cMoveState);
             }
         };
         moveAction.canceled += ctx =>
@@ -187,18 +185,23 @@ public class PlayerbleCharacter : Character
             {
                 isMoving = true;
                 eMouseState = mouseState.Click;
+                ActiveMouseIndicator();
             }
 
             if (eMouseState == mouseState.Hold)
             {
                 isMoving = false;
                 eMouseState = mouseState.None;
-                cStateMachine.ChangeState(cToStandState);
+                if (gameObject.activeSelf == true)
+                {
+                    cStateMachine.ChangeState(cToStandState);
+                }
+                
             }
         };
     }
 
-    private void InitalizeLeftMouseState()
+    private void InitializeLeftMouseState()
     {
         normalAttackAction.started += ctx =>
         {
@@ -229,7 +232,7 @@ public class PlayerbleCharacter : Character
                 Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
-                StartCoroutine(AttackDuringHoldMove());
+                GameManager.instance.AsynchronousExecution(AttackDuringHoldMove());
             }
         };
     }
@@ -262,12 +265,17 @@ public class PlayerbleCharacter : Character
                     cStateMachine.GetCurrentState() != cWSkillState &&
                     cStateMachine.GetCurrentState() != cESkillState &&
                     cStateMachine.GetCurrentState() != cDodgeState &&
+                    cStateMachine.GetCurrentState() != cToStandState &&
                     cStateMachine.GetCurrentState() != cNormalAttack[0] &&
                     cStateMachine.GetCurrentState() != cNormalAttack[1] &&
                     cStateMachine.GetCurrentState() != cNormalAttack[2] &&
                     cStateMachine.GetCurrentState() != cNormalAttack?[3] &&
                     cStateMachine.GetCurrentState() != cNormalAttack?[4])
                 {
+                    if (cStateMachine.GetCurrentState() != cMoveState)
+                    {
+                        cStateMachine.ChangeState(cMoveState);
+                    }
                     mousePosOnVirtualGround = GetPositionOnVirtualGround();
                     transform.localRotation = GetMouseAngle();
                     transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
@@ -293,6 +301,18 @@ public class PlayerbleCharacter : Character
             yield return null;
         }
     }
+
+    private void ActiveMouseIndicator()
+    {
+        if (Player.instance.cCurrentCharacter == Player.instance.GetTwinSword())
+        {
+            Instantiate(objWTDMouseIndicator, GetPositionOnGround(), Quaternion.identity);
+        }
+        else if (Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
+        {
+            Instantiate(objWGSMouseIndicator, GetPositionOnGround(), Quaternion.identity);
+        }
+    }
     #endregion
 
     #region Dodge Part
@@ -301,7 +321,7 @@ public class PlayerbleCharacter : Character
         if (isDodging && cStateMachine.GetCurrentState() == cDodgeState)
         {
             fDodgePlayTimer = fDodgePlayTime;
-            StartCoroutine(DodgeCoroutine());
+            GameManager.instance.AsynchronousExecution(DodgeCoroutine());
             isDodging = false;
         }
     }
@@ -312,21 +332,28 @@ public class PlayerbleCharacter : Character
         fDodgePlayTimer = fDodgePlayTime;
         cStateMachine.ChangeState(cToStandState);
     }
+    protected void CanDodge()
+    {
+        canDodge = true;
+    }
 
     private float DoDodge()
     {
+        transform.localRotation = GetMouseAngle();
         transform.position += transform.forward * Time.deltaTime * fDodgePower;
         return fDodgePlayTimer -= Time.deltaTime;
     }
 
     private IEnumerator StartDodgeCoolDown()
     {
+        canDodge = false;
         while (fDodgeTimer <= fDodgeCoolTime)
         {
             fDodgeTimer += Time.deltaTime;
             yield return null;
         }
         fDodgeTimer = 0f;
+        canDodge = true;
     }
 
     public void OnDodge(InputAction.CallbackContext context)
@@ -334,13 +361,10 @@ public class PlayerbleCharacter : Character
         if (context.started && fDodgeTimer <= 0f &&
             cStateMachine.GetCurrentState() != cDodgeState &&
             cStateMachine.GetCurrentState() != cTagState &&
-            cStateMachine.GetCurrentState() != cQSkillState &&
-            cStateMachine.GetCurrentState() != cWSkillState &&
-            cStateMachine.GetCurrentState() != cESkillState &&
-            cStateMachine.GetCurrentState() != cRSkillState)
+            canDodge == true)
         {
             cStateMachine.ChangeState(cDodgeState);
-            StartCoroutine(StartDodgeCoolDown());
+            GameManager.instance.AsynchronousExecution(StartDodgeCoolDown());
             isDodging = true;
         }
     }
@@ -348,17 +372,15 @@ public class PlayerbleCharacter : Character
     #endregion
 
     #region Skill Part
-    private void EnableSkillEffect(string skillName)
+    private void EnableSkillEffect()
     {
-        Skill currentSkill = dicCurrentSkill[skillName];
-        GameObject obj = EffectManager.instance.GetEffect(currentSkill.objSkillEffect);
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
     }
 
     private void OnMoveOnBySkill(AnimationEvent skillEvent)   // 애니메이션 이벤트에서 power 수정
     {
-        srtCurrentSkill = dicCurrentSkill[(skillEvent.stringParameter)];
-        StartCoroutine(StartMoveOnBySkill(skillEvent.floatParameter));
+        GameManager.instance.AsynchronousExecution(StartMoveOnBySkill(skillEvent.floatParameter));
     }
 
     private IEnumerator StartMoveOnBySkill(float power)
@@ -449,8 +471,8 @@ public class PlayerbleCharacter : Character
         if (canTag == true)
         {
             canTag = false;
-            cStateMachine.ChangeState(cTagState);
             Player.instance.ConvertCharacter();
+            cStateMachine.ChangeState(cTagState);
         }
     }
     public IEnumerator StartTagCoolDown()
@@ -468,20 +490,6 @@ public class PlayerbleCharacter : Character
     public string GetCurrentStateName()
     {
         return cStateMachine.GetCurrentState().strStateName;
-    }
-
-    public void ResetAllTimer()
-    {
-        fDodgeTimer = 0f;
-        fMoveOnBySkillTimer = 0f;
-        fNormalAttackCancelTimer = 0f;
-        nNormalAttackCount = 0;
-        fESkillHoldTimer = 0f;
-        fESkillTimer = 0f;
-        fWSkillTimer = 0f;
-        fQSkillTimer = 0f;
-        fParabolaTimer = 0f;
-        fFreeFallTimer = 0f;
     }
 
     public override void Damage(float fAmount)
@@ -523,6 +531,7 @@ public class PlayerbleCharacter : Character
     {
         cStateMachine.ChangeState(cToStandState);
     }
+
     protected void KeepHoldMove()
     {
         if (isMoving == true && eMouseState == mouseState.Hold

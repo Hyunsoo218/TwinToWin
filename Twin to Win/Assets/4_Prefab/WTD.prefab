@@ -980,7 +980,7 @@ MonoBehaviour:
   fMoveSpeed: 3
   fDodgePower: 30
   fDodgePlayTime: 0.1
-  fDodgeCoolTime: 3
+  fDodgeCoolTime: 1
   objAttackEffect: {fileID: 7777573416650849465, guid: aca93ad936975a34081c49b472a3c715,
     type: 3}
   objRotationAttackEffect: {fileID: 0}
@@ -1003,6 +1003,10 @@ MonoBehaviour:
     objSkillEffect: {fileID: 0}
     fSkillCoolDown: 0
     fMoveTimeOnBySkill: 0
+  objWGSMouseIndicator: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
+    type: 3}
+  objWTDMouseIndicator: {fileID: 1745249769378136, guid: 0a897a89c8da03c4a9e1843939845a68,
+    type: 3}
 --- !u!114 &9077109073580241485
 MonoBehaviour:
   m_ObjectHideFlags: 0
