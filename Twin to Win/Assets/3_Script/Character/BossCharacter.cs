@@ -9,6 +9,7 @@ public class BossCharacter : MonsterCharacter
 	[SerializeField] protected GameObject objAttack4EffectPrefab;
 	[SerializeField] protected GameObject objAttack5EffectPrefab;
 	[SerializeField] protected GameObject objAttack6EffectPrefab;
+	[SerializeField] protected GameObject objAttack6FinishEffectPrefab;
 	[SerializeField] protected Transform tRoot;
 
 	protected State cStateAttack2 = new State("Attack2");  // 근접 기본
@@ -16,6 +17,7 @@ public class BossCharacter : MonsterCharacter
 	protected State cStateAttack4 = new State("Attack4");  // 근접 360도 폭탄 
 	protected State cStateAttack5 = new State("Attack5");  // 원거리 가시
 	protected State cStateAttack6 = new State("Attack6");  // 원거리 돌진
+	protected State cStateAttack6_Finish = new State("Attack6 Finish");  // 원거리 돌진
 	protected int nAttackCount = 0;
 	protected List<State> arrAttackRanged = new List<State>();
 	protected List<State> arrAttackMelee = new List<State>();
@@ -27,9 +29,9 @@ public class BossCharacter : MonsterCharacter
 	{
 		base.Awake();
 		arrAttackMelee.Add(cStateAttack3);
-		//arrAttackMelee.Add(cStateAttack4);
+		arrAttackMelee.Add(cStateAttack4);
 
-		arrAttackRanged.Add(cStateAttack5);
+		//arrAttackRanged.Add(cStateAttack5);
 		arrAttackRanged.Add(cStateAttack6);
 
 		dAttackEffects.Add(cStateAttack, objAttackEffectPrefab);
@@ -38,6 +40,7 @@ public class BossCharacter : MonsterCharacter
 		dAttackEffects.Add(cStateAttack4, objAttack4EffectPrefab);
 		dAttackEffects.Add(cStateAttack5, objAttack5EffectPrefab);
 		dAttackEffects.Add(cStateAttack6, objAttack6EffectPrefab);
+		dAttackEffects.Add(cStateAttack6_Finish, objAttack6FinishEffectPrefab);
 	}
 	protected override void StateInitializeOnEnter()
 	{
@@ -68,6 +71,13 @@ public class BossCharacter : MonsterCharacter
 		cStateAttack6.onEnter = () => {
 			ChangeAnimation(cStateAttack6.strStateName);
 			Attack();
+		};
+		cStateAttack6_Finish.onEnter = () => {
+			ChangeAnimation(cStateAttack6_Finish.strStateName);
+			transform.position = vTargetPos;
+			cAgent.enabled = true;
+			cAgent.isStopped = true;
+			cAgent.radius = 0;
 		};
 	}
 	protected override void StateInitializeOnStay()
@@ -159,6 +169,9 @@ public class BossCharacter : MonsterCharacter
 			}
 			coAttackDelay = StartCoroutine(AttackDelay());
 		};
+		cStateAttack6_Finish.onExit = () => {
+			cAgent.radius = 0.5f;
+		};
 	}
 	protected void ChangeAttackStateRanged()
 	{
@@ -222,5 +235,34 @@ public class BossCharacter : MonsterCharacter
 		yield return new WaitForSeconds(3.8f);
 		cAgent.isStopped = true;
 		cAgent.speed = fDefaultSpeed;
+	}
+	public void Rush() 
+	{
+		StartCoroutine(Attack6Rush());
+	}
+	private IEnumerator Attack6Rush() 
+	{
+		cAgent.enabled = false;
+		//float startTime = Time.time;
+		//Vector3 temp = (vTargetPos - transform.position).normalized;
+		//print($"{transform.position - vTargetPos} , {(transform.position - vTargetPos).normalized}");
+		//// -20 45
+		//while ( (transform.position.x > -20f && transform.position.x < 45f) &&
+		//		(transform.position.z > -20f && transform.position.z < 45f))
+		//{
+		//	transform.position += transform.position + temp * Time.deltaTime * 100f;
+		//	//transform.Translate(temp * Time.deltaTime * 100f);
+		//	yield return null; 
+		//}
+		yield return new WaitForSeconds(1f);
+
+		transform.position += Vector3.up * 10f;
+
+		if (GameManager.instance.phase == Phase.Phase_3)
+			yield return new WaitForSeconds(4f);
+		else
+			yield return new WaitForSeconds(7.5f);
+
+		ChangeState(cStateAttack6_Finish);
 	}
 }

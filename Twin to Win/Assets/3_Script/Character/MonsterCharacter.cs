@@ -146,7 +146,10 @@ public class MonsterCharacter : Character
 		while (true)
 		{
 			vTargetPos = Player.instance.cCurrentCharacter.transform.position;
-			cAgent.SetDestination(vTargetPos);
+
+			if(cAgent.enabled)
+				cAgent.SetDestination(vTargetPos);
+			
 			fTargetDist = Vector3.Distance(transform.position, vTargetPos);
 			UIManager.instance.DebugLog($"°Å¸® - {fTargetDist}");
 			yield return new WaitForSeconds(0.25f);
