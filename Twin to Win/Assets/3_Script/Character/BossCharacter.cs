@@ -10,6 +10,7 @@ public class BossCharacter : MonsterCharacter
 	[SerializeField] protected GameObject objAttack5EffectPrefab;
 	[SerializeField] protected GameObject objAttack6EffectPrefab;
 	[SerializeField] protected GameObject objAttack6FinishEffectPrefab;
+	[SerializeField] protected GameObject objAttackBreakTilePrefab;
 	[SerializeField] protected Transform tRoot;
 
 	protected State cStateAttack2 = new State("Attack2");  // 근접 기본
@@ -17,7 +18,8 @@ public class BossCharacter : MonsterCharacter
 	protected State cStateAttack4 = new State("Attack4");  // 근접 360도 폭탄 
 	protected State cStateAttack5 = new State("Attack5");  // 원거리 가시
 	protected State cStateAttack6 = new State("Attack6");  // 원거리 돌진
-	protected State cStateAttack6_Finish = new State("Attack6 Finish");  // 원거리 돌진
+	protected State cStateAttack6_Finish = new State("Attack6 Finish");  // 원거리 돌진 마지막
+	protected State cStateBreakTile = new State("BreakTile");  
 	protected int nAttackCount = 0;
 	protected List<State> arrAttackRanged = new List<State>();
 	protected List<State> arrAttackMelee = new List<State>();
@@ -41,6 +43,7 @@ public class BossCharacter : MonsterCharacter
 		dAttackEffects.Add(cStateAttack5, objAttack5EffectPrefab);
 		dAttackEffects.Add(cStateAttack6, objAttack6EffectPrefab);
 		dAttackEffects.Add(cStateAttack6_Finish, objAttack6FinishEffectPrefab);
+		dAttackEffects.Add(cStateBreakTile, objAttackBreakTilePrefab);
 	}
 	protected override void StateInitializeOnEnter()
 	{
@@ -78,8 +81,13 @@ public class BossCharacter : MonsterCharacter
 			cAgent.enabled = true;
 			cAgent.isStopped = true;
 			cAgent.radius = 0;
-		};
-	}
+		};//
+        cStateBreakTile.onEnter = () => {
+            ChangeAnimation(cStateBreakTile.strStateName);
+            transform.position = (Vector3.forward + Vector3.right) * 14f;
+            cAgent.enabled = false;
+        };//cStateBreakTile
+    }
 	protected override void StateInitializeOnStay()
 	{
 		cStateIdle.onStay = () => {
@@ -172,7 +180,12 @@ public class BossCharacter : MonsterCharacter
 		cStateAttack6_Finish.onExit = () => {
 			cAgent.radius = 0.5f;
 		};
-	}
+        cStateBreakTile.onExit = () => {
+            cAgent.enabled = true;
+            cAgent.isStopped = true;
+            cAgent.radius = 0.5f;
+        };//cStateBreakTile
+    }
 	protected void ChangeAttackStateRanged()
 	{
 		if (nAttackCount < 2)

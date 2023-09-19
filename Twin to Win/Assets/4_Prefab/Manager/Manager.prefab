@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48e47a7d4bc07842a832b542207b27b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  phase: 2
+  phase: 0
 --- !u!1 &1011833673370785961
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.1
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 43dca2dd0d08080418ca6b820e776157, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: d9079f9a262555a49aa42c3b3677561d, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &8159236477865806914
 GameObject:
@@ -316,6 +316,8 @@ MonoBehaviour:
   - {fileID: 5473576151427780951, guid: f065f9a0e6a66ed43b1c5f8ee46ebe4c, type: 3}
   - {fileID: 1274870849073187235, guid: c45c5b177bd20074399e34be67e76725, type: 3}
   - {fileID: 3264944039358812313, guid: 799b90d696fc52f4cbcb65290d4b84e1, type: 3}
+  - {fileID: 4843465488604578526, guid: 6c2e80e42ad5bbe49bd313e110adf182, type: 3}
+  - {fileID: 3136586581446371381, guid: 7d5b2fc763820c445b128f7a375d063e, type: 3}
 --- !u!1 &9105482457195319717
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +363,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cCurrentCharacter: {fileID: 0}
-  cWaitingCharacter: {fileID: 0}
   cGreatSword: {fileID: 0}
   cTwinSword: {fileID: 0}
 --- !u!1001 &573962146659764949
