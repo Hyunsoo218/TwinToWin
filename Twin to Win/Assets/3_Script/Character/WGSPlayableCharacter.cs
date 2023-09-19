@@ -78,11 +78,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     public override void Attack()
     {
-        isNotNormalAttackState = cStateMachine.GetCurrentState() != cNormalAttack[0] && 
-            cStateMachine.GetCurrentState() != cNormalAttack[1] && 
-            cStateMachine.GetCurrentState() != cNormalAttack[2] && 
-            cStateMachine.GetCurrentState() != cNormalAttack[3] && 
-            cStateMachine.GetCurrentState() != cNormalAttack[4];
+        isNormalAttackState = cStateMachine.GetCurrentState() == cNormalAttack[0] ||
+            cStateMachine.GetCurrentState() == cNormalAttack[1] ||
+            cStateMachine.GetCurrentState() == cNormalAttack[2] || 
+            cStateMachine.GetCurrentState() == cNormalAttack[3] || 
+            cStateMachine.GetCurrentState() == cNormalAttack[4];
         IncreaseAttackCount();
         ResetAttackCount();
         CheckExceededCancelTime();
@@ -118,6 +118,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             srtCurrentSkill = srtQSkill;
             canDodge = false;
+            transform.localRotation = GetMouseAngle();
             cStateMachine.ChangeState(cQSkillState);
             GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class WTDPlayableCharacter : PlayerbleCharacter
 {
@@ -37,9 +38,9 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public override void Attack()
     {
-        isNotNormalAttackState = cStateMachine.GetCurrentState() != cNormalAttack[0] 
-            && cStateMachine.GetCurrentState() != cNormalAttack[1] 
-            && cStateMachine.GetCurrentState() != cNormalAttack[2];
+        isNormalAttackState = cStateMachine.GetCurrentState() == cNormalAttack[0] || 
+                            cStateMachine.GetCurrentState() == cNormalAttack[1] ||
+                            cStateMachine.GetCurrentState() == cNormalAttack[2];
         IncreaseAttackCount();
         ResetAttackCount();
         CheckExceededCancelTime();
@@ -144,7 +145,9 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     private IEnumerator StartJumpAndRotate()
     {
         Vector3 startPos = transform.position;
+        transform.localRotation = GetMouseAngle();
         Vector3 endPos = transform.position + transform.forward * 7f;
+        
         float parabolaHighestHeight = 3f;
         float parabolaSpeed = 2f;
 
@@ -155,23 +158,41 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         cStateMachine.ChangeState(cToStandState);
     }
 
-    private bool DoJumpAndRotate(Vector3 startPos, Vector3 endPos, float parabolaHighestHeight, float parabolaSpeed)
+    private bool DoJumpAndRotate(Vector3 startPos, Vector3 _endPos, float parabolaHighestHeight, float parabolaSpeed)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position + new Vector3(0f, 0.5f), 0.5f, ~(1 << LayerMask.NameToLayer("Player")));
-        Vector3 parabolaPos = Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f);
+        NavMeshHit navMeshHit;
+        RaycastHit hit;
+        Vector3 endPos = _endPos;
+
         fParabolaTimer += Time.deltaTime * parabolaSpeed;
         fParabolaTimer = fParabolaTimer % 1f;
+        
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 100f))
+        {
+            if (NavMesh.SamplePosition(hit.point, out navMeshHit, 10f, NavMesh.AllAreas))
+            {
+                print(navMeshHit.position);
+                
+                //fFreeFallTimer += Time.deltaTime;
+                //transform.position = FreeFall(navMeshHit.position.y, fFreeFallTimer);
+            }
+            Debug.DrawLine(transform.position, Parabola(startPos, navMeshHit.position, parabolaHighestHeight, fParabolaTimer / 1f), Color.red);
+            transform.position = Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f);
+            
 
-        if (colliders.Length > 0)
-        {
-            fFreeFallTimer += Time.deltaTime;
-            endPos = new Vector3(transform.position.x, 0f, transform.position.z);
-            transform.position = FreeFall(parabolaPos.y, fFreeFallTimer);
+            //if (!NavMesh.SamplePosition(hit.point, out navMeshHit, 1f, NavMesh.AllAreas))
+            //{
+            //    fFreeFallTimer += Time.deltaTime;
+            //    endPos = navMeshHit.position;
+            //    transform.position = FreeFall(parabolaPos.y, fFreeFallTimer);
+            //}
+            //else
+            //{
+                
+            //}
         }
-        else
-        {
-            transform.position = parabolaPos;
-        }
+
+
         return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
     }
 

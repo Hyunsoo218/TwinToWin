@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using Input = UnityEngine.Input;
 public enum mouseState
@@ -11,12 +12,12 @@ public enum mouseState
 };
 /** 
     버그 리스트
-    =마우스 클릭 Hold 이동 절묘하게 느림 : 하
+    =마우스 클릭 Hold 이동 절묘하게 느림 : 상
     =우클릭 Click을 하면 가끔 멈춤 : 중
     =Hold를 아주 살짝 했다가 떼면 toStand가 유지됨 : 하
     =게임 시작 전 WGS, WTD 둘 다 켜놓으면 안 움직임 : 하
     해야할 거
-    =마우스 이펙트를 쓸데없이 Inspector에서 둘 다 받음
+    =마우스 이펙트를 쓸데없이 Inspector에서 둘 다 받음 : 하
 **/
 
 public class PlayerbleCharacter : Character
@@ -53,6 +54,8 @@ public class PlayerbleCharacter : Character
         //print("mouse : " + eMouseState);
         Move();
         Dodge();
+        //Time.timeScale = 0.1f;
+        //cAnimator.speed = 10;
     }
 
     #region State
@@ -124,7 +127,7 @@ public class PlayerbleCharacter : Character
     protected float fNormalAttackCancelTimer = 0f;
     protected float fNormalAttackCancelTime = 2f;
     protected bool canNextAttack = true;
-    protected bool isNotNormalAttackState;
+    protected bool isNormalAttackState;
 
     private Coroutine corouAttackCancelCoroutine;
     protected InputAction normalAttackAction;
@@ -232,7 +235,9 @@ public class PlayerbleCharacter : Character
                 Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
-                GameManager.instance.AsynchronousExecution(AttackDuringHoldMove());
+                eMouseState = mouseState.None;
+                cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
+                GameManager.instance.AsynchronousExecution(StartAttackCancelTimerWhenHoldMove());
             }
         };
     }
@@ -264,13 +269,7 @@ public class PlayerbleCharacter : Character
                 if (cStateMachine.GetCurrentState() != cQSkillState &&
                     cStateMachine.GetCurrentState() != cWSkillState &&
                     cStateMachine.GetCurrentState() != cESkillState &&
-                    cStateMachine.GetCurrentState() != cDodgeState &&
-                    cStateMachine.GetCurrentState() != cToStandState &&
-                    cStateMachine.GetCurrentState() != cNormalAttack[0] &&
-                    cStateMachine.GetCurrentState() != cNormalAttack[1] &&
-                    cStateMachine.GetCurrentState() != cNormalAttack[2] &&
-                    cStateMachine.GetCurrentState() != cNormalAttack?[3] &&
-                    cStateMachine.GetCurrentState() != cNormalAttack?[4])
+                    cStateMachine.GetCurrentState() != cDodgeState)
                 {
                     if (cStateMachine.GetCurrentState() != cMoveState)
                     {
@@ -391,15 +390,15 @@ public class PlayerbleCharacter : Character
 
     private float DoMoveOnBySkill(float power)
     {
+        transform.localRotation = GetMouseAngle();
         transform.position += transform.forward * Time.deltaTime * power;
         return fMoveOnBySkillTimer -= Time.deltaTime;
     }
     #endregion
 
     #region Normal Attack Part
-    protected IEnumerator AttackDuringHoldMove()
+    protected IEnumerator StartAttackCancelTimerWhenHoldMove()
     {
-        cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
         yield return new WaitUntil(() => fNormalAttackCancelTimer > 0.2f || cStateMachine.GetCurrentState() == cIdleState);
         KeepHoldMove();
     }
@@ -425,7 +424,7 @@ public class PlayerbleCharacter : Character
 
     protected void ResetAttackCount()
     {
-        if (isNotNormalAttackState)
+        if (isNormalAttackState == false)
         {
             canNextAttack = true;
             nNormalAttackCount = 0;
@@ -537,7 +536,8 @@ public class PlayerbleCharacter : Character
         if (isMoving == true && eMouseState == mouseState.Hold
             && cStateMachine.GetCurrentState() != cQSkillState
             && cStateMachine.GetCurrentState() != cWSkillState
-            && cStateMachine.GetCurrentState() != cESkillState)
+            && cStateMachine.GetCurrentState() != cESkillState
+            || (isMoving == true && isNormalAttackState == true))
         {
             cStateMachine.ChangeState(cMoveState);
             eMouseState = mouseState.Hold;
@@ -560,16 +560,19 @@ public class PlayerbleCharacter : Character
     protected Vector3 GetPositionOnGround()
     {
         Ray ray;
+        NavMeshHit navMeshHit;
         RaycastHit hit;
         Vector3 pos = Vector3.zero;
 
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, 100f, 1 << 6))
-            pos = hit.point;
-        else
-            pos = transform.position;
-
+        if (Physics.Raycast(ray, out hit, 100f))
+        {
+            if (NavMesh.SamplePosition(hit.point, out navMeshHit, 1f, NavMesh.AllAreas))
+            {
+                pos = navMeshHit.position;
+            }
+        }
         return pos;
     }
     protected Quaternion GetMouseAngle()
