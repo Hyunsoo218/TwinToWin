@@ -146,8 +146,8 @@ public class MonsterCharacter : Character
 		while (true)
 		{
 			vTargetPos = Player.instance.cCurrentCharacter.transform.position;
-
-			if(cAgent.enabled)
+			vTargetPos.y = 0;
+			if (cAgent.enabled)
 				cAgent.SetDestination(vTargetPos);
 			
 			fTargetDist = Vector3.Distance(transform.position, vTargetPos);

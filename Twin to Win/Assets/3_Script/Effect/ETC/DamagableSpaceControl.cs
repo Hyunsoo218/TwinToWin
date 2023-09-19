@@ -20,36 +20,37 @@ public class DamagableSpaceControl : MonoBehaviour
 		switch (eType)
 		{
 			case FillType.X:
-				cFill.size = new Vector3(0, cArea.size.y, cArea.size.z);
 				StartCoroutine(FillingX(fTime));
+				StartCoroutine(FillingAlpha(fTime));
 				break;
 			case FillType.Y:
-				cFill.size = new Vector3(cArea.size.x, 0, cArea.size.z);
 				StartCoroutine(FillingY(fTime));
+				//StartCoroutine(FillingAlpha(fTime));
 				break;
 			case FillType.X_Y:
-				cFill.size = new Vector3(0, 0, cArea.size.z);
 				StartCoroutine(FillingX_Y(fTime));
 				break;
 			case FillType.Alpha:
-				cFill.size = new Vector3(0, 0, cArea.size.z);
-				cArea.fadeFactor = 0;
 				StartCoroutine(FillingAlpha(fTime));
 				break;
 		}
 	}
 	private IEnumerator FillingAlpha(float fTime)
 	{
+		cFill.size = new Vector3(0, 0, cArea.size.z);
+		cArea.fadeFactor = 0;
+
 		float fRunTime = 0;
 
-		float fFadeInTime = fTime * 0.9f;
-		float fFadeOutTime = fTime * 0.1f;
-
+		float fFadeOutTime = 0.2f;
+		float fFadeInTime = fTime - fFadeOutTime;
+		fFadeOutTime -= 0.05f;
 		while (fRunTime < fFadeInTime)
 		{
 			yield return null;
 			fRunTime += Time.deltaTime;
 			cArea.fadeFactor = fRunTime / fFadeInTime;
+			cFill.fadeFactor = fRunTime / fFadeInTime;
 		}
 		fRunTime = 0;
 		while (fRunTime < fFadeOutTime)
@@ -57,11 +58,13 @@ public class DamagableSpaceControl : MonoBehaviour
 			yield return null;
 			fRunTime += Time.deltaTime;
 			cArea.fadeFactor = 1f - fRunTime / fFadeOutTime;
+			cFill.fadeFactor = 1f - fRunTime / fFadeOutTime;
 		}
 		gameObject.SetActive(false);
 	}
 	private IEnumerator FillingY(float fTime)
 	{
+		cFill.size = new Vector3(cArea.size.x, 0, cArea.size.z);
 		float fRunTime = 0;
 		Vector3 v3Current;
 
@@ -79,6 +82,7 @@ public class DamagableSpaceControl : MonoBehaviour
 	}
 	private IEnumerator FillingX(float fTime)
 	{
+		cFill.size = new Vector3(0, cArea.size.y, cArea.size.z);
 		float fRunTime = 0;
 		Vector3 v3Current;
 
@@ -96,6 +100,7 @@ public class DamagableSpaceControl : MonoBehaviour
 	}
 	private IEnumerator FillingX_Y(float fTime)
 	{
+		cFill.size = new Vector3(0, 0, cArea.size.z);
 		float fRunTime = 0;
 		Vector3 v3Current;
 

@@ -31,7 +31,7 @@ public class BossCharacter : MonsterCharacter
 		arrAttackMelee.Add(cStateAttack3);
 		arrAttackMelee.Add(cStateAttack4);
 
-		//arrAttackRanged.Add(cStateAttack5);
+		arrAttackRanged.Add(cStateAttack5);
 		arrAttackRanged.Add(cStateAttack6);
 
 		dAttackEffects.Add(cStateAttack, objAttackEffectPrefab);
@@ -259,7 +259,7 @@ public class BossCharacter : MonsterCharacter
 		transform.position += Vector3.up * 10f;
 
 		if (GameManager.instance.phase == Phase.Phase_3)
-			yield return new WaitForSeconds(4f);
+			yield return new WaitForSeconds(3.7f);
 		else
 			yield return new WaitForSeconds(7.5f);
 

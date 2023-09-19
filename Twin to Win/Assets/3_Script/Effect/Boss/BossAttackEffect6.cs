@@ -84,18 +84,9 @@ public class BossAttackEffect6 : Effect
 						arrRush[i + j].OnAction(tUser, fDamage, nTargetLayer);
 					}
 				}
-				yield return new WaitForSeconds(.7f);
+				yield return new WaitForSeconds(.5f);
 				i += arrRush.Count / 5 - 1;
 			}
-			//for (int i = 0; i < arrRush.Count; i++)
-			//{
-			//	for (int j = 0; j < 3; j++)
-			//	{
-			//		arrRush[i].gameObject.SetActive(true);
-			//		arrRush[i].OnAction(tUser, fDamage, nTargetLayer);
-			//	}
-			//	yield return new WaitForSeconds(0.5f);
-			//}
 		}
 		else
 		{
