@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 		instance = this;
 		cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
     }
-	public void ConvertCharacter()
+    public void ConvertCharacter()
 	{
         InActiveCurrentCharacter();
         cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;

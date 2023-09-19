@@ -150,49 +150,42 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         
         float parabolaHighestHeight = 3f;
         float parabolaSpeed = 2f;
+        bool isHitWall = false;
 
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
-        yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed) == true);
+        yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
         canDodge = true;
         cStateMachine.ChangeState(cToStandState);
     }
 
-    private bool DoJumpAndRotate(Vector3 startPos, Vector3 _endPos, float parabolaHighestHeight, float parabolaSpeed)
+    private bool DoJumpAndRotate(Vector3 startPos, Vector3 _endPos, float parabolaHighestHeight, float parabolaSpeed, ref bool isHitWall)
     {
-        NavMeshHit navMeshHit;
         RaycastHit hit;
         Vector3 endPos = _endPos;
 
         fParabolaTimer += Time.deltaTime * parabolaSpeed;
         fParabolaTimer = fParabolaTimer % 1f;
-        
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 100f))
-        {
-            if (NavMesh.SamplePosition(hit.point, out navMeshHit, 10f, NavMesh.AllAreas))
-            {
-                print(navMeshHit.position);
-                
-                //fFreeFallTimer += Time.deltaTime;
-                //transform.position = FreeFall(navMeshHit.position.y, fFreeFallTimer);
-            }
-            Debug.DrawLine(transform.position, Parabola(startPos, navMeshHit.position, parabolaHighestHeight, fParabolaTimer / 1f), Color.red);
-            transform.position = Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f);
-            
 
-            //if (!NavMesh.SamplePosition(hit.point, out navMeshHit, 1f, NavMesh.AllAreas))
-            //{
-            //    fFreeFallTimer += Time.deltaTime;
-            //    endPos = navMeshHit.position;
-            //    transform.position = FreeFall(parabolaPos.y, fFreeFallTimer);
-            //}
-            //else
-            //{
-                
-            //}
+        Collider[] colliders = Physics.OverlapSphere(transform.position + new Vector3(0f, 0.5f), 0.5f, ~(1 << LayerMask.NameToLayer("Player")));
+        if (colliders.Length > 0)   // 벽치기 임시
+        {
+            isHitWall = true;
+            fFreeFallTimer += Time.deltaTime;
+            endPos = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.position = FreeFall(Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
 
-
+        if (Physics.Raycast(Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f), Vector3.down, out hit, 100f, 1 << LayerMask.NameToLayer("Ground")) && isHitWall == false) // 일반 포물선 운동
+        {
+            transform.position = Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f);
+        }
+        else if (Physics.Raycast(transform.position, Vector3.down, out hit, 100f, 1 << LayerMask.NameToLayer("Ground")))    // 빵꾸난 곳
+        {
+            isHitWall = true;
+            fFreeFallTimer += Time.deltaTime;
+            transform.position = FreeFall(Parabola(transform.position, hit.point, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
+        }
         return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
     }
 
@@ -212,7 +205,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     private Vector3 FreeFall(float height, float t)
     {
-        float freeFallY = height - 1 / 2 * 9.82f * (t * t);
+        float freeFallY = height + 1 / 2 * 9.82f * (t * t);
 
         return new Vector3(transform.position.x, freeFallY, transform.position.z);
     }

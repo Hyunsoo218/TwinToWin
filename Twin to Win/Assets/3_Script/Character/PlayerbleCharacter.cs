@@ -10,6 +10,16 @@ public enum mouseState
     Click,
     Hold
 };
+
+public enum SkillType
+{
+    QSkill,
+    WSkill,
+    ESkill,
+    RSkill,
+    Dodge,
+    Tag
+};
 /** 
     버그 리스트
     =마우스 클릭 Hold 이동 절묘하게 느림 : 상
@@ -113,6 +123,10 @@ public class PlayerbleCharacter : Character
     protected float fESkillTimer = 0f;
     #endregion
 
+    #region RSkill
+    protected float fRSkillTimer = 0f;
+    #endregion
+
     #region WTD ESKill
     protected float fParabolaTimer = 0f;
     protected float fFreeFallTimer = 0f;
@@ -197,7 +211,7 @@ public class PlayerbleCharacter : Character
                 eMouseState = mouseState.None;
                 if (gameObject.activeSelf == true)
                 {
-                    cStateMachine.ChangeState(cToStandState);
+                    cStateMachine.ChangeState(cIdleState);
                 }
                 
             }
@@ -292,7 +306,7 @@ public class PlayerbleCharacter : Character
                 isMoving = false;
                 eMouseState = mouseState.None;
 
-                cStateMachine.ChangeState(cToStandState);
+                cStateMachine.ChangeState(cIdleState);
                 yield break;
             }
             transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
@@ -572,6 +586,10 @@ public class PlayerbleCharacter : Character
             {
                 pos = navMeshHit.position;
             }
+            else
+            {
+                return transform.position;
+            }
         }
         return pos;
     }
@@ -612,6 +630,25 @@ public class PlayerbleCharacter : Character
 
         return mouseNormalizedYPosition;
     }
+    
+    public float GetSkillTimer(SkillType skill)
+    {
+        switch (skill)
+        {
+            case SkillType.QSkill:
+                return fQSkillTimer;
+            case SkillType.WSkill:
+                return fWSkillTimer;
+            case SkillType.ESkill:
+                return fESkillTimer;
+            case SkillType.RSkill:
+                return fRSkillTimer;
+            case SkillType.Dodge:
+                return fDodgeTimer;
+            case SkillType.Tag:
+                return fTagTimer;
+        }
 
-
+        return 0f;
+    }
 }
