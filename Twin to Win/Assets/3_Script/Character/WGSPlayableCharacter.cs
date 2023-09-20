@@ -41,16 +41,18 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         eSkillAction.started += ctx =>
         {
-            if (fESkillTimer <= 0f && EnableESkill() == true)
+            if (EnableESkill() == true && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f) && Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
             {
+                FeverGauge.instance.IncreaseSkillFeverGauge();
+                UIManager.instance.OnSkillBtn(KeyCode.E);
                 srtCurrentSkill = srtESkill;
-                canDodge = false;
+                Player.instance.canDodge = false;
                 cStateMachine.ChangeState(cESkillState);
             }
         };
         eSkillAction.performed += ctx =>
         {
-            if (cStateMachine.GetCurrentState() == cESkillState && isDoingHoldESkill == false)
+            if (cStateMachine.GetCurrentState() == cESkillState && isDoingHoldESkill == false && Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
             {
                 isDoingHoldESkill = true;
                 GameManager.instance.AsynchronousExecution(StartESkillHoldTimer());
@@ -58,7 +60,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         };
         eSkillAction.canceled += ctx =>
         {
-            if (cStateMachine.GetCurrentState() == cESkillState)
+            if (cStateMachine.GetCurrentState() == cESkillState && Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
             {
                 GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
                 StopESkill();
@@ -92,21 +94,25 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     private bool EnableQSkill()
     {
-        return cStateMachine.GetCurrentState() != cQSkillState 
-            && cStateMachine.GetCurrentState() != cESkillState 
+        return cStateMachine.GetCurrentState() != cQSkillState
+            && cStateMachine.GetCurrentState() != cWSkillState
+            && cStateMachine.GetCurrentState() != cESkillState
             && cStateMachine.GetCurrentState() != cDodgeState 
             && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableWSkill()
     {
-        return cStateMachine.GetCurrentState() != cWSkillState 
-            && cStateMachine.GetCurrentState() != cESkillState 
+        return cStateMachine.GetCurrentState() != cQSkillState
+            && cStateMachine.GetCurrentState() != cWSkillState
+            && cStateMachine.GetCurrentState() != cESkillState
             && cStateMachine.GetCurrentState() != cDodgeState 
             && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableESkill()
     {
-        return cStateMachine.GetCurrentState() != cESkillState 
+        return cStateMachine.GetCurrentState() != cQSkillState
+            && cStateMachine.GetCurrentState() != cWSkillState
+            && cStateMachine.GetCurrentState() != cESkillState
             && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
@@ -114,10 +120,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
     {
-        if (context.started && fQSkillTimer <= 0f && EnableQSkill() == true)
+        if (context.started && EnableQSkill() == true && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
         {
+            FeverGauge.instance.IncreaseSkillFeverGauge();
+            UIManager.instance.OnSkillBtn(KeyCode.Q);
             srtCurrentSkill = srtQSkill;
-            canDodge = false;
+            Player.instance.canDodge = false;
             transform.localRotation = GetMouseAngle();
             cStateMachine.ChangeState(cQSkillState);
             GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
@@ -126,22 +134,25 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     private IEnumerator StartQSkillCoolDown()
     {
+        fQSkillTimer = 0f;
         while (fQSkillTimer < srtQSkill.fSkillCoolDown)
         {
-            fQSkillTimer += Time.deltaTime;
+            fQSkillTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
-        fQSkillTimer = 0f;
+        fQSkillTimer = srtQSkill.fSkillCoolDown;
     }
     #endregion
 
     #region WSkill Part
     public void OnWSkill(InputAction.CallbackContext context)
     {
-        if (context.started && fWSkillTimer <= 0f && EnableWSkill() == true)
+        if (context.started && EnableWSkill() == true && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
         {
+            FeverGauge.instance.IncreaseSkillFeverGauge();
+            UIManager.instance.OnSkillBtn(KeyCode.W);
             srtCurrentSkill = srtWSkill;
-            canDodge = false;
+            Player.instance.canDodge = false;
             cStateMachine.ChangeState(cWSkillState);
             GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
@@ -149,12 +160,13 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     private IEnumerator StartWSkillCoolDown()
     {
+        fWSkillTimer = 0f;
         while (fWSkillTimer < srtWSkill.fSkillCoolDown)
         {
-            fWSkillTimer += Time.deltaTime;
+            fWSkillTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
-        fWSkillTimer = 0f;
+        fWSkillTimer = srtWSkill.fSkillCoolDown;
     }
 
 
@@ -168,8 +180,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             Vector3 mousePosOnVirtualGround = GetPositionOnVirtualGround();
             transform.localRotation = GetMouseAngle();
-            transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * 3f);
-            fESkillHoldTimer += Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * Constants.fSpeedConstant * 3f);
+            fESkillHoldTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
         StopESkill();
@@ -184,12 +196,26 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     private IEnumerator StartESkillCoolDown()
     {
+        fESkillTimer = 0f;
         while (fESkillTimer < srtESkill.fSkillCoolDown)
         {
-            fESkillTimer += Time.deltaTime;
+            fESkillTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
-        fESkillTimer = 0f;
+        fESkillTimer = srtESkill.fSkillCoolDown;
+    }
+    #endregion
+
+    #region Fever Part
+    public override void OnFever(InputAction.CallbackContext ctx)
+    {
+        base.OnFever(ctx);
+        if (FeverGauge.instance.IsDoubleFeverGaugeFull() == false && FeverGauge.instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        {
+            CutCoolDown(fCoolDownCutAndRestoreTime);
+            SetIsFeverTime(true);
+            StartCoroutine(FeverGauge.instance.StartBlueFeverTime());
+        }
     }
     #endregion
 

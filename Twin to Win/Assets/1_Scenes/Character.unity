@@ -196,6 +196,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3995086088750731284, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: cPSUI
+      value: 
+      objectReference: {fileID: 1681621626}
     - target: {fileID: 6475346935482829327, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
       propertyPath: m_Name
@@ -735,6 +740,41 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1741432393}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnFever
+      objectReference: {fileID: 0}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: WGSPlayableCharacter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5760106890908570739, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8605128690277393937, guid: 00db585ca94e45d45ab217c7f3ca0dee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -788,7 +828,12 @@ PrefabInstance:
     - target: {fileID: 8684553731372817573, guid: 00db585ca94e45d45ab217c7f3ca0dee,
         type: 3}
       propertyPath: srtQSkill.fSkillCoolDown
-      value: 10
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684553731372817573, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: srtWSkill.fSkillCoolDown
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -959,6 +1004,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1745249769378136, guid: 0a897a89c8da03c4a9e1843939845a68,
         type: 3}
+    - target: {fileID: 6280981427987442190, guid: 9e67e752b6a4ee24282ba8ed158c258b,
+        type: 3}
+      propertyPath: srtQSkill.fSkillCoolDown
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6280981427987442190, guid: 9e67e752b6a4ee24282ba8ed158c258b,
+        type: 3}
+      propertyPath: srtWSkill.fSkillCoolDown
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1463,6 +1518,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imgGaugeFillImage: {fileID: 707032797}
+  fIncreaseAttackGaugeAmount: 5
+  fIncreaseSkillGaugeAmount: 100
+  fFeverTime: 5
 --- !u!1 &1160234425
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,6 +1872,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1681621626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5776664168367000212, guid: 1599056f6fe74884890699c74ef83cf1,
+    type: 3}
+  m_PrefabInstance: {fileID: 22458283}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01915a61ea51864438b3277e85bab43b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1698404399
 GameObject:
   m_ObjectHideFlags: 0

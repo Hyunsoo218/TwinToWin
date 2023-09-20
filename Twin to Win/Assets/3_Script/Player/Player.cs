@@ -5,25 +5,63 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	public static Player instance;
-	public PlayerbleCharacter cCurrentCharacter;
-	[SerializeField] private PlayerbleCharacter cGreatSword;
-	[SerializeField] private PlayerbleCharacter cTwinSword;
+    public static Player instance;
+    public PlayerbleCharacter cCurrentCharacter;
+    [SerializeField] private PlayerbleCharacter cGreatSword;
+    [SerializeField] private PlayerbleCharacter cTwinSword;
 
+    #region Dodge Var
+
+    public float fDodgePower = 30f;
+    public float fDodgeCoolDown = 3f;
+    [HideInInspector] public float fDodgePlayTime = 0.1f;
+    [HideInInspector] public float fDodgeTimer = 99f;
+    [HideInInspector] public float fDodgePlayTimer = 0f;
+    [HideInInspector] public bool isDodging = false;
+    [HideInInspector] public bool canDodge = true;
+    #endregion
+
+    #region Tag Var
+    [HideInInspector] public bool canTag = true;
+    [HideInInspector] public float fTagTimer = 99f;
+    public float fTagCoolDown = 2f;
+    #endregion
+
+    #region Move Var
     private Transform tCurrentTrans;
     private bool isHoldingState = false;
-	private void Awake()
-	{
-		instance = this;
-		cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
+    #endregion
+
+    #region Fever Var
+    [HideInInspector] public bool isDoubleFeverTime = false;
+    #endregion
+
+    private void Awake()
+    {
+        instance = this;
+        cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
     }
     public void ConvertCharacter()
-	{
+    {
+        ResetFever();
         InActiveCurrentCharacter();
+
         cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
+
         ActiveNextCharacter();
+        FeverGauge.instance.ChangeState(cCurrentCharacter);
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
+    }
+
+    private void ResetFever()
+    {
+        if (FeverGauge.instance.IsDoubleFeverGaugeFull() == false)
+        {
+            cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
+            FeverGauge.instance.ResetGaugeWhenTag();
+        }
+        
     }
 
     private void InActiveCurrentCharacter()

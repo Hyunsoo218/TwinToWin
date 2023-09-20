@@ -16,27 +16,31 @@ public enum SkillType
     QSkill,
     WSkill,
     ESkill,
-    RSkill,
     Dodge,
     Tag
 };
-/** 
-    버그 리스트
-    =마우스 클릭 Hold 이동 절묘하게 느림 : 상
-    =우클릭 Click을 하면 가끔 멈춤 : 중
-    =Hold를 아주 살짝 했다가 떼면 toStand가 유지됨 : 하
-    =게임 시작 전 WGS, WTD 둘 다 켜놓으면 안 움직임 : 하
-    해야할 거
-    =마우스 이펙트를 쓸데없이 Inspector에서 둘 다 받음 : 하
-**/
+
+public class Constants
+{
+    private static Constants instance;
+
+    public static Constants GetInstance()
+    {
+        if (instance == null)
+        {
+            instance = new Constants();
+        }
+
+        return instance;
+    }
+    public static float fSpeedConstant = 1f;
+
+}
 
 public class PlayerbleCharacter : Character
 {
     [Header("Character Info")]
-    [SerializeField] private float fMoveSpeed = 3f;
-    [SerializeField] private float fDodgePower = 30f;
-    [SerializeField] private float fDodgePlayTime = 0.1f;
-    [SerializeField] private float fDodgeCoolTime = 3f;
+    public float fMoveSpeed = 3f;
 
     [Header("Attack Type Info")]
     public GameObject objAttackEffect;
@@ -44,7 +48,6 @@ public class PlayerbleCharacter : Character
     public Skill srtQSkill;
     public Skill srtWSkill;
     public Skill srtESkill;
-    public Skill srtRSkill;
 
     protected Skill srtCurrentSkill;
 
@@ -64,11 +67,10 @@ public class PlayerbleCharacter : Character
         //print("mouse : " + eMouseState);
         Move();
         Dodge();
-        //Time.timeScale = 0.1f;
-        //cAnimator.speed = 10;
+        cAnimator.speed = Constants.fSpeedConstant;
     }
 
-    #region State
+    #region State Var
     protected State cIdleState = new State("idleState");
     protected State cMoveState = new State("moveState");
     protected State cDodgeState = new State("dodgeState");
@@ -76,12 +78,11 @@ public class PlayerbleCharacter : Character
     protected State cQSkillState = new State("qSkill");
     protected State cWSkillState = new State("wSkill");
     protected State cESkillState = new State("eSkill");
-    protected State cRSkillState = new State("rSkill");
     protected State cTagState = new State("tagState");
     protected State[] cNormalAttack = new State[5] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3"), new State("normalAttack4"), new State("normalAttack5") };
     #endregion
 
-    #region Move
+    #region Move Var
     protected bool isMoving = false;
 
     Coroutine moveCoroutine;
@@ -93,14 +94,7 @@ public class PlayerbleCharacter : Character
     protected Vector3 mousePosOnGround;
     #endregion
 
-    #region Dodge
-    private float fDodgeTimer;
-    private float fDodgePlayTimer;
-    private bool isDodging = false;
-    protected bool canDodge = true;
-    #endregion
-
-    #region Skill
+    #region Skill Var
     [Serializable]
     public struct Skill
     {
@@ -111,32 +105,28 @@ public class PlayerbleCharacter : Character
     protected float fMoveOnBySkillTimer;
     #endregion
 
-    #region QSkill
-    protected float fQSkillTimer = 0f;
+    #region QSkill Var
+    protected float fQSkillTimer = 99f;
     #endregion
 
-    #region WSkill
-    protected float fWSkillTimer = 0f;
+    #region WSkill Var
+    protected float fWSkillTimer = 99f;
     #endregion
 
-    #region ESkill
-    protected float fESkillTimer = 0f;
+    #region ESkill Var
+    protected float fESkillTimer = 99f;
     #endregion
 
-    #region RSkill
-    protected float fRSkillTimer = 0f;
-    #endregion
-
-    #region WTD ESKill
+    #region WTD ESKill Var
     protected float fParabolaTimer = 0f;
     protected float fFreeFallTimer = 0f;
     #endregion
 
-    #region WGS ESkill
+    #region WGS ESkill Var
     protected float fESkillHoldTimer = 0f;
     #endregion
 
-    #region Normal Attack
+    #region Normal Attack Var
     protected int nNormalAttackCount = 0;
     protected float fNormalAttackCancelTimer = 0f;
     protected float fNormalAttackCancelTime = 2f;
@@ -147,10 +137,9 @@ public class PlayerbleCharacter : Character
     protected InputAction normalAttackAction;
     #endregion
 
-    #region Tag
-    protected static bool canTag = true;
-    protected static float fTagTimer = 0f;
-    protected static float fTagCoolTime = 2f;
+    #region Fever Var
+    private bool isFeverTime = false;
+    protected float fCoolDownCutAndRestoreTime = 2f;
     #endregion
 
     #region Init Part
@@ -171,7 +160,6 @@ public class PlayerbleCharacter : Character
         cQSkillState.onEnter += () => { ChangeAnimation(cQSkillState.strStateName); };
         cWSkillState.onEnter += () => { ChangeAnimation(cWSkillState.strStateName); };
         cESkillState.onEnter += () => { ChangeAnimation(cESkillState.strStateName); };
-        cRSkillState.onEnter += () => { ChangeAnimation(cRSkillState.strStateName); };
     }
 
     private void InitializeRightMouseState()
@@ -238,6 +226,7 @@ public class PlayerbleCharacter : Character
                 Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
+                FeverGauge.instance.IncreaseNormalAttackFeverGauge();
                 cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
             }
             else if (eMouseState == mouseState.Hold &&
@@ -249,6 +238,7 @@ public class PlayerbleCharacter : Character
                 Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
+                FeverGauge.instance.IncreaseNormalAttackFeverGauge();
                 eMouseState = mouseState.None;
                 cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
                 GameManager.instance.AsynchronousExecution(StartAttackCancelTimerWhenHoldMove());
@@ -291,7 +281,7 @@ public class PlayerbleCharacter : Character
                     }
                     mousePosOnVirtualGround = GetPositionOnVirtualGround();
                     transform.localRotation = GetMouseAngle();
-                    transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
+                    transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * Constants.fSpeedConstant * fMoveSpeed);
                 }
                 break;
         }
@@ -309,7 +299,7 @@ public class PlayerbleCharacter : Character
                 cStateMachine.ChangeState(cIdleState);
                 yield break;
             }
-            transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * Constants.fSpeedConstant * fMoveSpeed);
 
             yield return null;
         }
@@ -331,54 +321,56 @@ public class PlayerbleCharacter : Character
     #region Dodge Part
     public void Dodge()
     {
-        if (isDodging && cStateMachine.GetCurrentState() == cDodgeState)
+        if (Player.instance.isDodging && cStateMachine.GetCurrentState() == cDodgeState)
         {
-            fDodgePlayTimer = fDodgePlayTime;
+            Player.instance.fDodgePlayTimer = Player.instance.fDodgePlayTime;
             GameManager.instance.AsynchronousExecution(DodgeCoroutine());
-            isDodging = false;
+            Player.instance.isDodging = false;
         }
     }
 
     private IEnumerator DodgeCoroutine()
     {
         yield return new WaitUntil(() => DoDodge() <= 0f);
-        fDodgePlayTimer = fDodgePlayTime;
+        Player.instance.fDodgePlayTimer = Player.instance.fDodgePlayTime;
         cStateMachine.ChangeState(cToStandState);
     }
     protected void CanDodge()
     {
-        canDodge = true;
+        Player.instance.canDodge = true;
     }
 
     private float DoDodge()
     {
         transform.localRotation = GetMouseAngle();
-        transform.position += transform.forward * Time.deltaTime * fDodgePower;
-        return fDodgePlayTimer -= Time.deltaTime;
+        transform.position += transform.forward * Time.deltaTime * Constants.fSpeedConstant * Player.instance.fDodgePower;
+        return Player.instance.fDodgePlayTimer -= Time.deltaTime * Constants.fSpeedConstant;
     }
 
     private IEnumerator StartDodgeCoolDown()
     {
-        canDodge = false;
-        while (fDodgeTimer <= fDodgeCoolTime)
+        Player.instance.canDodge = false;
+        Player.instance.fDodgeTimer = 0f;
+        while (Player.instance.fDodgeTimer <= Player.instance.fDodgeCoolDown)
         {
-            fDodgeTimer += Time.deltaTime;
+            Player.instance.fDodgeTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
-        fDodgeTimer = 0f;
-        canDodge = true;
+        Player.instance.fDodgeTimer = Player.instance.fDodgeCoolDown;
+        Player.instance.canDodge = true;
+        
     }
 
     public void OnDodge(InputAction.CallbackContext context)
     {
-        if (context.started && fDodgeTimer <= 0f &&
+        if (context.started && (Player.instance.fDodgeTimer >= Player.instance.fDodgeCoolDown || Player.instance.fDodgeTimer == 0f) &&
             cStateMachine.GetCurrentState() != cDodgeState &&
             cStateMachine.GetCurrentState() != cTagState &&
-            canDodge == true)
+            Player.instance.canDodge == true)
         {
             cStateMachine.ChangeState(cDodgeState);
             GameManager.instance.AsynchronousExecution(StartDodgeCoolDown());
-            isDodging = true;
+            Player.instance.isDodging = true;
         }
     }
 
@@ -399,14 +391,15 @@ public class PlayerbleCharacter : Character
     private IEnumerator StartMoveOnBySkill(float power)
     {
         fMoveOnBySkillTimer = srtCurrentSkill.fMoveTimeOnBySkill;
+        transform.localRotation = GetMouseAngle();
         yield return new WaitUntil(() => DoMoveOnBySkill(power) <= 0f);
     }
 
     private float DoMoveOnBySkill(float power)
     {
-        transform.localRotation = GetMouseAngle();
-        transform.position += transform.forward * Time.deltaTime * power;
-        return fMoveOnBySkillTimer -= Time.deltaTime;
+        
+        transform.position += transform.forward * Time.deltaTime * Constants.fSpeedConstant * power;
+        return fMoveOnBySkillTimer -= Time.deltaTime * Constants.fSpeedConstant;
     }
     #endregion
 
@@ -471,7 +464,7 @@ public class PlayerbleCharacter : Character
     {
         while (fNormalAttackCancelTimer < fNormalAttackCancelTime)
         {
-            fNormalAttackCancelTimer += Time.deltaTime;
+            fNormalAttackCancelTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
         fNormalAttackCancelTimer = 0f;
@@ -481,22 +474,86 @@ public class PlayerbleCharacter : Character
     #region Tag Part
     public void OnTag(InputAction.CallbackContext ctx)
     {
-        if (canTag == true)
+        if (Player.instance.canTag == true && (Player.instance.fTagTimer >= Player.instance.fTagCoolDown || Player.instance.fTagTimer == 0f))
         {
-            canTag = false;
+            UIManager.instance.ConvertPlayer();
+            Player.instance.canTag = false;
             Player.instance.ConvertCharacter();
             cStateMachine.ChangeState(cTagState);
         }
     }
     public IEnumerator StartTagCoolDown()
     {
-        while (fTagTimer <= fTagCoolTime)
+        Player.instance.fTagTimer = 0f;
+        while (Player.instance.fTagTimer <= Player.instance.fTagCoolDown)
         {
-            fTagTimer += Time.deltaTime;
+            Player.instance.fTagTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
         }
-        fTagTimer = 0f;
-        canTag = true;
+        Player.instance.canTag = true;
+        Player.instance.fTagTimer = Player.instance.fTagCoolDown;
+    }
+    #endregion
+
+    #region Fever Part
+    public virtual void OnFever(InputAction.CallbackContext ctx)
+    {
+        if (FeverGauge.instance.IsDoubleFeverGaugeFull() == true)
+        {
+            Constants.fSpeedConstant = 2f;
+            Player.instance.GetTwinSword().CutCoolDown(fCoolDownCutAndRestoreTime);
+            Player.instance.GetGreatSword().CutCoolDown(fCoolDownCutAndRestoreTime);
+            Player.instance.GetTwinSword().SetIsFeverTime(true);
+            Player.instance.GetGreatSword().SetIsFeverTime(true);
+            GameManager.instance.AsynchronousExecution(FeverGauge.instance.StartRedFeverTime());
+            GameManager.instance.AsynchronousExecution(FeverGauge.instance.StartBlueFeverTime());
+        }
+    }
+    public bool IsFeverTime()
+    {
+        return isFeverTime;
+    }
+    public void SetIsFeverTime(bool isFeverTime)
+    {
+        this.isFeverTime = isFeverTime;
+    }
+    public float GetCoolDownCutAndRestoreTime()
+    {
+        return fCoolDownCutAndRestoreTime;
+    }
+    public void CutCoolDown(float cutTime)
+    {
+        if (isFeverTime == false)
+        {
+            Player.instance.fDodgeCoolDown /= cutTime;
+            Player.instance.fDodgeTimer = Player.instance.fDodgeCoolDown;
+
+            srtQSkill.fSkillCoolDown /= cutTime;
+            fQSkillTimer = srtQSkill.fSkillCoolDown;
+
+            srtWSkill.fSkillCoolDown /= cutTime;
+            fWSkillTimer = srtQSkill.fSkillCoolDown;
+
+            srtESkill.fSkillCoolDown /= cutTime;
+            fESkillTimer = srtQSkill.fSkillCoolDown;
+        }
+    }
+    public void RestoreCoolDown(float restoreTime)
+    {
+        if (isFeverTime == true)
+        {
+            Player.instance.fDodgeCoolDown *= restoreTime;
+            Player.instance.fDodgeTimer = Player.instance.fDodgeCoolDown;
+
+            srtQSkill.fSkillCoolDown *= restoreTime;
+            fQSkillTimer = srtQSkill.fSkillCoolDown;
+
+            srtWSkill.fSkillCoolDown *= restoreTime;
+            fWSkillTimer = srtQSkill.fSkillCoolDown;
+
+            srtESkill.fSkillCoolDown *= restoreTime;
+            fESkillTimer = srtQSkill.fSkillCoolDown;
+        }
     }
     #endregion
 
@@ -636,19 +693,27 @@ public class PlayerbleCharacter : Character
         switch (skill)
         {
             case SkillType.QSkill:
-                return fQSkillTimer;
+                return fQSkillTimer / srtQSkill.fSkillCoolDown;
             case SkillType.WSkill:
-                return fWSkillTimer;
+                return fWSkillTimer / srtWSkill.fSkillCoolDown;
             case SkillType.ESkill:
-                return fESkillTimer;
-            case SkillType.RSkill:
-                return fRSkillTimer;
+                return fESkillTimer / srtESkill.fSkillCoolDown;
             case SkillType.Dodge:
-                return fDodgeTimer;
+                return Player.instance.fDodgeTimer / Player.instance.fDodgeCoolDown;
             case SkillType.Tag:
-                return fTagTimer;
+                return Player.instance.fTagTimer / Player.instance.fTagCoolDown;
         }
-
         return 0f;
     }
 }
+
+
+/** 
+    버그 리스트
+    =마우스 클릭 Hold 이동 절묘하게 느림 : 상
+    =우클릭 Click을 하면 가끔 멈춤 : 중
+    =Hold를 아주 살짝 했다가 떼면 toStand가 유지됨 : 하
+    =게임 시작 전 WGS, WTD 둘 다 켜놓으면 안 움직임 : 하
+    해야할 거
+    =마우스 이펙트를 쓸데없이 Inspector에서 둘 다 받음 : 하
+**/

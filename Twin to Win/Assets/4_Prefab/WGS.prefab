@@ -1437,7 +1437,19 @@ MonoBehaviour:
     m_ActionId: 13a11b06-c19e-439a-bcea-d5209bb56a7b
     m_ActionName: PlayerActions/ESkill[/Keyboard/e]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8684553731372817573}
+        m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
+        m_MethodName: OnFever
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 531634d6-8345-4e9a-b2aa-0550b2c05995
     m_ActionName: PlayerActions/RSkill[/Keyboard/r]
   - m_PersistentCalls:
@@ -1586,7 +1598,7 @@ MonoBehaviour:
   fMoveSpeed: 3
   fDodgePower: 30
   fDodgePlayTime: 0.1
-  fDodgeCoolTime: 1
+  fDodgeCoolDown: 3
   objAttackEffect: {fileID: 7777573416650849465, guid: d05e0fcf47b191c45bf784f0717dad6b,
     type: 3}
   objRotationAttackEffect: {fileID: 7777573416650849465, guid: b6b8143a30683f2469e4153318f661e3,
@@ -1605,10 +1617,6 @@ MonoBehaviour:
     objSkillEffect: {fileID: 7777573416650849465, guid: 25ee29cebcda72b4c8578dc6af0783f3,
       type: 3}
     fSkillCoolDown: 3
-    fMoveTimeOnBySkill: 0
-  srtRSkill:
-    objSkillEffect: {fileID: 0}
-    fSkillCoolDown: 0
     fMoveTimeOnBySkill: 0
   objWGSMouseIndicator: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}
