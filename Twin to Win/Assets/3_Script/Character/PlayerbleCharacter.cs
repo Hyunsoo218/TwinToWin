@@ -42,6 +42,7 @@ public class PlayerbleCharacter : Character
     [Header("Character Info")]
     public float fMoveSpeed = 3f;
 
+
     [Header("Attack Type Info")]
     public GameObject objAttackEffect;
     public GameObject objRotationAttackEffect;
@@ -201,7 +202,7 @@ public class PlayerbleCharacter : Character
                 {
                     cStateMachine.ChangeState(cIdleState);
                 }
-                
+
             }
         };
     }
@@ -363,6 +364,7 @@ public class PlayerbleCharacter : Character
 
     public void OnDodge(InputAction.CallbackContext context)
     {
+        UIManager.instance.OnDodgeBtn();
         if (context.started && (Player.instance.fDodgeTimer >= Player.instance.fDodgeCoolDown || Player.instance.fDodgeTimer == 0f) &&
             cStateMachine.GetCurrentState() != cDodgeState &&
             cStateMachine.GetCurrentState() != cTagState &&
@@ -474,9 +476,9 @@ public class PlayerbleCharacter : Character
     #region Tag Part
     public void OnTag(InputAction.CallbackContext ctx)
     {
+        UIManager.instance.ConvertPlayer();
         if (Player.instance.canTag == true && (Player.instance.fTagTimer >= Player.instance.fTagCoolDown || Player.instance.fTagTimer == 0f))
         {
-            UIManager.instance.ConvertPlayer();
             Player.instance.canTag = false;
             Player.instance.ConvertCharacter();
             cStateMachine.ChangeState(cTagState);
@@ -687,7 +689,7 @@ public class PlayerbleCharacter : Character
 
         return mouseNormalizedYPosition;
     }
-    
+
     public float GetSkillTimer(SkillType skill)
     {
         switch (skill)

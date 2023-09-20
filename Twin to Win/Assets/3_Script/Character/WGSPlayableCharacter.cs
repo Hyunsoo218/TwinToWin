@@ -82,8 +82,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         isNormalAttackState = cStateMachine.GetCurrentState() == cNormalAttack[0] ||
             cStateMachine.GetCurrentState() == cNormalAttack[1] ||
-            cStateMachine.GetCurrentState() == cNormalAttack[2] || 
-            cStateMachine.GetCurrentState() == cNormalAttack[3] || 
+            cStateMachine.GetCurrentState() == cNormalAttack[2] ||
+            cStateMachine.GetCurrentState() == cNormalAttack[3] ||
             cStateMachine.GetCurrentState() == cNormalAttack[4];
         IncreaseAttackCount();
         ResetAttackCount();

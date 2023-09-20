@@ -38,7 +38,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public override void Attack()
     {
-        isNormalAttackState = cStateMachine.GetCurrentState() == cNormalAttack[0] || 
+        isNormalAttackState = cStateMachine.GetCurrentState() == cNormalAttack[0] ||
                             cStateMachine.GetCurrentState() == cNormalAttack[1] ||
                             cStateMachine.GetCurrentState() == cNormalAttack[2];
         IncreaseAttackCount();
@@ -160,7 +160,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         Vector3 startPos = transform.position;
         transform.localRotation = GetMouseAngle();
         Vector3 endPos = transform.position + transform.forward * 7f;
-        
+
         float parabolaHighestHeight = 3f;
         float parabolaSpeed = 2f;
         bool isHitWall = false;

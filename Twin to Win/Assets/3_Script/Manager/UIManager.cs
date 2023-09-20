@@ -12,12 +12,20 @@ public class UIManager : MonoBehaviour
 	{
 		instance = this;
 	}
-	public void ConvertPlayer() 
+    private void Update()
+    {
+		cPSUI.SetSkillFill();
+    }
+    public void ConvertPlayer() 
 	{
 		cPSUI.Convert();
 	}
 	public void OnSkillBtn(KeyCode key) 
 	{
 		cPSUI.OnButton(key);
+	}
+	public void OnDodgeBtn() 
+	{
+		cPSUI.Dodge();
 	}
 }

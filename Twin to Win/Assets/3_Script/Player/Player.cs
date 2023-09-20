@@ -97,4 +97,12 @@ public class Player : MonoBehaviour
     {
         return cGreatSword;
     }
+    public float GetTagTimer() 
+    {
+        return fTagTimer / fTagCoolDown;
+    }
+    public float GetDodgeTimer()
+    {
+        return fDodgeTimer / fDodgeCoolDown;
+    }
 }
