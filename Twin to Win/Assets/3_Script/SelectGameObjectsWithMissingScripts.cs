@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement; //3
 
+#if  UNITY_EDITOR
 public class SelectGameObjectsWithMissingScripts : Editor
 {
     [MenuItem("smilejsu/Remove All Missing Script Components")]
@@ -39,3 +40,4 @@ public class SelectGameObjectsWithMissingScripts : Editor
 
     }
 }
+#endif
