@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -13,12 +11,9 @@ public class Player : MonoBehaviour
     #region Dodge Var
 
     public float fDodgePower = 30f;
-    public float fDodgeCoolDown = 3f;
     [HideInInspector] public float fDodgePlayTime = 0.1f;
-    [HideInInspector] public float fDodgeTimer = 99f;
     [HideInInspector] public float fDodgePlayTimer = 0f;
     [HideInInspector] public bool isDodging = false;
-    [HideInInspector] public bool canDodge = true;
     #endregion
 
     #region Tag Var
@@ -34,6 +29,7 @@ public class Player : MonoBehaviour
 
     #region Fever Var
     [HideInInspector] public bool isDoubleFeverTime = false;
+    [HideInInspector] public float fDoubleFeverTimer = 0f;
     #endregion
 
     private void Awake()
@@ -49,17 +45,16 @@ public class Player : MonoBehaviour
         cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
 
         ActiveNextCharacter();
-        FeverGauge.instance.ChangeState(cCurrentCharacter);
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
     }
 
     private void ResetFever()
     {
-        if (FeverGauge.instance.IsDoubleFeverGaugeFull() == false)
+        if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)
         {
             cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
-            FeverGauge.instance.ResetGaugeWhenTag();
+            FeverGauge.Instance.ResetGaugeWhenTag();
         }
         
     }
@@ -100,9 +95,5 @@ public class Player : MonoBehaviour
     public float GetTagTimer() 
     {
         return fTagTimer / fTagCoolDown;
-    }
-    public float GetDodgeTimer()
-    {
-        return fDodgeTimer / fDodgeCoolDown;
     }
 }

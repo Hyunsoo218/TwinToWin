@@ -52,8 +52,8 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         return cStateMachine.GetCurrentState() != cQSkillState
             && cStateMachine.GetCurrentState() != cWSkillState
-            && cStateMachine.GetCurrentState() != cESkillState 
-            && cStateMachine.GetCurrentState() != cDodgeState 
+            && cStateMachine.GetCurrentState() != cESkillState
+            && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableWSkill()
@@ -61,7 +61,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         return cStateMachine.GetCurrentState() != cQSkillState
             && cStateMachine.GetCurrentState() != cWSkillState
             && cStateMachine.GetCurrentState() != cESkillState
-            && cStateMachine.GetCurrentState() != cDodgeState 
+            && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableESkill()
@@ -76,12 +76,15 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            UIManager.instance.OnSkillBtn(KeyCode.Q);
+        }
+
         if (EnableQSkill() == true && context.started && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
         {
-            FeverGauge.instance.IncreaseSkillFeverGauge();
-            UIManager.instance.OnSkillBtn(KeyCode.Q);
+            FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtQSkill;
-            Player.instance.canDodge = false;
             cStateMachine.ChangeState(cQSkillState);
             GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
         }
@@ -102,12 +105,15 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #region WSkill Part
     public void OnWSkill(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            UIManager.instance.OnSkillBtn(KeyCode.W);
+        }
+        
         if (EnableWSkill() == true && context.started && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
         {
-            FeverGauge.instance.IncreaseSkillFeverGauge();
-            UIManager.instance.OnSkillBtn(KeyCode.W);
+            FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtWSkill;
-            Player.instance.canDodge = false;
             cStateMachine.ChangeState(cWSkillState);
             GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
@@ -130,13 +136,15 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #region ESkill Part
     public void OnESkill(InputAction.CallbackContext context)
     {
-
+        if (context.started)
+        {
+            UIManager.instance.OnSkillBtn(KeyCode.E);
+        }
+        
         if (EnableESkill() == true && context.started && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f))
         {
-            FeverGauge.instance.IncreaseSkillFeverGauge();
-            UIManager.instance.OnSkillBtn(KeyCode.E);
+            FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtESkill;
-            Player.instance.canDodge = false;
             cStateMachine.ChangeState(cESkillState);
             GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
             GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
@@ -168,7 +176,6 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
-        Player.instance.canDodge = true;
         cStateMachine.ChangeState(cToStandState);
     }
 
@@ -209,11 +216,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     public override void OnFever(InputAction.CallbackContext ctx)
     {
         base.OnFever(ctx);
-        if (FeverGauge.instance.IsDoubleFeverGaugeFull() == false && FeverGauge.instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
         {
             CutCoolDown(fCoolDownCutAndRestoreTime);
             SetIsFeverTime(true);
-            StartCoroutine(FeverGauge.instance.StartRedFeverTime());
+            StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
         }
     }
     #endregion

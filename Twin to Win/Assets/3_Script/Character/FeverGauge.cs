@@ -1,82 +1,40 @@
-
-using Cinemachine;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class FeverGauge : MonoBehaviour
+public class FeverGauge 
 {
-    public static FeverGauge instance;
-
-    private StateMachine cStateMachine;
-    private State cRedGauge = new State("RedGauge");
-    private State cBlueGauge = new State("BlueGauge");
-
-    public Image imgGaugeFillImage;
-    private Slider sldFeverGaugeSlider;
+    private static FeverGauge instance;
+    public static FeverGauge Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new FeverGauge();
+            }
+            return instance;
+        }
+    }
 
     private float fRedGauge = 0f;
     private float fBlueGauge = 0f;
-    public float fIncreaseAttackGaugeAmount = 5f;
-    public float fIncreaseSkillGaugeAmount = 10f;
-    public float fFeverTime = 5f;
+    public float fIncreaseAttackGaugeAmount = 0.05f;
+    public float fIncreaseSkillGaugeAmount = 0.1f;
+    public float fFeverTimeTime = 5f;
 
-    private void Awake()
+    public FeverGauge()
     {
-        Initialize();
-        StateInitalizeOnStay();
-    }
 
-    private void Update()
-    {
-        SetFeverGaugeValue();
-    }
-
-    private void Initialize()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        fIncreaseAttackGaugeAmount /= 100f;
-        fIncreaseSkillGaugeAmount /= 100f;
-        sldFeverGaugeSlider = GetComponent<Slider>();
-        cStateMachine = GetComponent<StateMachine>();
-        ChangeState(Player.instance.cCurrentCharacter);
-    }
-
-    private void StateInitalizeOnStay()
-    {
-        cRedGauge.onStay += () =>
-        {
-            imgGaugeFillImage.color = Color.red;
-        };
-        cBlueGauge.onStay += () =>
-        {
-            imgGaugeFillImage.color = Color.blue;
-        };
-    }
-
-    public void ChangeState(PlayerbleCharacter currentCharacter)
-    {
-        if (currentCharacter == Player.instance.GetTwinSword())
-        {
-            cStateMachine.ChangeState(cRedGauge);
-        }
-        else if (currentCharacter == Player.instance.GetGreatSword())
-        {
-            cStateMachine.ChangeState(cBlueGauge);
-        }
     }
 
     public void IncreaseNormalAttackFeverGauge()
     {
-        if (cStateMachine.GetCurrentState() == cRedGauge && Player.instance.cCurrentCharacter.IsFeverTime() == false && fRedGauge < 1f)
+        if (IsTwin() == true && Player.instance.cCurrentCharacter.IsFeverTime() == false && fRedGauge < 1f)
         {
             fRedGauge += fIncreaseAttackGaugeAmount;
         }
-        else if (cStateMachine.GetCurrentState() == cBlueGauge && Player.instance.cCurrentCharacter.IsFeverTime() == false && fBlueGauge < 1f)
+        else if (IsTwin() == false && Player.instance.cCurrentCharacter.IsFeverTime() == false && fBlueGauge < 1f)
         {
             fBlueGauge += fIncreaseAttackGaugeAmount;
         }
@@ -84,31 +42,19 @@ public class FeverGauge : MonoBehaviour
 
     public void IncreaseSkillFeverGauge()
     {
-        if (cStateMachine.GetCurrentState() == cRedGauge && Player.instance.cCurrentCharacter.IsFeverTime() == false && fRedGauge < 1f)
+        if (IsTwin() == true && Player.instance.cCurrentCharacter.IsFeverTime() == false && fRedGauge < 1f)
         {
             fRedGauge += fIncreaseSkillGaugeAmount;
         }
-        else if (cStateMachine.GetCurrentState() == cBlueGauge && Player.instance.cCurrentCharacter.IsFeverTime() == false && fBlueGauge < 1f)
+        else if (IsTwin() == false && Player.instance.cCurrentCharacter.IsFeverTime() == false && fBlueGauge < 1f)
         {
             fBlueGauge += fIncreaseSkillGaugeAmount;
         }
     }
 
-    private void SetFeverGaugeValue()
-    {
-        if (cStateMachine.GetCurrentState() == cRedGauge)
-        {
-            sldFeverGaugeSlider.value = fRedGauge;
-        }
-        else if (cStateMachine.GetCurrentState() == cBlueGauge)
-        {
-            sldFeverGaugeSlider.value = fBlueGauge;
-        }
-    }
-
     public bool IsFeverGaugeFull()
     {
-        return cStateMachine.GetCurrentState() == cRedGauge ? Math.Round(fRedGauge, 2) >= 1f : Math.Round(fBlueGauge, 2) >= 1f;
+        return IsTwin() == true ? Math.Round(fRedGauge, 2) >= 1f : Math.Round(fBlueGauge, 2) >= 1f;
     }
     public bool IsDoubleFeverGaugeFull()
     {
@@ -123,40 +69,68 @@ public class FeverGauge : MonoBehaviour
     {
         while (fRedGauge > 0)
         {
-            fRedGauge -= Time.deltaTime / fFeverTime;
+            fRedGauge -= Time.deltaTime / fFeverTimeTime;
             yield return null;
         }
         Player.instance.GetTwinSword().RestoreCoolDown(Player.instance.GetTwinSword().GetCoolDownCutAndRestoreTime());
         Player.instance.GetTwinSword().SetIsFeverTime(false);
-        Player.instance.isDoubleFeverTime = false;
         Constants.fSpeedConstant = 1f;
     }
     public IEnumerator StartBlueFeverTime()
     {
         while (fBlueGauge > 0)
         {
-            fBlueGauge -= Time.deltaTime / fFeverTime;
+            fBlueGauge -= Time.deltaTime / fFeverTimeTime;
             yield return null;
         }
         Player.instance.GetGreatSword().RestoreCoolDown(Player.instance.GetGreatSword().GetCoolDownCutAndRestoreTime());
         Player.instance.GetGreatSword().SetIsFeverTime(false);
-        Player.instance.isDoubleFeverTime = false;
         Constants.fSpeedConstant = 1f;
+    }
+
+    public IEnumerator StartDoubleFeverTime()
+    {
+        fRedGauge = 0f;
+        fBlueGauge = 0f;
+        while (Player.instance.fDoubleFeverTimer < fFeverTimeTime)
+        {
+            Player.instance.fDoubleFeverTimer += Time.deltaTime;
+            yield return null;
+        }
+        Player.instance.GetGreatSword().RestoreCoolDown(Player.instance.GetGreatSword().GetCoolDownCutAndRestoreTime());
+        Player.instance.GetTwinSword().RestoreCoolDown(Player.instance.GetTwinSword().GetCoolDownCutAndRestoreTime());
+        Player.instance.GetGreatSword().SetIsFeverTime(false);
+        Player.instance.GetTwinSword().SetIsFeverTime(false);
+        Player.instance.isDoubleFeverTime = false;
+        Player.instance.fDoubleFeverTimer = 0f;
+        Constants.fSpeedConstant = 1f;
+        Player.instance.GetTwinSword().GetAnimator().speed = Constants.fSpeedConstant;
+        Player.instance.GetGreatSword().GetAnimator().speed = Constants.fSpeedConstant;
     }
 
     public void ResetGaugeWhenTag()
     {
         if (Player.instance.cCurrentCharacter.IsFeverTime() == true)
         {
-            if (cStateMachine.GetCurrentState() == cRedGauge)
+            if (IsTwin() == true)
             {
                 fRedGauge = 0f;
             }
-            else if (cStateMachine.GetCurrentState() == cBlueGauge)
+            else if (IsTwin() == false)
             {
                 fBlueGauge = 0f;
             }
             Player.instance.cCurrentCharacter.SetIsFeverTime(false);
         }
+    }
+
+    private bool IsTwin()
+    {
+        return Player.instance.cCurrentCharacter == Player.instance.GetTwinSword();
+    }
+
+    public float GetFeverGauge(PlayerbleCharacter playerType)
+    {
+        return playerType == Player.instance.GetTwinSword() ? fRedGauge : fBlueGauge;
     }
 }

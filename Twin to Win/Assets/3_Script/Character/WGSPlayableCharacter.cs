@@ -41,12 +41,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         eSkillAction.started += ctx =>
         {
+            UIManager.instance.OnSkillBtn(KeyCode.E);
             if (EnableESkill() == true && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f) && Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
             {
-                FeverGauge.instance.IncreaseSkillFeverGauge();
-                UIManager.instance.OnSkillBtn(KeyCode.E);
+                FeverGauge.Instance.IncreaseSkillFeverGauge();
                 srtCurrentSkill = srtESkill;
-                Player.instance.canDodge = false;
                 cStateMachine.ChangeState(cESkillState);
             }
         };
@@ -97,7 +96,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         return cStateMachine.GetCurrentState() != cQSkillState
             && cStateMachine.GetCurrentState() != cWSkillState
             && cStateMachine.GetCurrentState() != cESkillState
-            && cStateMachine.GetCurrentState() != cDodgeState 
+            && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableWSkill()
@@ -105,7 +104,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         return cStateMachine.GetCurrentState() != cQSkillState
             && cStateMachine.GetCurrentState() != cWSkillState
             && cStateMachine.GetCurrentState() != cESkillState
-            && cStateMachine.GetCurrentState() != cDodgeState 
+            && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
     private bool EnableESkill()
@@ -120,12 +119,15 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            UIManager.instance.OnSkillBtn(KeyCode.Q);
+        }
+        
         if (context.started && EnableQSkill() == true && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
         {
-            FeverGauge.instance.IncreaseSkillFeverGauge();
-            UIManager.instance.OnSkillBtn(KeyCode.Q);
+            FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtQSkill;
-            Player.instance.canDodge = false;
             transform.localRotation = GetMouseAngle();
             cStateMachine.ChangeState(cQSkillState);
             GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
@@ -147,12 +149,15 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #region WSkill Part
     public void OnWSkill(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            UIManager.instance.OnSkillBtn(KeyCode.W);
+        }
+        
         if (context.started && EnableWSkill() == true && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
         {
-            FeverGauge.instance.IncreaseSkillFeverGauge();
-            UIManager.instance.OnSkillBtn(KeyCode.W);
+            FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtWSkill;
-            Player.instance.canDodge = false;
             cStateMachine.ChangeState(cWSkillState);
             GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
@@ -210,11 +215,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     public override void OnFever(InputAction.CallbackContext ctx)
     {
         base.OnFever(ctx);
-        if (FeverGauge.instance.IsDoubleFeverGaugeFull() == false && FeverGauge.instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
         {
             CutCoolDown(fCoolDownCutAndRestoreTime);
             SetIsFeverTime(true);
-            StartCoroutine(FeverGauge.instance.StartBlueFeverTime());
+            StartCoroutine(FeverGauge.Instance.StartBlueFeverTime());
         }
     }
     #endregion

@@ -2081,6 +2081,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5258721158728249459}
   - component: {fileID: 1052961613247484546}
+  - component: {fileID: 2020746491826349075}
   m_Layer: 5
   m_Name: Stamina
   m_TagString: Untagged
@@ -2160,6 +2161,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2020746491826349075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2432003096355568791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff9467bbbe0e1842af778375986ea64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fFillTime: 10
+  fDecreaseAmountUsingDodge: 0.25
 --- !u!1 &3019473268324054559
 GameObject:
   m_ObjectHideFlags: 0
@@ -5406,7 +5421,6 @@ GameObject:
   - component: {fileID: 5320361021062955022}
   - component: {fileID: 8171759621734090920}
   - component: {fileID: 7433116537105046081}
-  - component: {fileID: 9147663094755365472}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -5498,22 +5512,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05670dba4b9723e4dbd9685fd8f46919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9147663094755365472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8058032383775062120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 862faded580a2f24989ff5fc8c5a21ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imgGaugeFillImage: {fileID: 5559746041026312781}
-  fIncreaseAttackGaugeAmount: 5
-  fIncreaseSkillGaugeAmount: 100
-  fFeverTime: 5
 --- !u!1 &8081420664581686509
 GameObject:
   m_ObjectHideFlags: 0
@@ -6530,16 +6528,14 @@ MonoBehaviour:
   cGreatSword: {fileID: 0}
   cTwinSword: {fileID: 0}
   fDodgePower: 30
-  fDodgeCoolDown: 3
   fDodgePlayTime: 0.1
-  fDodgeTimer: 99
   fDodgePlayTimer: 0
   isDodging: 0
-  canDodge: 1
   canTag: 1
   fTagTimer: 99
   fTagCoolDown: 2
   isDoubleFeverTime: 0
+  fDoubleFeverTimer: 0
 --- !u!1001 &573962146659764949
 PrefabInstance:
   m_ObjectHideFlags: 0

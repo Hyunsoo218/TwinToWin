@@ -71,14 +71,15 @@ public class PlayerStateUI : MonoBehaviour
 		arrSkillFill_WTD[0].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.QSkill);
         arrSkillFill_WTD[1].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.WSkill);
         arrSkillFill_WTD[2].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.ESkill);
+		arrSkillFill_WTD[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWTD);
 
         PlayerbleCharacter cWGS = Player.instance.GetGreatSword();
 		arrSkillFill_WGS[0].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.QSkill);
 		arrSkillFill_WGS[1].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.WSkill);
 		arrSkillFill_WGS[2].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.ESkill);
+        arrSkillFill_WGS[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWGS);
 
         imgConvertFill.fillAmount = 1f - Player.instance.GetTagTimer();
-		imgDodgeFill.fillAmount = 1f - Player.instance.GetDodgeTimer();
 
         //arrSkillFill_WTD[3] 
         //arrSkillFill_WGS[3]
