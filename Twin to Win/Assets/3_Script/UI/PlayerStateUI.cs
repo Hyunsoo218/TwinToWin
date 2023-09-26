@@ -11,16 +11,20 @@ public class PlayerStateUI : MonoBehaviour
 	[SerializeField] private List<Image> arrSkillFill_WGS;
 	[SerializeField] private Animator cConvertUIAnimator;
 	[SerializeField] private Image imgConvertFill;
-	[SerializeField] private Animator cDodgeUIAnimator;
-	[SerializeField] private Image imgDodgeFill;
 	[SerializeField] private Transform tWTDState;
+	[SerializeField] private Slider sHp;
+	[SerializeField] private Slider sStamina;
     private Animator cAnimator;
 
 	private void Awake()
 	{
 		cAnimator = GetComponent<Animator>();
 	}
-	public void Convert()
+    private void Start()
+    {
+        sStamina.maxValue = Player.instance.fMaxStamina;
+    }
+    public void Convert()
 	{
 		cConvertUIAnimator.SetTrigger("On");
 
@@ -44,10 +48,6 @@ public class PlayerStateUI : MonoBehaviour
             cAnimator.SetTrigger(animationTrigger);
 		}
 	}
-	public void Dodge() 
-	{
-        cDodgeUIAnimator.SetTrigger("On");
-    }
 	public void OnButton(KeyCode key) 
 	{
 		PlayerbleCharacter cWTD = Player.instance.GetTwinSword();
@@ -80,6 +80,8 @@ public class PlayerStateUI : MonoBehaviour
         arrSkillFill_WGS[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWGS);
 
         imgConvertFill.fillAmount = 1f - Player.instance.GetTagTimer();
+
+		sStamina.value = Player.instance.fCurrentStamina;
 
         //arrSkillFill_WTD[3] 
         //arrSkillFill_WGS[3]

@@ -11,8 +11,12 @@ public class GameManager : MonoBehaviour
 	private void Awake()
 	{
 		instance = this;
-	}
-	public void AsynchronousExecution(IEnumerator enumerator) 
+    }
+    private void Start()
+    {
+        Stage1Start();
+    }
+    public void AsynchronousExecution(IEnumerator enumerator) 
 	{
 		StartCoroutine(enumerator);
 	}
@@ -31,6 +35,10 @@ public class GameManager : MonoBehaviour
 				qAsynchronousAction.Dequeue().Invoke();
 			}
 		}
+	}
+	public void Stage1Start() 
+	{
+		UIManager.instance.OnStageUI(StageNumber.one);
 	}
 }
 

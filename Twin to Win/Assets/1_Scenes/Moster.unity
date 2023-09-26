@@ -30766,21 +30766,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 661450627996350537, guid: 1599056f6fe74884890699c74ef83cf1,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 661450627996350537, guid: 1599056f6fe74884890699c74ef83cf1,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 661450627996350537, guid: 1599056f6fe74884890699c74ef83cf1,
-        type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1045207492239608417, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
       propertyPath: cTwinSword
@@ -30841,10 +30826,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4373416789204729110, guid: 1599056f6fe74884890699c74ef83cf1,
+    - target: {fileID: 2593359338980121630, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      propertyPath: phase
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446104331969906795, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_Value
+      value: 0.48
       objectReference: {fileID: 0}
     - target: {fileID: 4479734257414053496, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}

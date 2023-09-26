@@ -355,18 +355,14 @@ public class PlayerbleCharacter : Character
 
     public void OnDodge(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            UIManager.instance.OnDodgeBtn();
-        }
-        
         if (context.started &&
             cStateMachine.GetCurrentState() != cDodgeState &&
             cStateMachine.GetCurrentState() != cTagState &&
             cStateMachine.GetCurrentState() != cQSkillState &&
             cStateMachine.GetCurrentState() != cWSkillState &&
             cStateMachine.GetCurrentState() != cESkillState &&
-            DodgeGauge.instance.IsUsedDodge() == true)
+            DodgeGauge.instance.IsUsedDodge() == true &&
+            Player.instance.CanDodge())
         {
             cStateMachine.ChangeState(cDodgeState);
             Player.instance.isDodging = true;

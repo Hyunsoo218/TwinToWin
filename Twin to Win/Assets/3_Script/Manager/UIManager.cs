@@ -27,10 +27,6 @@ public class UIManager : MonoBehaviour
 	{
 		cPSUI.OnButton(key);
 	}
-	public void OnDodgeBtn() 
-	{
-		cPSUI.Dodge();
-	}
 	public void OnStageUI(StageNumber number) 
 	{
 		cSUI.OnStage(number);

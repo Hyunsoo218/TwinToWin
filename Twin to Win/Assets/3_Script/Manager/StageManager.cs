@@ -15,7 +15,7 @@ public class StageManager : MonoBehaviour
 	[SerializeField] private Vector2 vTileCount;
 	[SerializeField] private int nOneFrameCount;
 
-	[Header("런타입 맵 만들기")]
+	[Header("런타입 네브메쉬 업데이트")]
 	[SerializeField] private bool bUpdateNavMesh = false;
 	[SerializeField] private float fUpdateInterval = 0.5f;
 	[SerializeField] private NavMeshSurface cNMS;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,9 @@ public class Player : MonoBehaviour
     public PlayerbleCharacter cCurrentCharacter;
     [SerializeField] private PlayerbleCharacter cGreatSword;
     [SerializeField] private PlayerbleCharacter cTwinSword;
+    public float fCurrentStamina = 10f;
+    public float fMaxStamina = 10f;
+    public float fDodgeStamina = 3f;
 
     #region Dodge Var
 
@@ -36,6 +40,14 @@ public class Player : MonoBehaviour
     {
         instance = this;
         cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
+        //StartCoroutine(RecoverStamina());
+    }
+    private void Update()
+    {
+        if (fCurrentStamina < fMaxStamina)
+        {
+            fCurrentStamina += Time.deltaTime;
+        }
     }
     public void ConvertCharacter()
     {
@@ -95,5 +107,25 @@ public class Player : MonoBehaviour
     public float GetTagTimer() 
     {
         return fTagTimer / fTagCoolDown;
+    }
+    public bool CanDodge() 
+    {
+        if (fCurrentStamina >= fDodgeStamina)
+        {
+            fCurrentStamina -= fDodgeStamina;
+            return true;
+        }
+        return false;
+    }
+    private IEnumerator RecoverStamina() 
+    {
+        while (true)
+        {
+            if (fCurrentStamina < fMaxStamina)
+            {
+                fCurrentStamina += Time.deltaTime;
+            }
+            yield return null;
+        }
     }
 }
