@@ -35,6 +35,10 @@ public class DamagableSpaceControl : MonoBehaviour
 				break;
 		}
 	}
+	public void Cancel() 
+	{
+        gameObject.SetActive(false);
+    }
 	private IEnumerator FillingAlpha(float fTime)
 	{
 		cFill.size = new Vector3(0, 0, cArea.size.z);

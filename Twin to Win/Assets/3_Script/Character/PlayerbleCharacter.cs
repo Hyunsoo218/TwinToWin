@@ -477,10 +477,10 @@ public class PlayerbleCharacter : Character
         
         if (ctx.started && Player.instance.canTag == true && (Player.instance.fTagTimer >= Player.instance.fTagCoolDown || Player.instance.fTagTimer == 0f))
         {
-            
             Player.instance.canTag = false;
             Player.instance.ConvertCharacter();
             cStateMachine.ChangeState(cTagState);
+            CameraManager.instance.ResetCamera();
         }
     }
     public IEnumerator StartTagCoolDown()

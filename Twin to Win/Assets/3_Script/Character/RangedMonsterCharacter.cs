@@ -5,6 +5,7 @@ using UnityEngine;
 public class RangedMonsterCharacter : MonsterCharacter
 {
 	[SerializeField] protected GameObject objCastingEffect;
+	[SerializeField] protected DamagableSpaceControl cDSC;
 	protected State cStateCasting = new State("Idle");
 	protected Coroutine coCasting;
 
@@ -15,8 +16,8 @@ public class RangedMonsterCharacter : MonsterCharacter
 		cStateCasting.onEnter = () => {
 			ChangeAnimation(cStateCasting.strStateName);
 			coCasting = StartCoroutine(AttackCasting());
-			objCastingEffect.SetActive(true);
-		};
+			cDSC.OnAction(3f, FillType.X);
+        };
 	}
 	protected override void StateInitializeOnStay()
 	{
@@ -56,9 +57,10 @@ public class RangedMonsterCharacter : MonsterCharacter
 		base.StateInitializeOnExit();
 
 		cStateCasting.onExit = () => {
-			objCastingEffect.SetActive(false);
 			StopCoroutine(coCasting);
-		};
+            cDSC.Cancel();
+
+        };
 	}
 	private IEnumerator AttackCasting()
 	{

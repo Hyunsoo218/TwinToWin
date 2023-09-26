@@ -6,8 +6,10 @@ public class Player : MonoBehaviour
 {
     public static Player instance;
     public PlayerbleCharacter cCurrentCharacter;
-    [SerializeField] private PlayerbleCharacter cGreatSword;
-    [SerializeField] private PlayerbleCharacter cTwinSword;
+    [SerializeField] private GameObject objWTD;
+    [SerializeField] private GameObject objWGS;
+    private PlayerbleCharacter cGreatSword;
+    private PlayerbleCharacter cTwinSword;
     public float fCurrentStamina = 10f;
     public float fMaxStamina = 10f;
     public float fDodgeStamina = 3f;
@@ -39,15 +41,16 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        StartCoroutine(RecoverStamina());
+        GameObject wtd = Instantiate(objWTD, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 45f, 0));
+        GameObject wgs = Instantiate(objWGS, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 45f, 0));
+
+        cTwinSword = wtd.GetComponent<PlayerbleCharacter>();
+        cGreatSword = wgs.GetComponent<PlayerbleCharacter>();
+
+        cGreatSword.gameObject.SetActive(false);
+
         cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
-        //StartCoroutine(RecoverStamina());
-    }
-    private void Update()
-    {
-        if (fCurrentStamina < fMaxStamina)
-        {
-            fCurrentStamina += Time.deltaTime;
-        }
     }
     public void ConvertCharacter()
     {
