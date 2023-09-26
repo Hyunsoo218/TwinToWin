@@ -61,7 +61,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             if (cStateMachine.GetCurrentState() == cESkillState && Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
             {
-                GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
                 StopESkill();
             }
         };
@@ -178,6 +177,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #endregion
 
     #region ESkill Part
+
+    public void StartWGSESkillCoolDownCoroutine()
+    {
+        GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
+    }
 
     private IEnumerator StartESkillHoldTimer()
     {

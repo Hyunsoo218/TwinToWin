@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     public float fCurrentStamina = 10f;
     public float fMaxStamina = 10f;
     public float fDodgeStamina = 3f;
+
 
     #region Dodge Var
 
@@ -129,6 +131,18 @@ public class Player : MonoBehaviour
                 fCurrentStamina += Time.deltaTime;
             }
             yield return null;
+        }
+    }
+    public void EnableCurrentPlayerInput(bool canUseInput)
+    {
+        PlayerInput playerInput = cCurrentCharacter.GetComponent<PlayerInput>();
+        if (canUseInput == true)
+        {
+            playerInput.enabled = true;
+        }
+        else
+        {
+            playerInput.enabled = false;
         }
     }
 }
