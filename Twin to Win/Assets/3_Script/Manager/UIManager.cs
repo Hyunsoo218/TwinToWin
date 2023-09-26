@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
 	private void Awake()
 	{
 		instance = this;
+		StartCoroutine(TutorialTag());
 	}
     private void Update()
     {
@@ -31,4 +32,22 @@ public class UIManager : MonoBehaviour
 	{
 		cSUI.OnStage(number);
 	}
+	public IEnumerator TutorialTag() 
+	{
+		bool run = true;
+		while (run) 
+		{
+			yield return null;
+            if (Input.GetKeyDown(KeyCode.Tab)) run = false; 
+		}
+	}
+    public IEnumerator TutorialSkill()
+    {
+        bool run = true;
+        while (run)
+        {
+            yield return null;
+            if (Input.GetKeyDown(KeyCode.E)) run = false; 
+        }
+    }
 }

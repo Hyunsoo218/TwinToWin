@@ -8,6 +8,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class MonsterCharacter : Character
 {
+	public static List<MonsterCharacter> allMonsterCharacters = new List<MonsterCharacter>();
+
 	[SerializeField] protected float fAttackDistance;
 	[SerializeField] protected float fAttackDelayTime = 3f;
 	[SerializeField] protected GameObject objAttackEffectPrefab;
@@ -25,24 +27,16 @@ public class MonsterCharacter : Character
 	protected Material mDefaultMaterial;
 	protected Coroutine coAttackDelay;
 
-	protected void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.I))
-		{
-			Damage(1f);
-		}
-	}
-
 	protected virtual void Awake()
 	{
-		cSMR = GetComponentInChildren<SkinnedMeshRenderer>();
+		allMonsterCharacters.Add(this);
+        cSMR = GetComponentInChildren<SkinnedMeshRenderer>();
 		cStateMachine = GetComponent<StateMachine>();
 		cAnimator = GetComponent<Animator>();
 		cAgent = GetComponent<NavMeshAgent>();
 		StateInitializeOnEnter();
 		StateInitializeOnStay();
 		StateInitializeOnExit();
-		ChangeState(cStateIdle);
 		mDefaultMaterial = cSMR.material;
 	}
 	protected void Start()
@@ -123,6 +117,14 @@ public class MonsterCharacter : Character
 		};
 	}
 
+	public void StartAction() 
+	{
+        ChangeState(cStateIdle);
+    }
+	public void EndAction() 
+	{
+		ChangeState(null);
+    }
 	public void ResetState()
 	{
 		if (fTargetDist < fAttackDistance)

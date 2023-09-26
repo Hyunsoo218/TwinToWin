@@ -14,11 +14,11 @@ public class StateMachine : MonoBehaviour
 	public void ChangeState(State cNextState)
 	{
 		if (cCurrentState != null) {
-			cCurrentState.onExit?.Invoke();
+			cCurrentState?.onExit?.Invoke();
 			cPrevState = cCurrentState;
 		}
 		cCurrentState = cNextState;
-		cCurrentState.onEnter?.Invoke();
+		cCurrentState?.onEnter?.Invoke();
 	}
 	public State GetCurrentState()
 	{

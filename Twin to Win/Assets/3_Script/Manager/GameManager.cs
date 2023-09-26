@@ -38,8 +38,24 @@ public class GameManager : MonoBehaviour
 	}
 	public void Stage1Start() 
 	{
-		UIManager.instance.OnStageUI(StageNumber.one);
+		StartCoroutine(Stage1());
 	}
+	private IEnumerator Stage1() 
+	{
+		yield return null;
+		// 플레이어 입력 x
+        UIManager.instance.OnStageUI(StageNumber.one);
+		EnemyManager.instance.OnActiveEnemy(StageEnemySet.Stage1_1);
+
+        foreach (var item in MonsterCharacter.allMonsterCharacters)  item.EndAction(); 
+		yield return new WaitForSeconds(3f);
+        yield return StartCoroutine(UIManager.instance.TutorialTag());
+        foreach (var item in MonsterCharacter.allMonsterCharacters) item.StartAction(); 
+        yield return new WaitForSeconds(0.5f);
+        foreach (var item in MonsterCharacter.allMonsterCharacters) item.EndAction();
+        yield return new WaitForSeconds(0.5f);
+        //yield return StartCoroutine(UIManager.instance.TutorialSkill());
+    }
 }
 
 public enum Phase

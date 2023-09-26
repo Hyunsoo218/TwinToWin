@@ -59,7 +59,6 @@ public class RangedMonsterCharacter : MonsterCharacter
 		cStateCasting.onExit = () => {
 			StopCoroutine(coCasting);
             cDSC.Cancel();
-
         };
 	}
 	private IEnumerator AttackCasting()
