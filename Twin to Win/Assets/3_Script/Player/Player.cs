@@ -65,7 +65,6 @@ public class Player : MonoBehaviour
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
     }
-
     private void ResetFever()
     {
         if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)

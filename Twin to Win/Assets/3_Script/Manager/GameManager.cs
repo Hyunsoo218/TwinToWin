@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
 	}
 	private IEnumerator Stage1() 
 	{
-		yield return null;
+        yield return null;
 		// 플레이어 입력 x
         UIManager.instance.OnStageUI(StageNumber.one);
 		EnemyManager.instance.OnActiveEnemy(StageEnemySet.Stage1_1);
@@ -54,7 +55,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         foreach (var item in MonsterCharacter.allMonsterCharacters) item.EndAction();
         yield return new WaitForSeconds(0.5f);
-        //yield return StartCoroutine(UIManager.instance.TutorialSkill());
+		//yield return StartCoroutine(UIManager.instance.TutorialSkill());
+		
     }
 }
 

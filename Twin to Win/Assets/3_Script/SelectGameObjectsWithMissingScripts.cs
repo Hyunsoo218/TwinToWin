@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement; //3
 #if  UNITY_EDITOR
 public class SelectGameObjectsWithMissingScripts : Editor
 {
-    [MenuItem("smilejsu/Remove All Missing Script Components")]
+    //[MenuItem("smilejsu/Remove All Missing Script Components")]
     private static void RemoveAllMissingScriptComponents()
     {
 

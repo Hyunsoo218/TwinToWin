@@ -20,7 +20,7 @@ public class StageManager : MonoBehaviour
 	[SerializeField] private float fUpdateInterval = 0.5f;
 	[SerializeField] private NavMeshSurface cNMS;
 
-	private void Awake() => instance = this; 
+	private void Awake() => instance = this;
 	private void Start()
 	{
 		if(bMakeMapRuntime) MakeMap();
