@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WaterFall
-  m_Shader: {fileID: -6465566751694194690, guid: 264a4fab4b397244e9e4ef5f8f9937fc,
+  m_Shader: {fileID: -6465566751694194690, guid: e01bf09678bf9504baa004dab46249ce,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -56,12 +56,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Normal_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_03746a829f0f457d90df7e53cdb1aeac_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 98ba8c5d932622248809389c2f08d100, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_0b4eadaa7f2743cc94a1c2c8577f2e20_Texture_1_Texture2D:
@@ -72,8 +80,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4c1aba1ef5053604e88538e2f0ec0381, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_52f9540de9724b959d26cedaa65bca3e_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a8e2bc5df97f6ba47a394c255793cc0a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_783ec2b0d7a14dff826cfd87d53c0ad3_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a8e2bc5df97f6ba47a394c255793cc0a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_86e7da95543e4831b6cbc92d6f30e3db_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 659d21c82adacc045a1a5c1b543a6b4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_a6f9112bdffd47a0b3b018788a2f62a0_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 98ba8c5d932622248809389c2f08d100, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_aecfdf5663234193b339ad7b64d106d3_Texture_1_Texture2D:
@@ -98,8 +118,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _A_Flow_Speed: 0.37
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _B_Flow_Speed: 1.15
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -127,6 +149,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _WaterCourse_Range: 0.2
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
@@ -134,6 +157,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _WaterCourse_Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5868689821550831188
 MonoBehaviour:
