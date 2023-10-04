@@ -120,10 +120,12 @@ public class MonsterCharacter : Character
 	public void StartAction() 
 	{
         ChangeState(cStateIdle);
+        cAnimator.speed = 1f;
     }
 	public void EndAction() 
 	{
 		ChangeState(null);
+		cAnimator.speed = 0;
     }
 	public void ResetState()
 	{
