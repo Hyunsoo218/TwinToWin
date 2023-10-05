@@ -122,7 +122,7 @@ public class MonsterCharacter : Character
         ChangeState(cStateIdle);
         cAnimator.speed = 1f;
     }
-	public void EndAction() 
+	public void StopAction() 
 	{
 		ChangeState(null);
 		cAnimator.speed = 0;

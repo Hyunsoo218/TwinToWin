@@ -44,25 +44,18 @@ public class GameManager : MonoBehaviour
 	private IEnumerator Stage1() 
 	{
         yield return null;
-		// 플레이어 입력 x
+		Player.instance.EnableCurrentPlayerInput(false);
         UIManager.instance.OnStageUI(StageNumber.one);
 		EnemyManager.instance.OnActiveEnemy(StageEnemySet.Stage1_1);
-        foreach (var item in MonsterCharacter.allMonsterCharacters)  item.EndAction(); 
+        foreach (var item in MonsterCharacter.allMonsterCharacters)  item.StopAction(); 
 		yield return new WaitForSeconds(3.5f);
-		// 스테이지 표시하고 몬스터 소환, 몬스터 정지 시키기
+		// 스테이지 표시하고 몬스터 소환, 몬스터 정지 시키기, 플레이어 입력x
 
         yield return StartCoroutine(UIManager.instance.WaitForTutorial());
-        yield return new WaitForSeconds(0.5f);
         // 플레이어 튜토리얼 열고 끝날때 까지 대기			
 
+        Player.instance.EnableCurrentPlayerInput(true);
 		foreach (var item in MonsterCharacter.allMonsterCharacters) item.StartAction(); 
-        yield return new WaitForSeconds(1.5f);
-        foreach (var item in MonsterCharacter.allMonsterCharacters) item.EndAction();
-
-		// 플레이어 입력 o
-		//
-        //yield return new WaitForSeconds(0.5f);
-		//yield return StartCoroutine(UIManager.instance.TutorialSkill());
     }
 	private IEnumerator WaitFotInputKey(KeyCode key) 
 	{

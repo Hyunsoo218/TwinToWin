@@ -7,9 +7,20 @@ public class TutorialUI : MonoBehaviour
 {
     private TutorialType type;
     private Animator cAnimator;
+    [SerializeField] private List<Animator> dataAnimators;   
+    [SerializeField] private List<Animator> navAnimators;
+    private int currentDataNum = -1;
     private void Awake()
     {
         cAnimator = GetComponent<Animator>();
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { OnData(0); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { OnData(1); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { OnData(2); }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) { OnData(3); }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) { OnData(4); }
     }
     public void SetPlayer(bool active) 
     {
@@ -47,6 +58,18 @@ public class TutorialUI : MonoBehaviour
             }
             yield return null;
         }
+    }
+    public void OnData(int num) 
+    {
+        if (currentDataNum == num) return; 
+        if (currentDataNum != -1)
+        {
+            dataAnimators[currentDataNum].SetTrigger("Off");
+            navAnimators[currentDataNum].SetTrigger("Off");
+        }
+        currentDataNum = num;
+        dataAnimators[num].SetTrigger("On");
+        navAnimators[num].SetTrigger("On");
     }
 }
 public enum TutorialType 

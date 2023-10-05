@@ -21,9 +21,6 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
 		cPSUI.SetSkillFill();
-		if (Input.GetKeyDown(KeyCode.Alpha1)) cSUI.OnStage(StageNumber.one); 
-		if (Input.GetKeyDown(KeyCode.Alpha2)) cSUI.OnStage(StageNumber.twe); 
-		if (Input.GetKeyDown(KeyCode.Alpha3)) cSUI.OnStage(StageNumber.three); 
     }
     public void ConvertPlayer() 
 	{
@@ -40,5 +37,6 @@ public class UIManager : MonoBehaviour
     public IEnumerator WaitForTutorial()
     {
 		yield return cTUI.WaitForTutorial();
+        yield return new WaitForSeconds(0.5f);
     }
 }
