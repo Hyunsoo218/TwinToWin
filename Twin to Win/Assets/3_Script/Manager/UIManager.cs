@@ -6,12 +6,17 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
 	[SerializeField] private PlayerStateUI cPSUI;
+	[SerializeField] private BossStateUI cBSUI;
 	[SerializeField] private StageUI cSUI;
 	[SerializeField] private TutorialUI cTUI;
 	public static UIManager instance;
 	private void Awake()
 	{
 		instance = this;
+		cPSUI.gameObject.SetActive(true);
+		cBSUI.gameObject.SetActive(true);
+		cSUI.gameObject.SetActive(true);
+		cTUI.gameObject.SetActive(true);
 	}
     private void Update()
     {
