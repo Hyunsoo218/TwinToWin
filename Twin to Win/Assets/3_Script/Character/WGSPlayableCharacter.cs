@@ -188,7 +188,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         while (fESkillHoldTime > fESkillHoldTimer && isDoingHoldESkill == true)
         {
             Vector3 mousePosOnVirtualGround = GetPositionOnVirtualGround();
-            transform.localRotation = GetMouseAngle();
             transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * Constants.fSpeedConstant * 3f);
             fESkillHoldTimer += Time.deltaTime * Constants.fSpeedConstant;
             yield return null;
@@ -200,6 +199,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         isDoingHoldESkill = false;
         cStateMachine.ChangeState(cToStandState);
+        transform.localRotation = GetMouseAngle();
         fESkillHoldTimer = 0f;
     }
 
