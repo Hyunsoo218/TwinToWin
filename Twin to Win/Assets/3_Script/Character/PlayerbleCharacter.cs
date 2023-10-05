@@ -22,7 +22,6 @@ public enum SkillType
 public class Constants
 {
     public static float fSpeedConstant = 1f;
-
 }
 
 public class PlayerbleCharacter : Character
@@ -238,6 +237,7 @@ public class PlayerbleCharacter : Character
                 Player.instance.cCurrentCharacter == this &&
                 canNextAttack)
             {
+                transform.localRotation = GetMouseAngle();
                 FeverGauge.Instance.IncreaseNormalAttackFeverGauge();
                 cStateMachine.ChangeState(cNormalAttack[nNormalAttackCount]);
             }
@@ -287,6 +287,10 @@ public class PlayerbleCharacter : Character
                 }
                 cStateMachine.ChangeState(cMoveState);
                 mousePosOnGround = GetPositionOnGround();
+
+                if (mousePosOnGround == Vector3.zero)
+                    return;
+
                 transform.localRotation = GetMouseAngle();
                 moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
                 eMouseState = mouseState.None;
@@ -335,7 +339,10 @@ public class PlayerbleCharacter : Character
     {
         if (Player.instance.cCurrentCharacter == Player.instance.GetTwinSword())
         {
-            Instantiate(objWTDMouseIndicator, GetPositionOnGround(), Quaternion.identity);
+            GameObject obj = EffectManager.instance.GetEffect(objWTDMouseIndicator);
+            obj.transform.position = GetPositionOnGround();
+            obj.transform.eulerAngles = Vector3.zero;
+            //Pooler
         }
         else if (Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
         {
@@ -519,17 +526,17 @@ public class PlayerbleCharacter : Character
             UIManager.instance.OnSkillBtn(KeyCode.R);
         }
         
-        if (ctx.started && FeverGauge.Instance.IsDoubleFeverGaugeFull() == true)
-        {
-            Constants.fSpeedConstant = 2f;
-            Player.instance.GetTwinSword().cAnimator.speed = Constants.fSpeedConstant;
-            Player.instance.GetGreatSword().cAnimator.speed = Constants.fSpeedConstant;
-            Player.instance.GetTwinSword().CutCoolDown(fCoolDownCutAndRestoreTime);
-            Player.instance.GetGreatSword().CutCoolDown(fCoolDownCutAndRestoreTime);
-            Player.instance.GetTwinSword().SetIsFeverTime(true);
-            Player.instance.GetGreatSword().SetIsFeverTime(true);
-            GameManager.instance.AsynchronousExecution(FeverGauge.Instance.StartDoubleFeverTime());
-        }
+        //if (ctx.started && FeverGauge.Instance.IsDoubleFeverGaugeFull() == true)
+        //{
+        //    Constants.fSpeedConstant = 2f;
+        //    Player.instance.GetTwinSword().cAnimator.speed = Constants.fSpeedConstant;
+        //    Player.instance.GetGreatSword().cAnimator.speed = Constants.fSpeedConstant;
+        //    Player.instance.GetTwinSword().CutCoolDown(fCoolDownCutAndRestoreTime);
+        //    Player.instance.GetGreatSword().CutCoolDown(fCoolDownCutAndRestoreTime);
+        //    Player.instance.GetTwinSword().SetIsFeverTime(true);
+        //    Player.instance.GetGreatSword().SetIsFeverTime(true);
+        //    GameManager.instance.AsynchronousExecution(FeverGauge.Instance.StartDoubleFeverTime());
+        //}
     }
     public bool IsFeverTime()
     {
@@ -666,7 +673,7 @@ public class PlayerbleCharacter : Character
             }
             else
             {
-                return transform.position;
+                return Vector3.zero;
             }
         }
         return pos;

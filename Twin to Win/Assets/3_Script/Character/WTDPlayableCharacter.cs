@@ -86,8 +86,12 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtQSkill;
             cStateMachine.ChangeState(cQSkillState);
-            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
         }
+    }
+
+    public void StartWTDQSkillCoolDownCoroutine()
+    {
+        GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
     }
 
     private IEnumerator StartQSkillCoolDown()
@@ -115,8 +119,12 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtWSkill;
             cStateMachine.ChangeState(cWSkillState);
-            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
+    }
+
+    public void StartWTDWSkillCoolDownCoroutine()
+    {
+        GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
     }
 
     private IEnumerator StartWSkillCoolDown()
@@ -147,8 +155,12 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             srtCurrentSkill = srtESkill;
             cStateMachine.ChangeState(cESkillState);
             GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
-            GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
         }
+    }
+
+    public void StartWTDESkillCoolDownCoroutine()
+    {
+        GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
     }
 
     private IEnumerator StartESkillCoolDown()
@@ -165,17 +177,21 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     private IEnumerator StartJumpAndRotate()
     {
-        Vector3 startPos = transform.position;
-        transform.localRotation = GetMouseAngle();
-        Vector3 endPos = transform.position + transform.forward * 7f;
-
         float parabolaHighestHeight = 3f;
         float parabolaSpeed = 2f;
+        float parabolaPower = 10f;
         bool isHitWall = false;
 
+        Vector3 startPos = transform.position;
+        Vector3 endPos = transform.position + transform.forward * parabolaPower;
+
+
+
+        transform.localRotation = GetMouseAngle();
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
+        StartWTDESkillCoolDownCoroutine();
         cStateMachine.ChangeState(cToStandState);
     }
 
@@ -216,7 +232,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     public override void OnFever(InputAction.CallbackContext ctx)
     {
         base.OnFever(ctx);
-        if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        //{
+        //    CutCoolDown(fCoolDownCutAndRestoreTime);
+        //    SetIsFeverTime(true);
+        //    StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
+        //}
+
+        if (FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
         {
             CutCoolDown(fCoolDownCutAndRestoreTime);
             SetIsFeverTime(true);

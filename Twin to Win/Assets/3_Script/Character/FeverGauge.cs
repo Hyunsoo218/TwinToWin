@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class FeverGauge 
@@ -56,57 +57,73 @@ public class FeverGauge
     {
         return IsTwin() == true ? Math.Round(fRedGauge, 2) >= 1f : Math.Round(fBlueGauge, 2) >= 1f;
     }
-    public bool IsDoubleFeverGaugeFull()
-    {
-        if (Math.Round(fRedGauge, 2) >= 1f && Math.Round(fBlueGauge, 2) >= 1f && Player.instance.isDoubleFeverTime == false)
-        {
-            Player.instance.isDoubleFeverTime = true;
-        }
-        return Player.instance.isDoubleFeverTime;
-    }
+    //public bool IsDoubleFeverGaugeFull()
+    //{
+    //    if (Math.Round(fRedGauge, 2) >= 1f && Math.Round(fBlueGauge, 2) >= 1f && Player.instance.isDoubleFeverTime == false)
+    //    {
+    //        Player.instance.isDoubleFeverTime = true;
+    //    }
+    //    return Player.instance.isDoubleFeverTime;
+    //}
 
     public IEnumerator StartRedFeverTime()
     {
-        while (fRedGauge > 0)
+        bool isUsed = false;
+        float fRedGaugeTimer = 0f;
+
+        while (isUsed == false)
         {
-            fRedGauge -= Time.deltaTime / fFeverTimeTime;
+            if (fRedGaugeTimer >= fFeverTimeTime)
+            {
+                isUsed = true;
+            }
+            fRedGaugeTimer += Time.deltaTime;
             yield return null;
         }
+        fRedGauge = 0f;
         Player.instance.GetTwinSword().RestoreCoolDown(Player.instance.GetTwinSword().GetCoolDownCutAndRestoreTime());
         Player.instance.GetTwinSword().SetIsFeverTime(false);
         Constants.fSpeedConstant = 1f;
     }
     public IEnumerator StartBlueFeverTime()
     {
-        while (fBlueGauge > 0)
+        bool isUsed = false;
+        float fBlueGaugeTimer = 0f;
+
+        while (isUsed == false)
         {
-            fBlueGauge -= Time.deltaTime / fFeverTimeTime;
+            if (fBlueGaugeTimer >= fFeverTimeTime)
+            {
+                isUsed = true;
+            }
+            fBlueGaugeTimer += Time.deltaTime;
             yield return null;
         }
+        fBlueGauge = 0f;
         Player.instance.GetGreatSword().RestoreCoolDown(Player.instance.GetGreatSword().GetCoolDownCutAndRestoreTime());
         Player.instance.GetGreatSword().SetIsFeverTime(false);
         Constants.fSpeedConstant = 1f;
     }
 
-    public IEnumerator StartDoubleFeverTime()
-    {
-        fRedGauge = 0f;
-        fBlueGauge = 0f;
-        while (Player.instance.fDoubleFeverTimer < fFeverTimeTime)
-        {
-            Player.instance.fDoubleFeverTimer += Time.deltaTime;
-            yield return null;
-        }
-        Player.instance.GetGreatSword().RestoreCoolDown(Player.instance.GetGreatSword().GetCoolDownCutAndRestoreTime());
-        Player.instance.GetTwinSword().RestoreCoolDown(Player.instance.GetTwinSword().GetCoolDownCutAndRestoreTime());
-        Player.instance.GetGreatSword().SetIsFeverTime(false);
-        Player.instance.GetTwinSword().SetIsFeverTime(false);
-        Player.instance.isDoubleFeverTime = false;
-        Player.instance.fDoubleFeverTimer = 0f;
-        Constants.fSpeedConstant = 1f;
-        Player.instance.GetTwinSword().GetAnimator().speed = Constants.fSpeedConstant;
-        Player.instance.GetGreatSword().GetAnimator().speed = Constants.fSpeedConstant;
-    }
+    //public IEnumerator StartDoubleFeverTime()
+    //{
+    //    fRedGauge = 0f;
+    //    fBlueGauge = 0f;
+    //    while (Player.instance.fDoubleFeverTimer < fFeverTimeTime)
+    //    {
+    //        Player.instance.fDoubleFeverTimer += Time.deltaTime;
+    //        yield return null;
+    //    }
+    //    Player.instance.GetGreatSword().RestoreCoolDown(Player.instance.GetGreatSword().GetCoolDownCutAndRestoreTime());
+    //    Player.instance.GetTwinSword().RestoreCoolDown(Player.instance.GetTwinSword().GetCoolDownCutAndRestoreTime());
+    //    Player.instance.GetGreatSword().SetIsFeverTime(false);
+    //    Player.instance.GetTwinSword().SetIsFeverTime(false);
+    //    Player.instance.isDoubleFeverTime = false;
+    //    Player.instance.fDoubleFeverTimer = 0f;
+    //    Constants.fSpeedConstant = 1f;
+    //    Player.instance.GetTwinSword().GetAnimator().speed = Constants.fSpeedConstant;
+    //    Player.instance.GetGreatSword().GetAnimator().speed = Constants.fSpeedConstant;
+    //}
 
     public void ResetGaugeWhenTag()
     {

@@ -35,10 +35,10 @@ public class Player : MonoBehaviour
     private bool isHoldingState = false;
     #endregion
 
-    #region Fever Var
-    [HideInInspector] public bool isDoubleFeverTime = false;
-    [HideInInspector] public float fDoubleFeverTimer = 0f;
-    #endregion
+    //#region Fever Var
+    //[HideInInspector] public bool isDoubleFeverTime = false;
+    //[HideInInspector] public float fDoubleFeverTimer = 0f;
+    //#endregion
 
     private void Awake()
     {
@@ -67,12 +67,15 @@ public class Player : MonoBehaviour
     }
     private void ResetFever()
     {
-        if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)
-        {
-            cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
-            FeverGauge.Instance.ResetGaugeWhenTag();
-        }
-        
+        //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)
+        //{
+        //    cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
+        //    FeverGauge.Instance.ResetGaugeWhenTag();
+        //}
+
+        cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
+        FeverGauge.Instance.ResetGaugeWhenTag();
+
     }
 
     private void InActiveCurrentCharacter()

@@ -9,7 +9,6 @@ public class DrawCloudsExample : MonoBehaviour {
     float offset;
 
     public int layer;
-    public Camera camera;
     private Matrix4x4 matrix;
     private Matrix4x4[] matrices;
     public bool castShadows = false;
@@ -18,7 +17,7 @@ public class DrawCloudsExample : MonoBehaviour {
     void Update()
     {
 
-        cloudMaterial.SetFloat("_midYValue", transform.position.y);
+        cloudMaterial.SetFloat("_midYValue", 0.38f);
         cloudMaterial.SetFloat("_cloudHeight", cloudHeight);
 
         offset = cloudHeight / horizontalStackSize / 2f;
@@ -39,7 +38,7 @@ public class DrawCloudsExample : MonoBehaviour {
             }
             else
             {
-                Graphics.DrawMesh(quadMesh, matrix, cloudMaterial, layer, camera, 0, null, castShadows, false, false); // otherwise just draw it now
+                Graphics.DrawMesh(quadMesh, matrix, cloudMaterial, layer, null, 0, null, castShadows, false, false); // otherwise just draw it now
             }
         }
 
@@ -49,7 +48,7 @@ public class DrawCloudsExample : MonoBehaviour {
             if (castShadows)
                 shadowCasting = UnityEngine.Rendering.ShadowCastingMode.On;
 
-            Graphics.DrawMeshInstanced(quadMesh, 0, cloudMaterial, matrices, horizontalStackSize, null, shadowCasting, false, layer, camera);
+            Graphics.DrawMeshInstanced(quadMesh, 0, cloudMaterial, matrices, horizontalStackSize, null, shadowCasting, false, layer, GetComponent<Camera>());
 
         }
     }

@@ -65,14 +65,16 @@ Material:
     m_Floats:
     - _Base_Speed: 1
     - _Cloud_Cutoff: 0
-    - _Cloud_Density: 7.64
-    - _Cloud_Softness: 3
-    - _Cloud_Speed: 0.88
+    - _Cloud_Density: 0.08
+    - _Cloud_Softness: 0.01
+    - _Cloud_Speed: 0.33
     - _Noise_Speed: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _cloudHeight: 1
-    - _midYValue: 0
+    - _Taper_Power: 1.55
+    - _cloudHeight: 0.44
+    - _midYValue: 0.38
     m_Colors:
     - _Cloud_Cutoff: {r: 1, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

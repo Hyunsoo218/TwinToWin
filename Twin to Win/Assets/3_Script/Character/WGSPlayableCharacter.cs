@@ -129,8 +129,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             srtCurrentSkill = srtQSkill;
             transform.localRotation = GetMouseAngle();
             cStateMachine.ChangeState(cQSkillState);
-            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
         }
+    }
+
+    public void StartWGSQSkillCoolDownCoroutine()
+    {
+        GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
     }
 
     private IEnumerator StartQSkillCoolDown()
@@ -158,8 +162,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             FeverGauge.Instance.IncreaseSkillFeverGauge();
             srtCurrentSkill = srtWSkill;
             cStateMachine.ChangeState(cWSkillState);
-            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
         }
+    }
+
+    public void StartWGSWSkillCoolDownCoroutine()
+    {
+        GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
     }
 
     private IEnumerator StartWSkillCoolDown()
@@ -219,11 +227,18 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     public override void OnFever(InputAction.CallbackContext ctx)
     {
         base.OnFever(ctx);
-        if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        //{
+        //    CutCoolDown(fCoolDownCutAndRestoreTime);
+        //    SetIsFeverTime(true);
+        //    StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
+        //}
+
+        if (FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
         {
             CutCoolDown(fCoolDownCutAndRestoreTime);
             SetIsFeverTime(true);
-            StartCoroutine(FeverGauge.Instance.StartBlueFeverTime());
+            StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
         }
     }
     #endregion

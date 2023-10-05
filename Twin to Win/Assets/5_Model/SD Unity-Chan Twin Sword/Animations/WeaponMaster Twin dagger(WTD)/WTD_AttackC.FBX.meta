@@ -1138,11 +1138,18 @@ ModelImporter:
         functionName: OnMoveOnBySkill
         data: 
         objectReferenceParameter: {instanceID: 0}
-        floatParameter: 30
+        floatParameter: 50
         intParameter: 0
         messageOptions: 0
       - time: 0.20175436
         functionName: EnableSkillEffect
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: StartWTDWSkillCoolDownCoroutine
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
