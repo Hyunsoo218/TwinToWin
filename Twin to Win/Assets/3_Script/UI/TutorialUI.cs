@@ -9,18 +9,13 @@ public class TutorialUI : MonoBehaviour
     private Animator cAnimator;
     [SerializeField] private List<Animator> dataAnimators;   
     [SerializeField] private List<Animator> navAnimators;
+    [SerializeField] private Animator lArrowBtnAnimator;
+    [SerializeField] private Animator rArrowBtnAnimator;
     private int currentDataNum = -1;
+    private bool waitTutorial = true;
     private void Awake()
     {
         cAnimator = GetComponent<Animator>();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { OnData(0); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { OnData(1); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { OnData(2); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { OnData(3); }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { OnData(4); }
     }
     public void SetPlayer(bool active) 
     {
@@ -31,32 +26,53 @@ public class TutorialUI : MonoBehaviour
     {
         type = TutorialType.Player;
         cAnimator.SetTrigger("Start");
-
-        bool wait = true;
-        while (wait)
+        waitTutorial = true;
+        while (waitTutorial)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (type == TutorialType.Player)
-                {
-                    type = TutorialType.Tag;
-                    cAnimator.SetTrigger("Tag");
-                }
-                else
-                {
-                    wait = false;
-                    cAnimator.SetTrigger("End");
-                }
+                OnMouseClickArrowBtn(false);
             }
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (type == TutorialType.Tag)
-                {
-                    type = TutorialType.Player;
-                    cAnimator.SetTrigger("Player");
-                }
+                OnMouseClickArrowBtn(true);
             }
             yield return null;
+        }
+    }
+    private void NextBtn() 
+    {
+        if (type == TutorialType.Player)
+        {
+            type = TutorialType.Tag;
+            cAnimator.SetTrigger("Tag");
+        }
+        else
+        {
+            if (currentDataNum == navAnimators.Count - 1)
+            {
+                cAnimator.SetTrigger("End");
+                waitTutorial = false;
+            }
+            else
+            {
+                OnData(currentDataNum + 1);
+            }
+        }
+    }
+    private void PrevBtn() 
+    {
+        if (type == TutorialType.Tag)
+        {
+            if (currentDataNum == 0)
+            {
+                type = TutorialType.Player;
+                cAnimator.SetTrigger("Player");
+            }
+            else
+            {
+                OnData(currentDataNum - 1);
+            }
         }
     }
     public void OnData(int num) 
@@ -70,6 +86,41 @@ public class TutorialUI : MonoBehaviour
         currentDataNum = num;
         dataAnimators[num].SetTrigger("On");
         navAnimators[num].SetTrigger("On");
+    }
+    public void OnMouseEnterArrowBtn(bool left)
+    {
+        if (left) 
+        {
+            lArrowBtnAnimator.SetTrigger("L_On");
+        }
+        else
+        {
+            rArrowBtnAnimator.SetTrigger("R_On");
+        }
+    }
+    public void OnMouseExitArrowBtn(bool left)
+    {
+        if (left)
+        {
+            lArrowBtnAnimator.SetTrigger("L_Off");
+        }
+        else
+        {
+            rArrowBtnAnimator.SetTrigger("R_Off");
+        }
+    }
+    public void OnMouseClickArrowBtn(bool left)
+    {
+        if (left)
+        {
+            lArrowBtnAnimator.SetTrigger("Click");
+            PrevBtn();
+        }
+        else
+        {
+            rArrowBtnAnimator.SetTrigger("Click");
+            NextBtn();
+        }
     }
 }
 public enum TutorialType 
