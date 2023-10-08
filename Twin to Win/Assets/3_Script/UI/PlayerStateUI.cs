@@ -14,6 +14,11 @@ public class PlayerStateUI : MonoBehaviour
 	[SerializeField] private Transform tWTDState;
 	[SerializeField] private Slider sHp;
 	[SerializeField] private Slider sStamina;
+	[SerializeField] private Sprite WTD_R_OFF;
+	[SerializeField] private Sprite WTD_R_ON;
+	[SerializeField] private Sprite WGS_R_OFF;
+	[SerializeField] private Sprite WGS_R_ON;
+	[SerializeField] private Slider cHealthPoint;
     private Animator cAnimator;
 
 	private void Awake()
@@ -23,6 +28,7 @@ public class PlayerStateUI : MonoBehaviour
     private void Start()
     {
         sStamina.maxValue = Player.instance.fMaxStamina;
+		cHealthPoint.maxValue = 100f;
     }
     public void Convert()
 	{
@@ -71,19 +77,23 @@ public class PlayerStateUI : MonoBehaviour
 		arrSkillFill_WTD[0].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.QSkill);
         arrSkillFill_WTD[1].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.WSkill);
         arrSkillFill_WTD[2].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.ESkill);
-		arrSkillFill_WTD[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWTD);
 
         PlayerbleCharacter cWGS = Player.instance.GetGreatSword();
 		arrSkillFill_WGS[0].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.QSkill);
 		arrSkillFill_WGS[1].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.WSkill);
 		arrSkillFill_WGS[2].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.ESkill);
-        arrSkillFill_WGS[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWGS);
 
         imgConvertFill.fillAmount = 1f - Player.instance.GetTagTimer();
-
 		sStamina.value = Player.instance.fCurrentStamina;
 
-        //arrSkillFill_WTD[3] 
-        //arrSkillFill_WGS[3]
+        arrSkillFill_WTD[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWTD);
+        arrSkillFill_WTD[3].sprite = arrSkillFill_WTD[3].fillAmount == 1f ? WTD_R_ON : WTD_R_OFF;
+
+        arrSkillFill_WGS[3].fillAmount = FeverGauge.Instance.GetFeverGauge(cWGS);
+        arrSkillFill_WGS[3].sprite = arrSkillFill_WGS[3].fillAmount == 1f ? WGS_R_ON : WGS_R_OFF;
+    }
+	public void SetPlayerHealthPoint(float healthPoint) 
+	{
+        cHealthPoint.value = healthPoint;
     }
 }

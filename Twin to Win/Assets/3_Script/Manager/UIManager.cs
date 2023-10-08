@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
 	{
 		instance = this;
 		cPSUI.gameObject.SetActive(true);
-		cBSUI.gameObject.SetActive(true);
+		cBSUI.gameObject.SetActive(false);
 		cSUI.gameObject.SetActive(true);
 		cTUI.gameObject.SetActive(true);
 	}
@@ -38,5 +38,9 @@ public class UIManager : MonoBehaviour
     {
 		yield return cTUI.WaitForTutorial();
         yield return new WaitForSeconds(0.5f);
+    }
+	public void SetPlayerHealthPoint(float healthPoint) 
+	{
+        cPSUI.SetPlayerHealthPoint(healthPoint);
     }
 }

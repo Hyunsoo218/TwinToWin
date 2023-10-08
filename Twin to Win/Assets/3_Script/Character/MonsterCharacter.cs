@@ -191,7 +191,8 @@ public class MonsterCharacter : Character
 	public override void Die()
 	{
 		ChangeState(cStateDie);
-	}
+        cAgent.enabled = false;
+    }
 	public override void Move()
 	{
 		cAgent.isStopped = false;
