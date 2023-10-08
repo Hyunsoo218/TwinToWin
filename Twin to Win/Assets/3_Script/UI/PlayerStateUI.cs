@@ -29,6 +29,7 @@ public class PlayerStateUI : MonoBehaviour
     {
         sStamina.maxValue = Player.instance.fMaxStamina;
 		cHealthPoint.maxValue = 100f;
+		cHealthPoint.value = 100f;
     }
     public void Convert()
 	{
