@@ -137,14 +137,11 @@ public class Player : MonoBehaviour
     }
     public void EnableCurrentPlayerInput(bool canUseInput)
     {
-        PlayerInput playerInput = cCurrentCharacter.GetComponent<PlayerInput>();
-        if (canUseInput == true)
-        {
-            playerInput.enabled = true;
-        }
-        else
-        {
-            playerInput.enabled = false;
-        }
+        // 둘 다 안되게
+        PlayerInput wtdPlayerInput = cGreatSword.GetComponent<PlayerInput>();
+        PlayerInput wgsPlayerInput = cGreatSword.GetComponent<PlayerInput>();
+        
+        wtdPlayerInput.enabled = canUseInput;
+        wgsPlayerInput.enabled = canUseInput;
     }
 }

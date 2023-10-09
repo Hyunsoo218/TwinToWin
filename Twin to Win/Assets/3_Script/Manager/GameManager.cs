@@ -22,11 +22,6 @@ public class GameManager : MonoBehaviour
 		StartCoroutine(enumerator);
 	}
 
-	public void AsynchronousStop(IEnumerator enumerator)
-	{
-		StopCoroutine(enumerator);
-	}
-
 	public void AsynchronousExecution(Queue<Action> qAsynchronousAction, int nOneFrameActionCount)
 	{
 		StartCoroutine(AsynchronousExecutors(qAsynchronousAction, nOneFrameActionCount));
