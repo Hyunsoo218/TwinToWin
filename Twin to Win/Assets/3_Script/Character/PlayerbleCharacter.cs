@@ -156,11 +156,11 @@ public class PlayerbleCharacter : Character
         cWSkillState.onExit += () => { Player.instance.canTag = true; };
         cESkillState.onExit += () => { Player.instance.canTag = true; };
         cRSkillState.onExit += () => { Player.instance.canTag = true; };
-        cNormalAttack[0].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false;  };
-        cNormalAttack[1].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false;  };
-        cNormalAttack[2].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false;  };
-        cNormalAttack[3].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false;  };
-        cNormalAttack[4].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false;  };
+        cNormalAttack[0].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[1].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[2].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[3].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[4].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
     }
 
     private void InitializeRightMouseState()
@@ -528,7 +528,7 @@ public class PlayerbleCharacter : Character
         {
             UIManager.instance.ConvertPlayer();
         }
-        
+
         if (ctx.started && Player.instance.canTag == true && (Player.instance.fTagTimer >= Player.instance.fTagCoolDown || Player.instance.fTagTimer == 0f))
         {
             Player.instance.canTag = false;
@@ -610,7 +610,7 @@ public class PlayerbleCharacter : Character
         }
     }
 
-    public virtual float GetCoolDownCutAndRestoreTime() { print("You have not overrided function");  return 0f; }
+    public virtual float GetCoolDownCutAndRestoreTime() { print("You have not overrided function"); return 0f; }
 
     public string GetCurrentStateName()
     {
@@ -619,10 +619,10 @@ public class PlayerbleCharacter : Character
 
     public override void Damage(float fAmount)
     {
-        
+
     }
 
-    protected virtual void ReduceHP(float fAmount) {}
+    protected virtual void ReduceHP(float fAmount) { }
 
     public override void Die()
     {

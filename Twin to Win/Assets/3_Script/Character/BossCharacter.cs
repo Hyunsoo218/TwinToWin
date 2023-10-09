@@ -33,10 +33,10 @@ public class BossCharacter : MonsterCharacter
 		arrAttackMelee.Add(cStateAttack3);
 		arrAttackMelee.Add(cStateAttack4);
 
-		//arrAttackRanged.Add(cStateAttack5);
-		//arrAttackRanged.Add(cStateAttack6);
+		arrAttackRanged.Add(cStateAttack5);
+		arrAttackRanged.Add(cStateAttack6);
 
-		arrAttackRanged.Add(cStateBreakTile);
+		//arrAttackRanged.Add(cStateBreakTile);
 
 		dAttackEffects.Add(cStateAttack, objAttackEffectPrefab);
 		dAttackEffects.Add(cStateAttack2, objAttack2EffectPrefab);

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private BossStateUI cBSUI;
 	[SerializeField] private StageUI cSUI;
 	[SerializeField] private TutorialUI cTUI;
+	[SerializeField] private TalkUI cTalkUI;
 	public static UIManager instance;
 	private void Awake()
 	{
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
 		cBSUI.gameObject.SetActive(false);
 		cSUI.gameObject.SetActive(true);
 		cTUI.gameObject.SetActive(true);
+        cTalkUI.gameObject.SetActive(true);
 	}
     private void Update()
     {
@@ -36,11 +38,24 @@ public class UIManager : MonoBehaviour
 	}
     public IEnumerator WaitForTutorial()
     {
-		yield return cTUI.WaitForTutorial();
+        yield return null;
+        yield return cTUI.WaitForTutorial();
         yield return new WaitForSeconds(0.5f);
     }
-	public void SetPlayerHealthPoint(float healthPoint) 
-	{
+	public void SetPlayerHealthPoint(float healthPoint)
+    {
         cPSUI.SetPlayerHealthPoint(healthPoint);
     }
+    public void OnTutorial(TutorialType type)
+    {
+		cTUI.OnTutorial(type);
+    }
+    public void OffTutorial()
+    {
+		cTUI.OffTutorial();
+    }
+	public IEnumerator WaitForTalk(string name, string script, float autoClickTime = -1f) 
+	{
+		yield return StartCoroutine(cTalkUI.ShowText(name, script, autoClickTime));
+	}
 }

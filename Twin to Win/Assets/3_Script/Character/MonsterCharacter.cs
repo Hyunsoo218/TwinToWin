@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -42,10 +43,10 @@ public class MonsterCharacter : Character
 		mDefaultMaterial = cSMR.material;
 	}
 	protected void Start()
-	{
-		cAgent.isStopped = true;
+    {
+        cAgent.isStopped = true;
 		StartCoroutine(SetTarget());
-	}
+    }
 	protected virtual void StateInitializeOnEnter()
 	{
 		cStateIdle.onEnter = () => {
@@ -193,12 +194,14 @@ public class MonsterCharacter : Character
 	}
 	public override void Die()
 	{
-		ChangeState(cStateDie);
+		allMonsterCharacters.Remove(this);
+        ChangeState(cStateDie);
         cAgent.enabled = false;
     }
 	public override void Move()
 	{
-		cAgent.isStopped = false;
+		if(cAgent.enabled)
+			cAgent.isStopped = false;
 	}
 	public override void ChangeAnimation(string strTrigger)
 	{

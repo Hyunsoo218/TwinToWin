@@ -44,8 +44,8 @@ public class Player : MonoBehaviour
     {
         instance = this;
         StartCoroutine(RecoverStamina());
-        GameObject wtd = Instantiate(objWTD, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 45f, 0));
-        GameObject wgs = Instantiate(objWGS, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 45f, 0));
+        GameObject wtd = Instantiate(objWTD, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
+        GameObject wgs = Instantiate(objWGS, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
 
         cTwinSword = (WTDPlayableCharacter)wtd.GetComponent<PlayerbleCharacter>();
         cGreatSword = (WGSPlayableCharacter)wgs.GetComponent<PlayerbleCharacter>();
@@ -137,8 +137,7 @@ public class Player : MonoBehaviour
     }
     public void EnableCurrentPlayerInput(bool canUseInput)
     {
-        // 둘 다 안되게
-        PlayerInput wtdPlayerInput = cGreatSword.GetComponent<PlayerInput>();
+        PlayerInput wtdPlayerInput = cTwinSword.GetComponent<PlayerInput>();
         PlayerInput wgsPlayerInput = cGreatSword.GetComponent<PlayerInput>();
         
         wtdPlayerInput.enabled = canUseInput;

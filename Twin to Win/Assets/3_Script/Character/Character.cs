@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 { 
+	[SerializeField] protected float fMaxHealthPoint;
 	[SerializeField] protected float fHealthPoint;
 	[SerializeField] protected float fPower;
 	protected StateMachine cStateMachine;

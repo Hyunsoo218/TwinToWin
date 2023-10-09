@@ -11,6 +11,12 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] private List<Animator> navAnimators;
     [SerializeField] private Animator lArrowBtnAnimator;
     [SerializeField] private Animator rArrowBtnAnimator;
+    [SerializeField] private GameObject WTD_tutorial_w;
+    [SerializeField] private GameObject WTD_tutorial_q;
+    [SerializeField] private GameObject WTD_tutorial_qw;
+    [SerializeField] private GameObject WGS_tutorial_tag;
+    [SerializeField] private GameObject WGS_tutorial_e;
+    private GameObject currentTutorial;
     private int currentDataNum = -1;
     private bool waitTutorial = true;
     private void Awake()
@@ -122,8 +128,24 @@ public class TutorialUI : MonoBehaviour
             NextBtn();
         }
     }
+    public void OnTutorial(TutorialType type)
+    {
+        switch (type)
+        {
+            case TutorialType.WTD_W: currentTutorial = WTD_tutorial_w; break;
+            case TutorialType.WTD_Q: currentTutorial = WTD_tutorial_q; break;
+            case TutorialType.WTD_QW: currentTutorial = WTD_tutorial_qw; break;
+            case TutorialType.WGS_Tag: currentTutorial = WGS_tutorial_tag; break;
+            case TutorialType.WGS_E: currentTutorial = WGS_tutorial_e; break;
+        }
+        currentTutorial.SetActive(true);
+    }
+    public void OffTutorial() 
+    {
+        currentTutorial.SetActive(false);
+    }
 }
 public enum TutorialType 
 {
-    Player, Tag
+    Player, Tag, WTD_W, WTD_Q, WTD_QW, WGS_Tag, WGS_E
 }
