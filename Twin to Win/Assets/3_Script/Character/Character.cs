@@ -15,4 +15,6 @@ public abstract class Character : MonoBehaviour
 	public abstract void Die();
 	public abstract void ChangeState(State cNextState);
 	public abstract void ChangeAnimation(string strTrigger);
+	public float GetMaxHP() { return fMaxHealthPoint; }
+	public float GetHP() { return fHealthPoint; }
 }

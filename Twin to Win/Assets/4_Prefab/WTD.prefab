@@ -982,6 +982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc97e0d3b9fe344295f5930bec264df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fMaxHealthPoint: 100
   fHealthPoint: 100
   fPower: 3
   fMoveSpeed: 3
@@ -991,17 +992,17 @@ MonoBehaviour:
   srtQSkill:
     objSkillEffect: {fileID: 7777573416650849465, guid: 653a6ce455f29a744917c539ce1fff1a,
       type: 3}
-    fSkillCoolDown: 1
+    fSkillCoolDown: 10
     fMoveTimeOnBySkill: 0
   srtWSkill:
     objSkillEffect: {fileID: 7777573416650849465, guid: d764afbc8da6cd44a92dc84e4799a247,
       type: 3}
-    fSkillCoolDown: 1
+    fSkillCoolDown: 10
     fMoveTimeOnBySkill: 0.1
   srtESkill:
     objSkillEffect: {fileID: 7777573416650849465, guid: 6af48ac8af76846438df8c77f199279a,
       type: 3}
-    fSkillCoolDown: 1
+    fSkillCoolDown: 30
     fMoveTimeOnBySkill: 0
   srtRSkill:
     objSkillEffect: {fileID: 0}

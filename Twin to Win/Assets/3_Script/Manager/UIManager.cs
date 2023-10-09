@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private StageUI cSUI;
 	[SerializeField] private TutorialUI cTUI;
 	[SerializeField] private TalkUI cTalkUI;
+	[SerializeField] private HpbarControl cHpC;
 	public static UIManager instance;
 	private void Awake()
 	{
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
 		cSUI.gameObject.SetActive(true);
 		cTUI.gameObject.SetActive(true);
         cTalkUI.gameObject.SetActive(true);
+        cHpC.gameObject.SetActive(true);
 	}
     private void Update()
     {
@@ -58,4 +60,16 @@ public class UIManager : MonoBehaviour
 	{
 		yield return StartCoroutine(cTalkUI.ShowText(name, script, autoClickTime));
 	}
+	public void InsertHpbar(Character target, Vector3 offset) 
+	{
+        cHpC.InsertHpbar(target, offset);
+    }
+    public void SetHp(Character target)
+    {
+        cHpC.SetHp(target);
+    }
+    public void RemoveHpbar(Character target)
+    {
+        cHpC.RemoveHpbar(target);
+    }
 }

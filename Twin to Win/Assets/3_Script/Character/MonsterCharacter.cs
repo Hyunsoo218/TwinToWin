@@ -14,6 +14,7 @@ public class MonsterCharacter : Character
 	[SerializeField] protected float fAttackDistance;
 	[SerializeField] protected float fAttackDelayTime = 3f;
 	[SerializeField] protected GameObject objAttackEffectPrefab;
+	[SerializeField] private Vector3 hpbarOffset;
 
 	protected SkinnedMeshRenderer cSMR;
 	protected NavMeshAgent cAgent;
@@ -47,6 +48,7 @@ public class MonsterCharacter : Character
     {
         cAgent.isStopped = true;
 		StartCoroutine(SetTarget());
+		InsertHpbar();
     }
 	protected virtual void StateInitializeOnEnter()
 	{
@@ -183,7 +185,8 @@ public class MonsterCharacter : Character
 		if (cStateMachine.GetCurrentState() == cStateDie) return;
 
 		fHealthPoint -= fAmount;
-		if (fHealthPoint <= 0)
+        UIManager.instance.SetHp(this);
+        if (fHealthPoint <= 0)
 		{
 			Die();
 			isEnterMonsterDeath = true;
@@ -198,6 +201,7 @@ public class MonsterCharacter : Character
 		allMonsterCharacters.Remove(this);
         ChangeState(cStateDie);
         cAgent.enabled = false;
+        UIManager.instance.RemoveHpbar(this);
     }
 	public override void Move()
 	{
@@ -210,19 +214,17 @@ public class MonsterCharacter : Character
 			cAnimator.ResetTrigger(cStateMachine.GetPrevState().strStateName);
 		cAnimator.SetTrigger(strTrigger);
 	}
+	protected virtual void InsertHpbar() 
+	{
+        UIManager.instance.InsertHpbar(this, hpbarOffset);
+    }
 
 	public bool GetIsEnterMonsterDead()
 	{
 		return isEnterMonsterDeath;
 	}
-
 	public void SetIsEnterMonsterDead(bool isMonsterDead)
 	{
 		this.isEnterMonsterDeath = isMonsterDead;
-	}
-
-	public float GetMaxHP()
-	{
-		return fMaxHealthPoint;
 	}
 }

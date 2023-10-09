@@ -909,7 +909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ee0025d2826944285ccba159c8d6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fHealthPoint: 0
+  fMaxHealthPoint: 3000
+  fHealthPoint: 3000
   fPower: 0
   fAttackDistance: 4.5
   fAttackDelayTime: 3

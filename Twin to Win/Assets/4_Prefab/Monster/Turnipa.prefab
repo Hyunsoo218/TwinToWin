@@ -551,12 +551,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dbedea37a24139499f0b585bd9e3c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fHealthPoint: 100
+  fMaxHealthPoint: 1000
+  fHealthPoint: 1000
   fPower: 1
   fAttackDistance: 4
   fAttackDelayTime: 3
   objAttackEffectPrefab: {fileID: 7777573416650849465, guid: 01e7965eb18c62741ae9970e6302150e,
     type: 3}
+  hpbarOffset: {x: 0, y: 1.5, z: 0}
 --- !u!195 &5089566584115381822
 NavMeshAgent:
   m_ObjectHideFlags: 0

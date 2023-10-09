@@ -280,4 +280,8 @@ public class BossCharacter : MonsterCharacter
 
 		ChangeState(cStateAttack6_Finish);
 	}
+    protected override void InsertHpbar()
+    {
+        // º¸½º hp ui ¶ç¿ì±â
+    }
 }
