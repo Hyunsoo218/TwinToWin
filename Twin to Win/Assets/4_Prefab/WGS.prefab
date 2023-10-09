@@ -1433,14 +1433,10 @@ MonoBehaviour:
     m_ActionId: 1a622c6f-facc-44f2-8a0e-5406d14e7a35
     m_ActionName: PlayerActions/WSkill[/Keyboard/w]
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 13a11b06-c19e-439a-bcea-d5209bb56a7b
-    m_ActionName: PlayerActions/ESkill[/Keyboard/e]
-  - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8684553731372817573}
-        m_TargetAssemblyTypeName: PlayerbleCharacter, Assembly-CSharp
-        m_MethodName: OnFever
+        m_TargetAssemblyTypeName: WGSPlayableCharacter, Assembly-CSharp
+        m_MethodName: OnRSkill
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1489,9 +1485,21 @@ MonoBehaviour:
     m_ActionId: b1226d63-86f2-417a-9607-6c531d3336b3
     m_ActionName: PlayerActions/NormalAttack[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 5960058a-f327-4ecb-809a-9c7a984dad08
-    m_ActionName: PlayerActions/WGSESkill[/Keyboard/e]
+      m_Calls:
+      - m_Target: {fileID: 8684553731372817573}
+        m_TargetAssemblyTypeName: WGSPlayableCharacter, Assembly-CSharp
+        m_MethodName: OnESkill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c108332c-6099-4dcd-855a-1573f7e4a307
+    m_ActionName: PlayerActions/ESkill[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerActions
@@ -1614,6 +1622,10 @@ MonoBehaviour:
     objSkillEffect: {fileID: 7777573416650849465, guid: 25ee29cebcda72b4c8578dc6af0783f3,
       type: 3}
     fSkillCoolDown: 3
+    fMoveTimeOnBySkill: 0
+  srtRSkill:
+    objSkillEffect: {fileID: 0}
+    fSkillCoolDown: 0
     fMoveTimeOnBySkill: 0
   objWGSMouseIndicator: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}

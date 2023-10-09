@@ -33,25 +33,16 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WTDESkill",
+                    "name": "ESkill",
                     "type": "Button",
-                    "id": "13a11b06-c19e-439a-bcea-d5209bb56a7b",
+                    "id": "c108332c-6099-4dcd-855a-1573f7e4a307",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WGSESkill",
-                    "type": "Button",
-                    "id": "5960058a-f327-4ecb-809a-9c7a984dad08",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Fever",
+                    "name": "RSkill",
                     "type": "Button",
                     "id": "531634d6-8345-4e9a-b2aa-0550b2c05995",
                     "expectedControlType": "Button",
@@ -156,34 +147,23 @@
                 },
                 {
                     "name": "",
-                    "id": "b3b6fb3b-bef7-45dd-a437-ea1d99ed3a49",
-                    "path": "<Keyboard>/e",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "",
-                    "action": "WTDESkill",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "04925281-eec8-4f50-92df-870eb02b339a",
                     "path": "<Keyboard>/r",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
-                    "action": "Fever",
+                    "action": "RSkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "e672abdd-4257-4f95-a035-9f161f152500",
+                    "id": "a34fbbe7-a6d7-4d56-b6b0-46c600318892",
                     "path": "<Keyboard>/e",
-                    "interactions": "Hold",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
-                    "action": "WGSESkill",
+                    "action": "ESkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

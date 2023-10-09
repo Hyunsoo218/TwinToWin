@@ -11,6 +11,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     protected override void Awake()
     {
         base.Awake();
+        
     }
     protected override void FixedUpdate()
     {
@@ -18,59 +19,80 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         Attack();
     }
 
-
     #region init
     protected override void StateInitalizeOnEnter()
     {
         base.StateInitalizeOnEnter();
-        cNormalAttack[0].onEnter += () => { ChangeAnimation(cNormalAttack[0].strStateName); };
-        cNormalAttack[1].onEnter += () => { ChangeAnimation(cNormalAttack[1].strStateName); };
-        cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); };
+        cNormalAttack[0].onEnter += () => { ChangeAnimation(cNormalAttack[0].strStateName); isNormalAttackState = true; };
+        cNormalAttack[1].onEnter += () => { ChangeAnimation(cNormalAttack[1].strStateName); isNormalAttackState = true; };
+        cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); isNormalAttackState = true; };
     }
 
     #endregion
 
-    #region ESKill
+    #region ESKill Var
     private float parabolaHeight = 0f;
+    #endregion
+
+    #region Skill Var
+    private bool isTutorialState = false;
     #endregion
 
     #region Normal Attack Part
 
     public override void Attack()
     {
-        isNormalAttackState = cStateMachine.GetCurrentState() == cNormalAttack[0] ||
-                            cStateMachine.GetCurrentState() == cNormalAttack[1] ||
-                            cStateMachine.GetCurrentState() == cNormalAttack[2];
         IncreaseAttackCount();
         ResetAttackCount();
         CheckExceededCancelTime();
     }
 
+    protected override void IncreaseAttackCount()
+    {
+        if (cStateMachine.GetCurrentState() == cNormalAttack[nNormalAttackCount] && canNextAttack == true)
+        {
+            nNormalAttackCount = nNormalAttackCount < 2 ? ++nNormalAttackCount : 0;
+        }
+    }
+
     #endregion
 
-    private bool EnableQSkill()
+    private bool EnableSkill()
     {
         return cStateMachine.GetCurrentState() != cQSkillState
             && cStateMachine.GetCurrentState() != cWSkillState
             && cStateMachine.GetCurrentState() != cESkillState
+            && cStateMachine.GetCurrentState() != cRSkillState
             && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
-    private bool EnableWSkill()
+
+    private void EnableSkillEffect()
     {
-        return cStateMachine.GetCurrentState() != cQSkillState
-            && cStateMachine.GetCurrentState() != cWSkillState
-            && cStateMachine.GetCurrentState() != cESkillState
-            && cStateMachine.GetCurrentState() != cDodgeState
-            && cStateMachine.GetCurrentState() != cToStandState;
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
+        //ResetCoolDownWhenMonsterDie(srtCurrentSkill, obj?.GetComponent<PlayerEffect>().GetMonsterInOverlap());
     }
-    private bool EnableESkill()
+
+    private void ResetCoolDownWhenMonsterDie(Skill skillType, Collider monster)
     {
-        return cStateMachine.GetCurrentState() != cQSkillState
-            && cStateMachine.GetCurrentState() != cWSkillState
-            && cStateMachine.GetCurrentState() != cESkillState
-            && cStateMachine.GetCurrentState() != cDodgeState
-            && cStateMachine.GetCurrentState() != cToStandState;
+        if (monster == null || (monster.GetComponent<MonsterCharacter>().GetCurrentHealthPoint() <= 0f && monster.GetComponent<MonsterCharacter>().GetIsMonsterDie() == false))
+        {
+            
+        }
+        else
+        {
+            if (skillType.Equals(srtQSkill))
+            {
+
+            }
+            else if (skillType.Equals(srtWSkill))
+            {
+
+            }
+        }
+
+
     }
 
     #region QSkill Part
@@ -81,17 +103,27 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             UIManager.instance.OnSkillBtn(KeyCode.Q);
         }
 
-        if (EnableQSkill() == true && context.started && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
+        if (EnableSkill() == true && context.started && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
         {
-            FeverGauge.Instance.IncreaseSkillFeverGauge();
+            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtQSkill;
             cStateMachine.ChangeState(cQSkillState);
         }
     }
 
+    private void UseQSkillWithoutKey()
+    {
+        srtCurrentSkill = srtQSkill;
+        cStateMachine.ChangeState(cQSkillState);
+    }
+
     public void StartWTDQSkillCoolDownCoroutine()
     {
-        GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
+        if (isTutorialState == false)
+        {
+            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
+        }
+        isTutorialState = false;
     }
 
     private IEnumerator StartQSkillCoolDown()
@@ -99,11 +131,13 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fQSkillTimer = 0f;
         while (fQSkillTimer < srtQSkill.fSkillCoolDown)
         {
-            fQSkillTimer += Time.deltaTime * Constants.fSpeedConstant;
+            fQSkillTimer += Time.deltaTime;
             yield return null;
         }
         fWSkillTimer = srtWSkill.fSkillCoolDown;
     }
+
+
     #endregion
 
     #region WSkill Part
@@ -114,17 +148,26 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             UIManager.instance.OnSkillBtn(KeyCode.W);
         }
         
-        if (EnableWSkill() == true && context.started && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
+        if (EnableSkill() == true && context.started && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
         {
-            FeverGauge.Instance.IncreaseSkillFeverGauge();
+            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtWSkill;
             cStateMachine.ChangeState(cWSkillState);
         }
     }
+    private void UseWSkillWithoutKey()
+    {
+        srtCurrentSkill = srtWSkill;
+        cStateMachine.ChangeState(cWSkillState);
+    }
 
     public void StartWTDWSkillCoolDownCoroutine()
     {
-        GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
+        if (isTutorialState == false)
+        {
+            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
+        }
+        isTutorialState = false;
     }
 
     private IEnumerator StartWSkillCoolDown()
@@ -132,7 +175,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fWSkillTimer = 0f;
         while (fWSkillTimer < srtWSkill.fSkillCoolDown)
         {
-            fWSkillTimer += Time.deltaTime * Constants.fSpeedConstant;
+            fWSkillTimer += Time.deltaTime;
             yield return null;
         }
         fWSkillTimer = srtWSkill.fSkillCoolDown;
@@ -149,18 +192,28 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             UIManager.instance.OnSkillBtn(KeyCode.E);
         }
         
-        if (EnableESkill() == true && context.started && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f))
+        if (EnableSkill() == true && context.started && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f))
         {
-            FeverGauge.Instance.IncreaseSkillFeverGauge();
+            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtESkill;
             cStateMachine.ChangeState(cESkillState);
             GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
         }
     }
+    private void UseESkillWithoutKey()
+    {
+        srtCurrentSkill = srtESkill;
+        cStateMachine.ChangeState(cESkillState);
+        GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
+    }
 
     public void StartWTDESkillCoolDownCoroutine()
     {
-        GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
+        if (isTutorialState == false)
+        {
+            GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
+        }
+        isTutorialState = false;
     }
 
     private IEnumerator StartESkillCoolDown()
@@ -168,7 +221,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fESkillTimer = 0f;
         while (fESkillTimer < srtESkill.fSkillCoolDown)
         {
-            fESkillTimer += Time.deltaTime * Constants.fSpeedConstant;
+            fESkillTimer += Time.deltaTime;
             yield return null;
         }
         fESkillTimer = srtESkill.fSkillCoolDown;
@@ -182,12 +235,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         float parabolaPower = 10f;
         bool isHitWall = false;
 
+        transform.localRotation = GetMouseAngle();
         Vector3 startPos = transform.position;
         Vector3 endPos = transform.position + transform.forward * parabolaPower;
 
-
-
-        transform.localRotation = GetMouseAngle();
+        
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
@@ -200,14 +252,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         RaycastHit hit;
         Vector3 endPos = _endPos;
 
-        fParabolaTimer += Time.deltaTime * Constants.fSpeedConstant * parabolaSpeed;
+        fParabolaTimer += Time.deltaTime * parabolaSpeed;
         fParabolaTimer = fParabolaTimer % 1f;
 
         Collider[] colliders = Physics.OverlapSphere(transform.position + new Vector3(0f, 0.5f), 0.5f, ~(1 << LayerMask.NameToLayer("Player")));
         if (colliders.Length > 0)   // 벽치기 임시
         {
             isHitWall = true;
-            fFreeFallTimer += Time.deltaTime * Constants.fSpeedConstant;
+            fFreeFallTimer += Time.deltaTime;
             endPos = new Vector3(transform.position.x, 0f, transform.position.z);
             transform.position = FreeFall(Parabola(startPos, endPos, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
@@ -219,7 +271,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         else if (Physics.Raycast(transform.position, Vector3.down, out hit, 100f, 1 << LayerMask.NameToLayer("Ground")))    // 빵꾸난 곳
         {
             isHitWall = true;
-            fFreeFallTimer += Time.deltaTime * Constants.fSpeedConstant;
+            fFreeFallTimer += Time.deltaTime;
             transform.position = FreeFall(Parabola(transform.position, hit.point, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
         return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
@@ -228,10 +280,15 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     #endregion
 
-    #region Fever Part
-    public override void OnFever(InputAction.CallbackContext ctx)
+    #region RSkill Part
+    private float fCoolDownCutAndRestoreTime = 2f;
+    private int fRSkillConsumeTime = 5;
+    public void OnRSkill(InputAction.CallbackContext ctx)
     {
-        base.OnFever(ctx);
+        if (ctx.started)
+        {
+            UIManager.instance.OnSkillBtn(KeyCode.R);
+        }
         //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
         //{
         //    CutCoolDown(fCoolDownCutAndRestoreTime);
@@ -239,17 +296,60 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         //    StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
         //}
 
-        if (FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
+        if (ctx.started && EnableSkill() == true && RSkillGauge.Instance.IsRSkillGaugeFull() == true && IsRSkillTime() == false)
         {
             CutCoolDown(fCoolDownCutAndRestoreTime);
-            SetIsFeverTime(true);
-            StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
+            SetIsRSkillTime(true);
+            srtCurrentSkill = srtRSkill;
+            StartCoroutine(StartRedRSkillTime(fRSkillConsumeTime));
         }
+    }
+
+    public IEnumerator StartRedRSkillTime(float rSkillTime)
+    {
+        bool isUsed = false;
+        float fRedGaugeTimer = 0f;
+
+        while (isUsed == false)
+        {
+            if (fRedGaugeTimer >= rSkillTime)
+            {
+                isUsed = true;
+            }
+            fRedGaugeTimer += Time.deltaTime;
+            yield return null;
+        }
+        RSkillGauge.Instance.fRedGauge = 0f;
+        RestoreCoolDown(fCoolDownCutAndRestoreTime);
+        SetIsRSkillTime(false);
+    }
+
+    public override float GetCoolDownCutAndRestoreTime()
+    {
+        return fCoolDownCutAndRestoreTime;
     }
     #endregion
 
 
-
+    protected override void DoSkillWithoutPressKey(SkillType skillType)
+    {
+        isTutorialState = true;
+        switch (skillType)
+        {
+            case SkillType.QSkill:
+                UseQSkillWithoutKey();
+                break;
+            case SkillType.WSkill:
+                UseWSkillWithoutKey();
+                break;
+            case SkillType.ESkill:
+                UseESkillWithoutKey();
+                break;
+            default:
+                Debug.Log("SkillType is Null!");
+            break;
+        }
+    }
 
     private Vector3 Parabola(Vector3 start, Vector3 end, float height, float t)
     {

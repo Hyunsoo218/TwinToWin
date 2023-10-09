@@ -9,8 +9,8 @@ public class Player : MonoBehaviour
     public PlayerbleCharacter cCurrentCharacter;
     [SerializeField] private GameObject objWTD;
     [SerializeField] private GameObject objWGS;
-    private PlayerbleCharacter cGreatSword;
-    private PlayerbleCharacter cTwinSword;
+    private WGSPlayableCharacter cGreatSword;
+    private WTDPlayableCharacter cTwinSword;
     public float fCurrentStamina = 10f;
     public float fMaxStamina = 10f;
     public float fDodgeStamina = 3f;
@@ -47,8 +47,8 @@ public class Player : MonoBehaviour
         GameObject wtd = Instantiate(objWTD, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 45f, 0));
         GameObject wgs = Instantiate(objWGS, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 45f, 0));
 
-        cTwinSword = wtd.GetComponent<PlayerbleCharacter>();
-        cGreatSword = wgs.GetComponent<PlayerbleCharacter>();
+        cTwinSword = (WTDPlayableCharacter)wtd.GetComponent<PlayerbleCharacter>();
+        cGreatSword = (WGSPlayableCharacter)wgs.GetComponent<PlayerbleCharacter>();
 
         cGreatSword.gameObject.SetActive(false);
 
@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
     }
     public void ConvertCharacter()
     {
-        ResetFever();
+        ResetRSkill();
         InActiveCurrentCharacter();
 
         cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
     }
-    private void ResetFever()
+    private void ResetRSkill()
     {
         //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)
         //{
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         //}
 
         cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
-        FeverGauge.Instance.ResetGaugeWhenTag();
+        RSkillGauge.Instance.ResetGaugeWhenTag();
 
     }
 
@@ -102,12 +102,12 @@ public class Player : MonoBehaviour
 		return cCurrentCharacter.GetCurrentStateName();
 	}
 
-    public PlayerbleCharacter GetTwinSword()
+    public WTDPlayableCharacter GetTwinSword()
     {
         return cTwinSword;
     }
 
-    public PlayerbleCharacter GetGreatSword()
+    public WGSPlayableCharacter GetGreatSword()
     {
         return cGreatSword;
     }

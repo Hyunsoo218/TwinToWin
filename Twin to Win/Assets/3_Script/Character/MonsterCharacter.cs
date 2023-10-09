@@ -203,4 +203,18 @@ public class MonsterCharacter : Character
 			cAnimator.ResetTrigger(cStateMachine.GetPrevState().strStateName);
 		cAnimator.SetTrigger(strTrigger);
 	}
+
+	public bool GetIsMonsterDie()
+	{
+		if (cAgent.enabled.Equals(true))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	public float GetCurrentHealthPoint()
+	{
+		return fHealthPoint;
+	}
 }

@@ -826,7 +826,7 @@ ModelImporter:
       takeName: Take 001
       internalID: 7400002
       firstFrame: 20
-      lastFrame: 40
+      lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -846,22 +846,29 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.3903509
+      - time: 0.07456144
         functionName: EnableSkillEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.46052632
+      - time: 0.27631578
         functionName: EnableSkillEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.53070176
+      - time: 0.4649123
         functionName: EnableSkillEffect
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9871795
+        functionName: StartWTDQSkillCoolDownCoroutine
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -874,8 +881,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 1
-        functionName: StartWTDQSkillCoolDownCoroutine
+      - time: 0.764045
+        functionName: EnableSkillEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
