@@ -41,6 +41,7 @@ public class MonsterCharacter : Character
 		StateInitializeOnStay();
 		StateInitializeOnExit();
 		mDefaultMaterial = cSMR.material;
+		fMaxHealthPoint = fHealthPoint;
 	}
 	protected void Start()
     {
@@ -218,5 +219,10 @@ public class MonsterCharacter : Character
 	public void SetIsEnterMonsterDead(bool isMonsterDead)
 	{
 		this.isEnterMonsterDeath = isMonsterDead;
+	}
+
+	public float GetMaxHP()
+	{
+		return fMaxHealthPoint;
 	}
 }

@@ -77,8 +77,32 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     private void EnableSkillEffect()
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
-        ResetCoolDownWhenMonsterDie(srtCurrentSkill, obj?.GetComponent<PlayerEffect>().GetMonsterInOverlap());
+        Collider monster = obj.GetComponent<PlayerEffect>().GetMonsterInOverlap(transform);
+        float power = 0f;
+
+        if (monster != null && srtCurrentSkill.Equals(srtQSkill))
+        {
+            power = ReduceDamageToMonster(monster, 80f);
+        }
+        else
+        {
+            power = fPower;
+        }
+        
+        obj.GetComponent<Effect>().OnAction(transform, power, 1 << 7);
+        ResetCoolDownWhenMonsterDie(srtCurrentSkill, monster);
+    }
+
+    private float ReduceDamageToMonster(Collider target, float percent)
+    {
+        if (target.GetComponent<MonsterCharacter>().GetMaxHP() > fPower)
+        {
+            return fPower;
+        }
+        else
+        {
+            return target.GetComponent<MonsterCharacter>().GetMaxHP() * (percent / 100f);
+        }
     }
 
     private void ResetCoolDownWhenMonsterDie(Skill skillType, Collider monster)

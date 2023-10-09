@@ -25,20 +25,23 @@ Material:
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _SampleTexture2D_d83b3052ecd341f0ae70196d26fe32a8_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: e15dfb5e2d1ebc74893d8e3f160ddbe6, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_4262afdcfb24447fa318a1f62795f776_Out_0_Texture2D:
@@ -63,17 +66,33 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _BUILTIN_QueueControl: -1
+    - _BUILTIN_QueueOffset: 0
     - _Base_Speed: 1
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
+    - _CastShadows: 1
     - _Cloud_Cutoff: 0
     - _Cloud_Density: 0.08
     - _Cloud_Softness: 0.01
-    - _Cloud_Speed: 0.33
+    - _Cloud_Speed: 1
+    - _Cull: 0
+    - _DstBlend: 10
     - _Noise_Speed: 1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _SrcBlend: 5
+    - _Surface: 1
     - _Taper_Power: 1.55
+    - _WorkflowMode: 1
+    - _ZTest: 4
+    - _ZWrite: 0
+    - _ZWriteControl: 0
     - _cloudHeight: 0.44
-    - _midYValue: 0.38
+    - _midYValue: 0.53
     m_Colors:
     - _Cloud_Cutoff: {r: 1, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
