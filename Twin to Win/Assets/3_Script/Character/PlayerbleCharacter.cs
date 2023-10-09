@@ -26,7 +26,6 @@ public class PlayerbleCharacter : Character
     [Header("Character Info")]
     public float fMoveSpeed = 3f;
 
-
     [Header("Attack Type Info")]
     public GameObject objAttackEffect;
     public GameObject objRotationAttackEffect;
@@ -143,10 +142,10 @@ public class PlayerbleCharacter : Character
         cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
         cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
         cToStandState.onEnter += () => { ChangeAnimation(cToStandState.strStateName); };
-        cQSkillState.onEnter += () => { ChangeAnimation(cQSkillState.strStateName); Player.instance.canTag = false; };
-        cWSkillState.onEnter += () => { ChangeAnimation(cWSkillState.strStateName); Player.instance.canTag = false; };
-        cESkillState.onEnter += () => { ChangeAnimation(cESkillState.strStateName); Player.instance.canTag = false; };
-        cRSkillState.onEnter += () => { ChangeAnimation(cRSkillState.strStateName); Player.instance.canTag = false; };
+        cQSkillState.onEnter += () => { ChangeAnimation(cQSkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
+        cWSkillState.onEnter += () => { ChangeAnimation(cWSkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
+        cESkillState.onEnter += () => { ChangeAnimation(cESkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
+        cRSkillState.onEnter += () => { ChangeAnimation(cRSkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
     }
 
     protected virtual void StateInitalizeOnExit()
@@ -409,7 +408,6 @@ public class PlayerbleCharacter : Character
     private IEnumerator StartMoveOnBySkill(float power)
     {
         fMoveOnBySkillTimer = srtCurrentSkill.fMoveTimeOnBySkill;
-        transform.localRotation = GetMouseAngle();
         yield return new WaitUntil(() => DoMoveOnBySkill(power) <= 0f);
     }
 
@@ -419,21 +417,21 @@ public class PlayerbleCharacter : Character
         return fMoveOnBySkillTimer -= Time.deltaTime;
     }
 
-    public void UseSkillWithoutPressKey(SkillType skillType)
+    public void UseSkillWithoutPressKey(SkillType skillType, Vector3 target)
     {
         switch (skillType)
         {
             case SkillType.QSkill:
-                DoSkillWithoutPressKey(SkillType.QSkill);
+                DoSkillWithoutPressKey(SkillType.QSkill, target);
                 break;
             case SkillType.WSkill:
-                DoSkillWithoutPressKey(SkillType.WSkill);
+                DoSkillWithoutPressKey(SkillType.WSkill, target);
                 break;
             case SkillType.ESkill:
-                DoSkillWithoutPressKey(SkillType.ESkill);
+                DoSkillWithoutPressKey(SkillType.ESkill, target);
                 break;
             case SkillType.RSkill:
-                DoSkillWithoutPressKey(SkillType.RSkill);
+                DoSkillWithoutPressKey(SkillType.RSkill, target);
                 break;
             default:
                 Debug.Log($"Skill Type is {skillType}!");
@@ -441,7 +439,7 @@ public class PlayerbleCharacter : Character
         }
     }
 
-    protected virtual void DoSkillWithoutPressKey(SkillType skillType) { Debug.Log("DoSkillWithoutPressKey isn't override! "); }
+    protected virtual void DoSkillWithoutPressKey(SkillType skillType, Vector3 t) { Debug.Log("DoSkillWithoutPressKey isn't override! "); }
     #endregion
 
     #region Normal Attack Part

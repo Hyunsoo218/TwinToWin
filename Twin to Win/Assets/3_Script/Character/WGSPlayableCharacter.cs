@@ -86,15 +86,15 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtQSkill;
-            transform.localRotation = GetMouseAngle();
             cStateMachine.ChangeState(cQSkillState);
         }
     }
 
-    private void UseQSkillWithoutKey()
+    private void UseQSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtQSkill;
         cStateMachine.ChangeState(cQSkillState);
+        transform.LookAt(target);
     }
 
     public void StartWGSQSkillCoolDownCoroutine()
@@ -134,10 +134,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         }
     }
 
-    private void UseWSkillWithoutKey()
+    private void UseWSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtWSkill;
         cStateMachine.ChangeState(cWSkillState);
+        transform.LookAt(target);
     }
 
     public void StartWGSWSkillCoolDownCoroutine()
@@ -179,18 +180,19 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         }
     }
 
-    private void UseESkillWithoutKey()
+    private void UseESkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtESkill;
         cStateMachine.ChangeState(cESkillState);
+        transform.LookAt(target);
     }
 
     public void StartWGSESkillCoolDownCoroutine()
     {
+        GameManager.instance.AsynchronousExecution(StartESkillHoldTimer());
         if (isTutorialState == false)
         {
             GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
-            GameManager.instance.AsynchronousExecution(StartESkillHoldTimer());
         }
         isTutorialState = false;
     }
@@ -251,10 +253,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         }
     }
 
-    private void UseRSkillWithoutKey()
+    private void UseRSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtRSkill;
         cStateMachine.ChangeState(cRSkillState);
+        transform.LookAt(target);
     }
 
     public override float GetCoolDownCutAndRestoreTime()
@@ -263,22 +266,22 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     }
     #endregion
 
-    protected override void DoSkillWithoutPressKey(SkillType skillType)
+    protected override void DoSkillWithoutPressKey(SkillType skillType, Vector3 target)
     {
         isTutorialState = true;
         switch (skillType)
         {
             case SkillType.QSkill:
-                UseQSkillWithoutKey();
+                UseQSkillWithoutKey(target);
                 break;
             case SkillType.WSkill:
-                UseWSkillWithoutKey();
+                UseWSkillWithoutKey(target);
                 break;
             case SkillType.ESkill:
-                UseESkillWithoutKey();
+                UseESkillWithoutKey(target);
                 break;
             case SkillType.RSkill:
-                UseRSkillWithoutKey();
+                UseRSkillWithoutKey(target);
                 break;
             default:
                 Debug.Log("SkillType is Null!");

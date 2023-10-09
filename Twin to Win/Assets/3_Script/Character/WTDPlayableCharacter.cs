@@ -111,10 +111,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         }
     }
 
-    private void UseQSkillWithoutKey()
+    private void UseQSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtQSkill;
         cStateMachine.ChangeState(cQSkillState);
+        transform.LookAt(target);
     }
 
     public void StartWTDQSkillCoolDownCoroutine()
@@ -155,10 +156,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             cStateMachine.ChangeState(cWSkillState);
         }
     }
-    private void UseWSkillWithoutKey()
+    private void UseWSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtWSkill;
         cStateMachine.ChangeState(cWSkillState);
+        transform.LookAt(target);
     }
 
     public void StartWTDWSkillCoolDownCoroutine()
@@ -200,10 +202,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
         }
     }
-    private void UseESkillWithoutKey()
+    private void UseESkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtESkill;
         cStateMachine.ChangeState(cESkillState);
+        transform.LookAt(target);
         GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
     }
 
@@ -234,8 +237,6 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         float parabolaSpeed = 2f;
         float parabolaPower = 10f;
         bool isHitWall = false;
-
-        transform.localRotation = GetMouseAngle();
         Vector3 startPos = transform.position;
         Vector3 endPos = transform.position + transform.forward * parabolaPower;
 
@@ -331,19 +332,19 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #endregion
 
 
-    protected override void DoSkillWithoutPressKey(SkillType skillType)
+    protected override void DoSkillWithoutPressKey(SkillType skillType, Vector3 t)
     {
         isTutorialState = true;
         switch (skillType)
         {
             case SkillType.QSkill:
-                UseQSkillWithoutKey();
+                UseQSkillWithoutKey(t);
                 break;
             case SkillType.WSkill:
-                UseWSkillWithoutKey();
+                UseWSkillWithoutKey(t);
                 break;
             case SkillType.ESkill:
-                UseESkillWithoutKey();
+                UseESkillWithoutKey(t);
                 break;
             default:
                 Debug.Log("SkillType is Null!");
