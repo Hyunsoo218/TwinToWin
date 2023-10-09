@@ -64,6 +64,7 @@ public class PlayerbleCharacter : Character
     protected State cESkillState = new State("eSkill");
     protected State cRSkillState = new State("rSkill");
     protected State cTagState = new State("tagState");
+    protected State cDeadState = new State("deadState");
     protected State[] cNormalAttack = new State[5] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3"), new State("normalAttack4"), new State("normalAttack5") };
     #endregion
 
@@ -146,6 +147,7 @@ public class PlayerbleCharacter : Character
         cWSkillState.onEnter += () => { ChangeAnimation(cWSkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
         cESkillState.onEnter += () => { ChangeAnimation(cESkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
         cRSkillState.onEnter += () => { ChangeAnimation(cRSkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
+        cDeadState.onEnter += () => { ChangeAnimation(cDeadState.strStateName); };
     }
 
     protected virtual void StateInitalizeOnExit()
@@ -434,7 +436,20 @@ public class PlayerbleCharacter : Character
                 DoSkillWithoutPressKey(SkillType.RSkill, target);
                 break;
             default:
-                Debug.Log($"Skill Type is {skillType}!");
+                Debug.Log($"Skill Type is Wrong Type!");
+                break;
+        }
+    }
+
+    public void UseSkillWithoutPressKey(SkillType skillType)
+    {
+        switch (skillType)
+        {
+            case SkillType.Tag:
+                DoTagWithoutPressKey();
+                break;
+            default:
+                Debug.Log($"Skill Type is Wrong Type!");
                 break;
         }
     }
@@ -533,6 +548,13 @@ public class PlayerbleCharacter : Character
         Player.instance.canTag = true;
         Player.instance.fTagTimer = Player.instance.fTagCoolDown;
     }
+
+    private void DoTagWithoutPressKey()
+    {
+        Player.instance.ConvertCharacter();
+        cStateMachine.ChangeState(cTagState);
+        CameraManager.instance.ResetCamera();
+    }
     #endregion
 
     //public virtual void OnRSkill(InputAction.CallbackContext ctx)
@@ -595,12 +617,15 @@ public class PlayerbleCharacter : Character
 
     public override void Damage(float fAmount)
     {
-
+        
     }
+
+    protected virtual void ReduceHP(float fAmount) {}
 
     public override void Die()
     {
-
+        cStateMachine.ChangeState(cDeadState);
+        Player.instance.EnableCurrentPlayerInput(false);
     }
 
     public override void ChangeState(State cNextState)

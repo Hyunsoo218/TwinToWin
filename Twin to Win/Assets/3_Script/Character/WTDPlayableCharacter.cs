@@ -25,7 +25,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         base.StateInitalizeOnEnter();
         cNormalAttack[0].onEnter += () => { ChangeAnimation(cNormalAttack[0].strStateName); isNormalAttackState = true; };
         cNormalAttack[1].onEnter += () => { ChangeAnimation(cNormalAttack[1].strStateName); isNormalAttackState = true; };
-        cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); isNormalAttackState = true; };
+        cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); isNormalAttackState = true; }; 
+    }
+
+    protected override void StateInitalizeOnExit()
+    {
+        base.StateInitalizeOnExit();
+        cQSkillState.onExit += () => { canResetCoolDown = false; };
+        cWSkillState.onExit += () => { canResetCoolDown = false; };
     }
 
     #endregion
@@ -35,7 +42,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #endregion
 
     #region Skill Var
-    private bool isTutorialState = false;
+    private bool canResetCoolDown = false;
     #endregion
 
     #region Normal Attack Part
@@ -71,29 +78,54 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
-        //ResetCoolDownWhenMonsterDie(srtCurrentSkill, obj?.GetComponent<PlayerEffect>().GetMonsterInOverlap());
+        ResetCoolDownWhenMonsterDie(srtCurrentSkill, obj?.GetComponent<PlayerEffect>().GetMonsterInOverlap());
     }
 
     private void ResetCoolDownWhenMonsterDie(Skill skillType, Collider monster)
     {
-        if (monster == null || (monster.GetComponent<MonsterCharacter>().GetCurrentHealthPoint() <= 0f && monster.GetComponent<MonsterCharacter>().GetIsMonsterDie() == false))
+        if (monster == null || monster.GetComponent<MonsterCharacter>().GetIsEnterMonsterDead() == false)
         {
-            
+            return;
         }
-        else
+        else if (monster.GetComponent<MonsterCharacter>().GetIsEnterMonsterDead() == true)
         {
-            if (skillType.Equals(srtQSkill))
+            if (skillType.Equals(srtQSkill) || skillType.Equals(srtWSkill))
             {
-
-            }
-            else if (skillType.Equals(srtWSkill))
-            {
-
+                canResetCoolDown = true;
             }
         }
-
+        monster.GetComponent<MonsterCharacter>().SetIsEnterMonsterDead(false);
 
     }
+
+    public override void Damage(float fAmount)
+    {
+        if (Invincible() == true)
+        {
+            return;
+        }
+
+        ReduceHP(fAmount);
+        if (fHealthPoint <= 0)
+        {
+            Die();
+        }
+    }
+
+    private bool Invincible()
+    {
+        if (cStateMachine.GetCurrentState() == cDeadState || cStateMachine.GetCurrentState() == cESkillState)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected override void ReduceHP(float fAmount) 
+    {
+        fHealthPoint -= fAmount;
+    }
+
 
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
@@ -120,11 +152,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public void StartWTDQSkillCoolDownCoroutine()
     {
-        if (isTutorialState == false)
-        {
-            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
-        }
-        isTutorialState = false;
+        GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
     }
 
     private IEnumerator StartQSkillCoolDown()
@@ -165,11 +193,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public void StartWTDWSkillCoolDownCoroutine()
     {
-        if (isTutorialState == false)
-        {
-            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
-        }
-        isTutorialState = false;
+        GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
     }
 
     private IEnumerator StartWSkillCoolDown()
@@ -212,11 +236,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public void StartWTDESkillCoolDownCoroutine()
     {
-        if (isTutorialState == false)
-        {
-            GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
-        }
-        isTutorialState = false;
+        GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
     }
 
     private IEnumerator StartESkillCoolDown()
@@ -334,7 +354,6 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     protected override void DoSkillWithoutPressKey(SkillType skillType, Vector3 t)
     {
-        isTutorialState = true;
         switch (skillType)
         {
             case SkillType.QSkill:

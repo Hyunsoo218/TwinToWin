@@ -508,12 +508,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1838531054659112432, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2986291350433906846, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 7cf85c65a4bc124408505af8ba006d5a,
         type: 3}
+    - target: {fileID: 3979244128659832552, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898355105539957716, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5686988787529605061, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6337733503053778514, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
       propertyPath: m_Sprite
@@ -524,6 +544,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6640148790500760296, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6776840392241159606, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7896547332079246664, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8837598046625139590, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: fHealthPoint
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8853953158876960200, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
@@ -545,6 +585,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894388070197530276, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: fHealthPoint
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -766,7 +811,7 @@ PrefabInstance:
     - target: {fileID: 6280981427987442190, guid: 9e67e752b6a4ee24282ba8ed158c258b,
         type: 3}
       propertyPath: srtQSkill.fSkillCoolDown
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6280981427987442190, guid: 9e67e752b6a4ee24282ba8ed158c258b,
         type: 3}

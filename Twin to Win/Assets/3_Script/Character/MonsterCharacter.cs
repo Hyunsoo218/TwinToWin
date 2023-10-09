@@ -27,6 +27,8 @@ public class MonsterCharacter : Character
 	protected Material mDefaultMaterial;
 	protected Coroutine coAttackDelay;
 
+	private bool isEnterMonsterDeath = false;
+
 	protected virtual void Awake()
 	{
 		allMonsterCharacters.Add(this);
@@ -182,6 +184,7 @@ public class MonsterCharacter : Character
 		if (fHealthPoint <= 0)
 		{
 			Die();
+			isEnterMonsterDeath = true;
 		}
 		else
 		{
@@ -204,17 +207,13 @@ public class MonsterCharacter : Character
 		cAnimator.SetTrigger(strTrigger);
 	}
 
-	public bool GetIsMonsterDie()
+	public bool GetIsEnterMonsterDead()
 	{
-		if (cAgent.enabled.Equals(true))
-		{
-			return false;
-		}
-		return true;
+		return isEnterMonsterDeath;
 	}
 
-	public float GetCurrentHealthPoint()
+	public void SetIsEnterMonsterDead(bool isMonsterDead)
 	{
-		return fHealthPoint;
+		this.isEnterMonsterDeath = isMonsterDead;
 	}
 }

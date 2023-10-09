@@ -34,7 +34,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     #endregion
 
     #region Skill Var
-    private bool isTutorialState = false;
     #endregion
 
     #region Normal Attack Part
@@ -74,6 +73,39 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
     }
 
+    public override void Damage(float fAmount)
+    {
+        if (Invincible() == true)
+        {
+            return;
+        }
+
+        ReduceHP(fAmount);
+        if (fHealthPoint <= 0)
+        {
+            Die();
+        }
+    }
+
+    private bool Invincible()
+    {
+        if (cStateMachine.GetCurrentState() == cDeadState || cStateMachine.GetCurrentState() == cRSkillState)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected override void ReduceHP(float fAmount)
+    {
+        if (cStateMachine.GetCurrentState() == cQSkillState
+            || cStateMachine.GetCurrentState() == cWSkillState
+            || cStateMachine.GetCurrentState() == cESkillState)
+        {
+            fHealthPoint -= fAmount / 2;
+        }
+    }
+
     #region QSkill Part
     public void OnQSkill(InputAction.CallbackContext context)
     {
@@ -99,11 +131,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     public void StartWGSQSkillCoolDownCoroutine()
     {
-        if (isTutorialState == false)
-        {
-            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
-        }
-        isTutorialState = false;
+        GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
     }
 
     private IEnumerator StartQSkillCoolDown()
@@ -143,11 +171,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     public void StartWGSWSkillCoolDownCoroutine()
     {
-        if (isTutorialState == false)
-        {
-            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
-        }
-        isTutorialState = false;
+        GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
     }
 
     private IEnumerator StartWSkillCoolDown()
@@ -190,11 +214,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     public void StartWGSESkillCoolDownCoroutine()
     {
         GameManager.instance.AsynchronousExecution(StartESkillHoldTimer());
-        if (isTutorialState == false)
-        {
-            GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
-        }
-        isTutorialState = false;
+        GameManager.instance.AsynchronousExecution(StartESkillCoolDown());
     }
 
     public IEnumerator StartESkillHoldTimer()
@@ -268,7 +288,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     protected override void DoSkillWithoutPressKey(SkillType skillType, Vector3 target)
     {
-        isTutorialState = true;
         switch (skillType)
         {
             case SkillType.QSkill:
