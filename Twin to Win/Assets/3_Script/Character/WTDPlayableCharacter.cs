@@ -124,6 +124,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public override void Damage(float fAmount)
     {
+        UIManager.instance.SetPlayerHealthPoint();
         if (Invincible() == true)
         {
             return;
@@ -187,7 +188,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             fQSkillTimer += Time.deltaTime;
             yield return null;
         }
-        fWSkillTimer = srtWSkill.fSkillCoolDown;
+        fQSkillTimer = srtQSkill.fSkillCoolDown;
     }
 
 

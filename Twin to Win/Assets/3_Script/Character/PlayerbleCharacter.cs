@@ -586,13 +586,10 @@ public class PlayerbleCharacter : Character
         if (isRSkillTime == false && Player.instance.cCurrentCharacter == Player.instance.GetTwinSword())
         {
             srtQSkill.fSkillCoolDown /= cutTime;
-            fQSkillTimer = srtQSkill.fSkillCoolDown;
-
             srtWSkill.fSkillCoolDown /= cutTime;
-            fWSkillTimer = srtWSkill.fSkillCoolDown;
-
             srtESkill.fSkillCoolDown /= cutTime;
-            fESkillTimer = srtESkill.fSkillCoolDown;
+
+            ResetAllCoolDown();
         }
     }
     public void RestoreCoolDown(float restoreTime)
@@ -600,14 +597,33 @@ public class PlayerbleCharacter : Character
         if (isRSkillTime == true && Player.instance.cCurrentCharacter == Player.instance.GetTwinSword())
         {
             srtQSkill.fSkillCoolDown *= restoreTime;
-            fQSkillTimer = srtQSkill.fSkillCoolDown;
-
             srtWSkill.fSkillCoolDown *= restoreTime;
-            fWSkillTimer = srtWSkill.fSkillCoolDown;
-
             srtESkill.fSkillCoolDown *= restoreTime;
-            fESkillTimer = srtESkill.fSkillCoolDown;
+
+            fQSkillTimer *= restoreTime;
+            fWSkillTimer *= restoreTime;
+            fESkillTimer *= restoreTime;
         }
+
+        if (fQSkillTimer > 0f && fQSkillTimer <= srtQSkill.fSkillCoolDown == false)
+        {
+            fQSkillTimer = 99f;
+        }
+        if (fWSkillTimer > 0f && fWSkillTimer <= srtWSkill.fSkillCoolDown == false)
+        {
+            fWSkillTimer = 99f;
+        }
+        if (fESkillTimer > 0f && fESkillTimer <= srtESkill.fSkillCoolDown == false)
+        {
+            fESkillTimer = 99f;
+        }
+    }
+
+    private void ResetAllCoolDown()
+    {
+        fQSkillTimer = 99f;
+        fWSkillTimer = 99f;
+        fESkillTimer = 99f;
     }
 
     public virtual float GetCoolDownCutAndRestoreTime() { print("You have not overrided function"); return 0f; }
@@ -620,6 +636,7 @@ public class PlayerbleCharacter : Character
     public override void Damage(float fAmount)
     {
 
+        
     }
 
     protected virtual void ReduceHP(float fAmount) { }

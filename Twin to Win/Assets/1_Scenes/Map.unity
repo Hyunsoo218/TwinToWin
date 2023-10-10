@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -32160,7 +32160,7 @@ MonoBehaviour:
   horizontalStackSize: 20
   cloudHeight: 0.44
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  cloudMaterial: {fileID: 2100000, guid: 18182ba52ee57e34da707d02cc1489f8, type: 2}
+  cloudMaterial: {fileID: 2100000, guid: cb6457e27fcfc3e429172e8adfc79519, type: 2}
   layer: 0
   castShadows: 1
   useGpuInstancing: 0
@@ -32206,7 +32206,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 18182ba52ee57e34da707d02cc1489f8, type: 2}
+  - {fileID: 2100000, guid: cb6457e27fcfc3e429172e8adfc79519, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -34549,6 +34549,7 @@ MonoBehaviour:
   fAttackDelayTime: 3
   objAttackEffectPrefab: {fileID: 3080061615330173599, guid: 1f0538cd171205941bb42071e60535bf,
     type: 3}
+  hpbarOffset: {x: 0, y: 0, z: 0}
   objAttack2EffectPrefab: {fileID: 7777573416650849465, guid: 39fc2f1769f0bf94cacb28eb14286e32,
     type: 3}
   objAttack3EffectPrefab: {fileID: 790505907424516061, guid: 6d9b517b72a373d4fb5dab44f3aea870,
@@ -39545,6 +39546,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539119734179426769, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539119734179426769, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8249407033793354153, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}

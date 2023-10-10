@@ -17,7 +17,7 @@ public class DrawCloudsExample : MonoBehaviour {
     void Update()
     {
 
-        cloudMaterial.SetFloat("_midYValue", 0.38f);
+        cloudMaterial.SetFloat("_midYValue", transform.position.y);
         cloudMaterial.SetFloat("_cloudHeight", cloudHeight);
 
         offset = cloudHeight / horizontalStackSize / 2f;

@@ -20,8 +20,8 @@ public class RSkillGauge
 
     public float fRedGauge = 0f;
     public float fBlueGauge = 0f;
-    public float fIncreaseAttackGaugeAmount = 0.05f;
-    public float fIncreaseSkillGaugeAmount = 1f; // default 0.1
+    public float fIncreaseAttackGaugeAmount = 0.02f;
+    public float fIncreaseSkillGaugeAmount = 0.1f; // default 0.1
     public RSkillGauge()
     {
 
