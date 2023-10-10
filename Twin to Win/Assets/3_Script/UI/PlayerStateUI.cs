@@ -18,18 +18,28 @@ public class PlayerStateUI : MonoBehaviour
 	[SerializeField] private Sprite WTD_R_ON;
 	[SerializeField] private Sprite WGS_R_OFF;
 	[SerializeField] private Sprite WGS_R_ON;
-	[SerializeField] private Slider cHealthPoint;
+	[SerializeField] private Hpbar hpbar;
     private Animator cAnimator;
-
-	private void Awake()
+    private float hp = 500f;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            hp -= 10;
+            hpbar.Set(hp);
+        }
+    }
+    private void Awake()
 	{
-		cAnimator = GetComponent<Animator>();
+        hpbar.Initialize(hp, 0, hp);
+        cAnimator = GetComponent<Animator>();
 	}
     private void Start()
     {
         sStamina.maxValue = Player.instance.fMaxStamina;
-		cHealthPoint.maxValue = 100f;
-		cHealthPoint.value = 100f;
+        //float maxHp = Player.instance.GetMaxHp();
+        //float hp = Player.instance.GetHp();
+        //hpbar.Initialize(maxHp, 0 , hp);
     }
     public void Convert()
 	{
@@ -95,8 +105,9 @@ public class PlayerStateUI : MonoBehaviour
         arrSkillFill_WGS[3].fillAmount = RSkillGauge.Instance.GetRSkillGauge(cWGS);
         arrSkillFill_WGS[3].sprite = arrSkillFill_WGS[3].fillAmount == 1f ? WGS_R_ON : WGS_R_OFF;
     }
-	public void SetPlayerHealthPoint(float healthPoint) 
+	public void SetPlayerHealthPoint() 
 	{
-        cHealthPoint.value = healthPoint;
+		//float hp = Player.instance.GetHp();
+		//hpbar.Set(hp);
     }
 }

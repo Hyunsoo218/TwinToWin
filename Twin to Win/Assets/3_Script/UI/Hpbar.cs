@@ -10,7 +10,6 @@ public class Hpbar : MonoBehaviour
     [SerializeField] private Slider sub;
     private Coroutine SetSubSliderCoroutine = null;
     private Animator animator;
-
     private void Awake()
     {
         animator = GetComponent<Animator>();

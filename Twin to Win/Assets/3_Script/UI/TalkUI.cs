@@ -35,6 +35,11 @@ public class TalkUI : MonoBehaviour
         for (int i = 0; i < script.Length; i++)
         {
             text.text += script[i];
+            if (Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0))
+            {
+                text.text = script;
+                break;
+            }
             yield return new WaitForSeconds(0.025f);
         }
 
@@ -45,7 +50,7 @@ public class TalkUI : MonoBehaviour
             bool wait = true;
             while (wait)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButton(0))
                     wait = false;
                 yield return null;
             }

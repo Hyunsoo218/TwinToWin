@@ -44,9 +44,9 @@ public class UIManager : MonoBehaviour
         yield return cTUI.WaitForTutorial();
         yield return new WaitForSeconds(0.5f);
     }
-	public void SetPlayerHealthPoint(float healthPoint)
+	public void SetPlayerHealthPoint()
     {
-        cPSUI.SetPlayerHealthPoint(healthPoint);
+        cPSUI.SetPlayerHealthPoint();
     }
     public void OnTutorial(TutorialType type)
     {
