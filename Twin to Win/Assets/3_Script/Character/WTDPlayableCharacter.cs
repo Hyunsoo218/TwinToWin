@@ -28,13 +28,6 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         cNormalAttack[2].onEnter += () => { ChangeAnimation(cNormalAttack[2].strStateName); isNormalAttackState = true; }; 
     }
 
-    protected override void StateInitalizeOnExit()
-    {
-        base.StateInitalizeOnExit();
-        cQSkillState.onExit += () => { canResetCoolDown = false; };
-        cWSkillState.onExit += () => { canResetCoolDown = false; };
-    }
-
     #endregion
 
     #region ESKill Var
@@ -42,7 +35,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     #endregion
 
     #region Skill Var
-    private bool canResetCoolDown = false;
+    private bool isKillMonsterByQSkill = false;
     #endregion
 
     #region Normal Attack Part
@@ -101,7 +94,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         }
         else
         {
-            return target.GetComponent<MonsterCharacter>().GetMaxHP() * (percent / 100f);
+            return target.GetComponent<MonsterCharacter>().GetMaxHP() * (percent * 0.01f);
         }
     }
 
@@ -111,12 +104,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         {
             return;
         }
-        else if (monster.GetComponent<MonsterCharacter>().GetIsEnterMonsterDead() == true)
+        else if (monster.GetComponent<MonsterCharacter>().GetIsEnterMonsterDead() == true && skillType.Equals(srtQSkill) == true)
         {
-            if (skillType.Equals(srtQSkill) || skillType.Equals(srtWSkill))
-            {
-                canResetCoolDown = true;
-            }
+            isKillMonsterByQSkill = true;
+            fQSkillTimer = 99f;
+            fWSkillTimer = 99f;
         }
         monster.GetComponent<MonsterCharacter>().SetIsEnterMonsterDead(false);
 
@@ -124,14 +116,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public override void Damage(float fAmount)
     {
-        UIManager.instance.SetPlayerHealthPoint();
         if (Invincible() == true)
         {
             return;
         }
 
         ReduceHP(fAmount);
-        if (fHealthPoint <= 0)
+        UIManager.instance.SetPlayerHealthPoint();
+        if (Player.instance.GetPlayerHp() <= 0)
         {
             Die();
         }
@@ -148,7 +140,8 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     protected override void ReduceHP(float fAmount) 
     {
-        fHealthPoint -= fAmount;
+        float currentHp = Player.instance.GetPlayerHp();
+        Player.instance.SetPlayerHp(currentHp - fAmount);
     }
 
 
@@ -177,7 +170,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public void StartWTDQSkillCoolDownCoroutine()
     {
-        GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
+        if (isKillMonsterByQSkill == false)
+        {
+            GameManager.instance.AsynchronousExecution(StartQSkillCoolDown());
+        }
+        isKillMonsterByQSkill = false;
     }
 
     private IEnumerator StartQSkillCoolDown()
@@ -218,7 +215,11 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     public void StartWTDWSkillCoolDownCoroutine()
     {
-        GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
+        if (isKillMonsterByQSkill == false)
+        {
+            GameManager.instance.AsynchronousExecution(StartWSkillCoolDown());
+        }
+        isKillMonsterByQSkill = false;
     }
 
     private IEnumerator StartWSkillCoolDown()
@@ -320,7 +321,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             fFreeFallTimer += Time.deltaTime;
             transform.position = FreeFall(Parabola(transform.position, hit.point, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
-        return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
+        return Physics.Raycast(transform.position, Vector3.down, 100f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
     }
 
 

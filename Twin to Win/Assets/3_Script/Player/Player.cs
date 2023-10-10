@@ -11,9 +11,13 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject objWGS;
     private WGSPlayableCharacter cGreatSword;
     private WTDPlayableCharacter cTwinSword;
+
     public float fCurrentStamina = 10f;
-    public float fMaxStamina = 10f;
-    public float fDodgeStamina = 3f;
+    public readonly float fMaxStamina = 10f;
+    public float fUsingDodgeStamina = 3f;
+
+    private readonly float fPlayerMaxHealthPoint = 3000f;
+    private float fPlayerCurrentHealthPoint = 0f;
 
 
     #region Dodge Var
@@ -43,6 +47,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        fPlayerCurrentHealthPoint = fPlayerMaxHealthPoint;
         StartCoroutine(RecoverStamina());
         GameObject wtd = Instantiate(objWTD, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
         GameObject wgs = Instantiate(objWGS, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
@@ -65,6 +70,22 @@ public class Player : MonoBehaviour
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
     }
+
+    public float GetPlayerMaxHp()
+    {
+        return fPlayerMaxHealthPoint;
+    }
+
+    public float GetPlayerHp()
+    {
+        return fPlayerCurrentHealthPoint >= 0f ? fPlayerCurrentHealthPoint : 0f;
+    }
+
+    public void SetPlayerHp(float hp)
+    {
+        this.fPlayerCurrentHealthPoint = hp;
+    }
+
     private void ResetRSkill()
     {
         //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)
@@ -117,9 +138,9 @@ public class Player : MonoBehaviour
     }
     public bool CanDodge() 
     {
-        if (fCurrentStamina >= fDodgeStamina)
+        if (fCurrentStamina >= fUsingDodgeStamina)
         {
-            fCurrentStamina -= fDodgeStamina;
+            fCurrentStamina -= fUsingDodgeStamina;
             return true;
         }
         return false;

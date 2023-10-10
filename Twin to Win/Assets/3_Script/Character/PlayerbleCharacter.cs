@@ -54,6 +54,12 @@ public class PlayerbleCharacter : Character
         Move();
     }
 
+    protected void Update()
+    {
+        fMaxHealthPoint = Player.instance.GetPlayerMaxHp();
+        fHealthPoint = Player.instance.GetPlayerHp();
+    }
+
     #region State Var
     protected State cIdleState = new State("idleState");
     protected State cMoveState = new State("moveState");
@@ -131,6 +137,8 @@ public class PlayerbleCharacter : Character
     #region Init Part
     protected void Initialize()
     {
+        
+        
         moveAction = GetComponent<PlayerInput>().actions["Move"];
         normalAttackAction = GetComponent<PlayerInput>().actions["NormalAttack"];
         cStateMachine = GetComponent<StateMachine>();

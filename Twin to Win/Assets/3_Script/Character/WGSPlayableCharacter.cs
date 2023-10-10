@@ -81,7 +81,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         }
 
         ReduceHP(fAmount);
-        if (fHealthPoint <= 0)
+        UIManager.instance.SetPlayerHealthPoint();
+        if (Player.instance.GetPlayerHp() <= 0)
         {
             Die();
         }
@@ -98,11 +99,17 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     protected override void ReduceHP(float fAmount)
     {
+        float currentHp = Player.instance.GetPlayerHp();
+
         if (cStateMachine.GetCurrentState() == cQSkillState
             || cStateMachine.GetCurrentState() == cWSkillState
             || cStateMachine.GetCurrentState() == cESkillState)
         {
-            fHealthPoint -= fAmount / 2;
+            Player.instance.SetPlayerHp(currentHp - (fAmount * 0.5f));
+        }
+        else
+        {
+            Player.instance.SetPlayerHp(currentHp - fAmount);
         }
     }
 

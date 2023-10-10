@@ -312,6 +312,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 853890023989164, guid: 1599056f6fe74884890699c74ef83cf1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 853890023989164, guid: 1599056f6fe74884890699c74ef83cf1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1612468951084309288, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -393,6 +401,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5776664168367000212, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6302106714070841468, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
       propertyPath: m_IsActive
@@ -418,6 +431,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539119734179426769, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539119734179426769, guid: 1599056f6fe74884890699c74ef83cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7896547332079246664, guid: 1599056f6fe74884890699c74ef83cf1,
         type: 3}
@@ -926,10 +949,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2947070741314081537, guid: a0dcdf3c01919184f894e1d2a5d27963,
+        type: 3}
+      propertyPath: fPower
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5335333625063444565, guid: a0dcdf3c01919184f894e1d2a5d27963,
         type: 3}
       propertyPath: m_Name
       value: Beez
+      objectReference: {fileID: 0}
+    - target: {fileID: 5335333625063444565, guid: a0dcdf3c01919184f894e1d2a5d27963,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5711517364252163281, guid: a0dcdf3c01919184f894e1d2a5d27963,
         type: 3}

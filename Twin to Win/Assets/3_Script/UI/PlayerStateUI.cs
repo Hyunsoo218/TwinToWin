@@ -37,10 +37,10 @@ public class PlayerStateUI : MonoBehaviour
     private void Start()
     {
         sStamina.maxValue = Player.instance.fMaxStamina;
-        //float maxHp = Player.instance.GetMaxHp();
-        //float hp = Player.instance.GetHp();
-        //hpbar.Initialize(maxHp, 0 , hp);
-    }
+		float maxHp = Player.instance.GetPlayerMaxHp();
+		float hp = Player.instance.GetPlayerHp();
+		hpbar.Initialize(maxHp, 0 , hp);
+	}
     public void Convert()
 	{
 		cConvertUIAnimator.SetTrigger("On");
@@ -107,7 +107,7 @@ public class PlayerStateUI : MonoBehaviour
     }
 	public void SetPlayerHealthPoint() 
 	{
-		//float hp = Player.instance.GetHp();
-		//hpbar.Set(hp);
-    }
+		float hp = Player.instance.GetPlayerHp();
+		hpbar.Set(hp);
+	}
 }
