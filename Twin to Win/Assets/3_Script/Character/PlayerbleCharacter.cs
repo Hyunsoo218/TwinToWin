@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -140,8 +141,6 @@ public class PlayerbleCharacter : Character
     #region Init Part
     protected void Initialize()
     {
-        
-        
         moveAction = GetComponent<PlayerInput>().actions["Move"];
         normalAttackAction = GetComponent<PlayerInput>().actions["NormalAttack"];
         cStateMachine = GetComponent<StateMachine>();
@@ -232,6 +231,11 @@ public class PlayerbleCharacter : Character
                 GetPositionOnGround() != Vector3.zero ||
                 (isNormalAttackState == true && fNormalAttackCancelTimer >= 0.2f))
             {
+                if (isMoving == false)
+                {
+                    cStateMachine.ChangeState(cMoveState);
+                }
+
                 isMoving = true;
                 eMouseState = mouseState.Click;
                 ActiveMouseIndicator();
@@ -304,7 +308,6 @@ public class PlayerbleCharacter : Character
                 {
                     StopCoroutine(moveCoroutine);
                 }
-                cStateMachine.ChangeState(cMoveState);
                 mousePosOnGround = GetPositionOnGround();
 
                 transform.localRotation = GetMouseAngle();
@@ -476,16 +479,18 @@ public class PlayerbleCharacter : Character
         KeepHoldMove();
     }
 
-    protected void EnableAttackEffect()
+    protected void EnableAttackEffect(float damage)
     {
         GameObject obj = EffectManager.instance.GetEffect(objAttackEffect);
-        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
+        float finalDamage = ChangeDamageToRandom(damage);
+        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
     }
 
-    protected void EnableRotationAttackEffect()
+    protected void EnableRotationAttackEffect(float damage)
     {
         GameObject obj = EffectManager.instance.GetEffect(objRotationAttackEffect);
-        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
+        float finalDamage = ChangeDamageToRandom(damage);
+        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
     }
     protected virtual void IncreaseAttackCount() { print("You have not added anything"); }
 
@@ -570,20 +575,6 @@ public class PlayerbleCharacter : Character
 
     #endregion
 
-    //public virtual void OnRSkill(InputAction.CallbackContext ctx)
-    //{
-    //    //if (ctx.started && FeverGauge.Instance.IsDoubleFeverGaugeFull() == true)
-    //    //{
-    //    //    Constants.fSpeedConstant = 2f;
-    //    //    Player.instance.GetTwinSword().cAnimator.speed = Constants.fSpeedConstant;
-    //    //    Player.instance.GetGreatSword().cAnimator.speed = Constants.fSpeedConstant;
-    //    //    Player.instance.GetTwinSword().CutCoolDown(fCoolDownCutAndRestoreTime);
-    //    //    Player.instance.GetGreatSword().CutCoolDown(fCoolDownCutAndRestoreTime);
-    //    //    Player.instance.GetTwinSword().SetIsFeverTime(true);
-    //    //    Player.instance.GetGreatSword().SetIsFeverTime(true);
-    //    //    GameManager.instance.AsynchronousExecution(FeverGauge.Instance.StartDoubleFeverTime());
-    //    //}
-    //}
     public bool IsRSkillTime()
     {
         return isRSkillTime;
@@ -599,7 +590,6 @@ public class PlayerbleCharacter : Character
             srtQSkill.fSkillCoolDown /= cutTime;
             srtWSkill.fSkillCoolDown /= cutTime;
             srtESkill.fSkillCoolDown /= cutTime;
-
             ResetAllCoolDown();
         }
     }
@@ -610,7 +600,7 @@ public class PlayerbleCharacter : Character
             srtQSkill.fSkillCoolDown *= restoreTime;
             srtWSkill.fSkillCoolDown *= restoreTime;
             srtESkill.fSkillCoolDown *= restoreTime;
-
+            
             fQSkillTimer *= restoreTime;
             fWSkillTimer *= restoreTime;
             fESkillTimer *= restoreTime;
@@ -632,9 +622,9 @@ public class PlayerbleCharacter : Character
 
     private void ResetAllCoolDown()
     {
-        fQSkillTimer = 99f;
-        fWSkillTimer = 99f;
-        fESkillTimer = 99f;
+        fQSkillTimer = srtQSkill.fSkillCoolDown;
+        fWSkillTimer = srtWSkill.fSkillCoolDown;
+        fESkillTimer = srtESkill.fSkillCoolDown;
     }
 
     public virtual float GetCoolDownCutAndRestoreTime() { print("You have not overrided function"); return 0f; }
@@ -644,10 +634,14 @@ public class PlayerbleCharacter : Character
         return cStateMachine.GetCurrentState().strStateName;
     }
 
-    public override void Damage(float fAmount)
-    {
+    public override void Damage(float fAmount) { }
 
-        
+    protected int ChangeDamageToRandom(float originalDamage)
+    {
+        float minDamage = originalDamage * 0.9f;
+        float maxDamage = originalDamage * 1.1f;
+
+        return Mathf.FloorToInt(UnityEngine.Random.Range(minDamage, maxDamage));
     }
 
     protected virtual void ReduceHP(float fAmount) { }
@@ -655,7 +649,7 @@ public class PlayerbleCharacter : Character
     public override void Die()
     {
         cStateMachine.ChangeState(cDeadState);
-        Player.instance.EnableCurrentPlayerInput(false);
+        Player.instance.EnablePlayerInput(false);
     }
 
     public override void ChangeState(State cNextState)
@@ -665,6 +659,7 @@ public class PlayerbleCharacter : Character
 
     public override void Attack()
     {
+
     }
 
     public override void ChangeAnimation(string strTrigger)
@@ -698,11 +693,6 @@ public class PlayerbleCharacter : Character
             cStateMachine.ChangeState(cMoveState);
             eMouseState = mouseState.Hold;
         }
-    }
-
-    public Animator GetAnimator()
-    {
-        return cAnimator;
     }
 
     protected Vector3 GetPositionOnVirtualGround()

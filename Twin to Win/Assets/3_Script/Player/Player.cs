@@ -39,11 +39,6 @@ public class Player : MonoBehaviour
     private bool isHoldingState = false;
     #endregion
 
-    //#region Fever Var
-    //[HideInInspector] public bool isDoubleFeverTime = false;
-    //[HideInInspector] public float fDoubleFeverTimer = 0f;
-    //#endregion
-
     private void Awake()
     {
         instance = this;
@@ -88,15 +83,8 @@ public class Player : MonoBehaviour
 
     private void ResetRSkill()
     {
-        //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false)
-        //{
-        //    cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
-        //    FeverGauge.Instance.ResetGaugeWhenTag();
-        //}
-
         cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
         RSkillGauge.Instance.ResetGaugeWhenTag();
-
     }
 
     private void InActiveCurrentCharacter()
@@ -156,7 +144,7 @@ public class Player : MonoBehaviour
             yield return null;
         }
     }
-    public void EnableCurrentPlayerInput(bool canUseInput)
+    public void EnablePlayerInput(bool canUseInput)
     {
         PlayerInput wtdPlayerInput = cTwinSword.GetComponent<PlayerInput>();
         PlayerInput wgsPlayerInput = cGreatSword.GetComponent<PlayerInput>();

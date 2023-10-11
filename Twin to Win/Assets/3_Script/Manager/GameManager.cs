@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 	private IEnumerator Stage1() 
 	{
 		yield return null;
-        Player.instance.EnableCurrentPlayerInput(false);
+        Player.instance.EnablePlayerInput(false);
 
         if (!fastDebug) 
         { 
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
 
         yield return StartCoroutine(UIManager.instance.WaitForTutorial());
 
-        Player.instance.EnableCurrentPlayerInput(true);
+        Player.instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
 	private IEnumerator WaitForTalk(string name, string script, float autoClickTime = -1f) 

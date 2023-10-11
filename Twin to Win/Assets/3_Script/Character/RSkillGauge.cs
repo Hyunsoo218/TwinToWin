@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting.FullSerializer;
-using UnityEngine;
 
 public class RSkillGauge 
 {
@@ -21,7 +18,7 @@ public class RSkillGauge
     public float fRedGauge = 0f;
     public float fBlueGauge = 0f;
     public float fIncreaseAttackGaugeAmount = 0.02f;
-    public float fIncreaseSkillGaugeAmount = 0.1f; // default 0.1
+    public float fIncreaseSkillGaugeAmount = 1f; // default 0.1
     public RSkillGauge()
     {
 
@@ -55,34 +52,6 @@ public class RSkillGauge
     {
         return IsTwin() == true ? Math.Round(fRedGauge, 2) >= 1f : Math.Round(fBlueGauge, 2) >= 1f;
     }
-    //public bool IsDoubleFeverGaugeFull()
-    //{
-    //    if (Math.Round(fRedGauge, 2) >= 1f && Math.Round(fBlueGauge, 2) >= 1f && Player.instance.isDoubleFeverTime == false)
-    //    {
-    //        Player.instance.isDoubleFeverTime = true;
-    //    }
-    //    return Player.instance.isDoubleFeverTime;
-    //}
-
-    //public IEnumerator StartDoubleFeverTime()
-    //{
-    //    fRedGauge = 0f;
-    //    fBlueGauge = 0f;
-    //    while (Player.instance.fDoubleFeverTimer < fFeverTimeTime)
-    //    {
-    //        Player.instance.fDoubleFeverTimer += Time.deltaTime;
-    //        yield return null;
-    //    }
-    //    Player.instance.GetGreatSword().RestoreCoolDown(Player.instance.GetGreatSword().GetCoolDownCutAndRestoreTime());
-    //    Player.instance.GetTwinSword().RestoreCoolDown(Player.instance.GetTwinSword().GetCoolDownCutAndRestoreTime());
-    //    Player.instance.GetGreatSword().SetIsFeverTime(false);
-    //    Player.instance.GetTwinSword().SetIsFeverTime(false);
-    //    Player.instance.isDoubleFeverTime = false;
-    //    Player.instance.fDoubleFeverTimer = 0f;
-    //    Constants.fSpeedConstant = 1f;
-    //    Player.instance.GetTwinSword().GetAnimator().speed = Constants.fSpeedConstant;
-    //    Player.instance.GetGreatSword().GetAnimator().speed = Constants.fSpeedConstant;
-    //}
 
     public void ResetGaugeWhenTag()
     {

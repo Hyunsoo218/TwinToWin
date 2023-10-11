@@ -1134,6 +1134,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0
+        functionName: StartWTDWSkillCoolDownCoroutine
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.018950941
         functionName: OnMoveOnBySkill
         data: 
@@ -1145,17 +1152,10 @@ ModelImporter:
         functionName: EnableSkillEffect
         data: 
         objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        floatParameter: 150
         intParameter: 0
         messageOptions: 0
-      - time: 0.9867725
-        functionName: StartWTDWSkillCoolDownCoroutine
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
+      - time: 0.9927536
         functionName: ReturnToIdleWithHold
         data: 
         objectReferenceParameter: {instanceID: 0}

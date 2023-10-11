@@ -67,10 +67,11 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             && cStateMachine.GetCurrentState() != cToStandState;
     }
 
-    private void EnableSkillEffect()
+    public void EnableSkillEffect(float damage)
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        obj.GetComponent<Effect>().OnAction(transform, fPower, 1 << 7);
+        float finalDamage = ChangeDamageToRandom(damage);
+        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
     }
 
     public override void Damage(float fAmount)
@@ -246,7 +247,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     private void StopESkill()
     {
-        ReturnToIdleWithHold();
+        //ReturnToIdleWithHold();
+        cStateMachine.ChangeState(cToStandState);
         transform.localRotation = GetMouseAngle();
         fESkillHoldTimer = 0f;
     }

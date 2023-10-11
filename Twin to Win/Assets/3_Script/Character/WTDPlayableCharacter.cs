@@ -67,30 +67,26 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             && cStateMachine.GetCurrentState() != cToStandState;
     }
 
-    private void EnableSkillEffect()
+    public void EnableSkillEffect(float damage)
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         Collider monster = obj.GetComponent<PlayerEffect>().GetMonsterInOverlap(transform);
-        float power = 0f;
+        float finalDamage = ChangeDamageToRandom(damage);
 
         if (monster != null && srtCurrentSkill.Equals(srtQSkill))
         {
-            power = ReduceDamageToMonster(monster, 80f);
-        }
-        else
-        {
-            power = fPower;
+            finalDamage = ReduceDamageToMonster(monster, finalDamage, 80f);
         }
         
-        obj.GetComponent<Effect>().OnAction(transform, power, 1 << 7);
+        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
         ResetCoolDownWhenMonsterDie(srtCurrentSkill, monster);
     }
 
-    private float ReduceDamageToMonster(Collider target, float percent)
+    private float ReduceDamageToMonster(Collider target, float damage, float percent)
     {
-        if (target.GetComponent<MonsterCharacter>().GetMaxHP() > fPower)
+        if (target.GetComponent<MonsterCharacter>().GetMaxHP() > damage)
         {
-            return fPower;
+            return damage;
         }
         else
         {
@@ -107,8 +103,8 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         else if (monster.GetComponent<MonsterCharacter>().GetIsEnterMonsterDead() == true && skillType.Equals(srtQSkill) == true)
         {
             isKillMonsterByQSkill = true;
-            fQSkillTimer = 99f;
-            fWSkillTimer = 99f;
+            fQSkillTimer = srtQSkill.fSkillCoolDown;
+            fWSkillTimer = srtWSkill.fSkillCoolDown;
         }
         monster.GetComponent<MonsterCharacter>().SetIsEnterMonsterDead(false);
 
@@ -246,6 +242,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         
         if (EnableSkill() == true && context.started && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f))
         {
+            StartWTDESkillCoolDownCoroutine();
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtESkill;
             cStateMachine.ChangeState(cESkillState);
@@ -290,7 +287,6 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
-        StartWTDESkillCoolDownCoroutine();
         cStateMachine.ChangeState(cToStandState);
     }
 
@@ -321,7 +317,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             fFreeFallTimer += Time.deltaTime;
             transform.position = FreeFall(Parabola(transform.position, hit.point, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
-        return Physics.Raycast(transform.position, Vector3.down, 100f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
+        return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
     }
 
 
@@ -329,7 +325,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
     #region RSkill Part
     private float fCoolDownCutAndRestoreTime = 2f;
-    private int fRSkillConsumeTime = 5;
+    private int fRSkillConsumeTime = 10;
     public void OnRSkill(InputAction.CallbackContext ctx)
     {
         if (ctx.started)
