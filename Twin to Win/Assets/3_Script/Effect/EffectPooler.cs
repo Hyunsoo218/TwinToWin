@@ -34,4 +34,11 @@ public class EffectPooler : MonoBehaviour
 			obj.SetActive(false);
 		}
 	}
+	public void DisableAllEffect() 
+	{
+		foreach (var item in arrEffects)
+		{
+			item.SetActive(false);
+		}
+	}
 }

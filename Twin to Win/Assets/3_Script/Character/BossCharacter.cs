@@ -258,17 +258,6 @@ public class BossCharacter : MonsterCharacter
 	private IEnumerator Attack6Rush() 
 	{
 		cAgent.enabled = false;
-		//float startTime = Time.time;
-		//Vector3 temp = (vTargetPos - transform.position).normalized;
-		//print($"{transform.position - vTargetPos} , {(transform.position - vTargetPos).normalized}");
-		//// -20 45
-		//while ( (transform.position.x > -20f && transform.position.x < 45f) &&
-		//		(transform.position.z > -20f && transform.position.z < 45f))
-		//{
-		//	transform.position += transform.position + temp * Time.deltaTime * 100f;
-		//	//transform.Translate(temp * Time.deltaTime * 100f);
-		//	yield return null; 
-		//}
 		yield return new WaitForSeconds(1f);
 
 		transform.position += Vector3.up * 10f;

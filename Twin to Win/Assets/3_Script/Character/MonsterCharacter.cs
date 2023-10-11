@@ -133,6 +133,20 @@ public class MonsterCharacter : Character
 		ChangeState(null);
 		cAnimator.speed = 0;
     }
+	public void Slow(float time, float amount) 
+	{
+		StartCoroutine(SlowAction(time, amount));
+	}
+	protected IEnumerator SlowAction(float time, float amount) 
+	{
+		ChangeState(cStateIdle);
+		float currentSpeed = cAgent.speed;
+		cAnimator.speed *= amount;
+		cAgent.speed *= amount;
+		yield return new WaitForSeconds(time);
+		cAnimator.speed = 1f;
+		cAgent.speed *= currentSpeed;
+	}
 	public void ResetState()
 	{
 		if (fTargetDist < fAttackDistance)
