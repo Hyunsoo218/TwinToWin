@@ -64,6 +64,10 @@ public class UIManager : MonoBehaviour
 	{
 		yield return StartCoroutine(cTalkUI.ShowText(name, script, autoClickTime));
 	}
+	public IEnumerator WaitForChoice(string name, string script, List<string> Options) 
+	{
+		yield return StartCoroutine(cTalkUI.Choice(name, script, Options));
+	}
 	public void InsertHpbar(Character target, Vector3 offset) 
 	{
         cHpC.InsertHpbar(target, offset);
@@ -83,5 +87,9 @@ public class UIManager : MonoBehaviour
 	public void OnPlayerDie() 
 	{
 		playerDie.SetActive(true);
+	}
+	public int GetPlayersChoice() 
+	{
+		return cTalkUI.GetPlayersChoice();
 	}
 }

@@ -215,6 +215,7 @@ public class MonsterCharacter : Character
 		allMonsterCharacters.Remove(this);
         ChangeState(cStateDie);
         cAgent.enabled = false;
+		GetComponent<Collider>().enabled = false;
         UIManager.instance.RemoveHpbar(this);
     }
 	public override void Move()

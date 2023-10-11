@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
 	public Phase phase;
-    [SerializeField] private bool fastDebug = false;
 	private Queue<Action> qAsynchronousAction = new Queue<Action>();
+
 	private void Awake()
 	{
 		instance = this;
@@ -55,10 +55,17 @@ public class GameManager : MonoBehaviour
 	private IEnumerator Stage1() 
 	{
 		yield return null;
+        List<string> options = new List<string>();
+        int playersChoice;
         Player.instance.EnablePlayerInput(false);
-
-        if (!fastDebug) 
-        { 
+        options.Add("아니요");
+        options.Add("네");
+        yield return StartCoroutine(WaitForChoice("", "튜토리얼을 건너뛰시겠습니까?", options));
+        options.Clear();
+        playersChoice = UIManager.instance.GetPlayersChoice();
+        if (playersChoice == 0) 
+        {
+            yield return StartCoroutine(UIManager.instance.WaitForTutorial());
             yield return StartCoroutine(WaitForTalk("스칼렛", "으으... 여기가 어디지? 앨리스 무사해?"));
             yield return StartCoroutine(WaitForTalk("앨리스", "괜찮아. 언니는?"));
             yield return StartCoroutine(WaitForTalk("스칼렛", "머리가 조금 아프긴 하지만 참을만해. 그런데 앨리스 어디 있어?"));
@@ -127,6 +134,7 @@ public class GameManager : MonoBehaviour
             EnemyManager.instance.StopAllEnemy();
             UIManager.instance.OnTutorial(TutorialType.WGS_E);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.E));
+            EnemyManager.instance.StartActionAllEnemy();
             Player.instance.cCurrentCharacter.UseSkillWithoutPressKey(SkillType.ESkill, new Vector3(8f, 0, 8f));
             UIManager.instance.OffTutorial();
             yield return new WaitForSeconds(5f);
@@ -141,17 +149,21 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("앨리스", "....."));
             yield return StartCoroutine(WaitForTalk("스칼렛", "아 진짜! 지금까진 진심이 아니었다고!"));
         }
+
         UIManager.instance.OnStageUI(StageNumber.one);
+        EnemyManager.instance.OnActiveEnemy(StageEnemySet.Stage1_1);
+        EnemyManager.instance.StopAllEnemy();
         yield return new WaitForSeconds(3.5f);
-
-        yield return StartCoroutine(UIManager.instance.WaitForTutorial());
-
         Player.instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
 	private IEnumerator WaitForTalk(string name, string script, float autoClickTime = -1f) 
 	{
         yield return StartCoroutine(UIManager.instance.WaitForTalk(name, script, autoClickTime));
+    }
+    private IEnumerator WaitForChoice(string name, string script, List<string> Options)
+    {
+        yield return StartCoroutine(UIManager.instance.WaitForChoice(name, script, Options));
     }
     private IEnumerator WaitFotInputKey(KeyCode key) 
 	{

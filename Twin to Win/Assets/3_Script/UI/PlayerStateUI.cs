@@ -126,12 +126,15 @@ public class PlayerStateUI : MonoBehaviour
     }
     private void SetRSkillInfo(List<Image> images, List<TextMeshProUGUI> times, PlayerbleCharacter character, SkillType type)
     {
+		Sprite onImg = (character == Player.instance.GetTwinSword()) ? WTD_R_ON : WGS_R_ON;
+		Sprite offImg = (character == Player.instance.GetTwinSword()) ? WTD_R_OFF : WGS_R_OFF;
+
 		float gauge = RSkillGauge.Instance.GetRSkillGauge(character);
         images[(int)type].fillAmount = gauge;
-        images[(int)type].sprite = (gauge >= 1f) ? WTD_R_ON : WTD_R_OFF;
+        images[(int)type].sprite = (gauge >= 1f) ? onImg : offImg;
 
 		string text = "";
-		if (images[(int)type].sprite != WTD_R_ON)
+		if (images[(int)type].sprite != onImg)
 		{
 			gauge = gauge * 99f;
 			text = gauge.ToString("N0") + "%";
