@@ -56,5 +56,6 @@ public class Hpbar : MonoBehaviour
     private void Hide()
     {
         gameObject.SetActive(false);
+
     }
 }

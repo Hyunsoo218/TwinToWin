@@ -1,19 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class HpbarControl : MonoBehaviour
 {
     [SerializeField] private GameObject hpbar;
     private Dictionary<Character, CharacterWithHpbarInfo> hpbarInfos = new Dictionary<Character, CharacterWithHpbarInfo>();
-
+    private List<Character> characters = new List<Character>();
     void Update()
     {
         foreach (var info in hpbarInfos)
         {
-            Vector3 hpbarPos = info.Value.target.transform.position + info.Value.hpbarPosOffset;
-            info.Value.hpbar.transform.position = Camera.main.WorldToScreenPoint(hpbarPos);
+            if (info.Value.hpbar.gameObject.activeSelf)
+            {
+                Vector3 hpbarPos = info.Value.target.transform.position + info.Value.hpbarPosOffset;
+                info.Value.hpbar.transform.position = Camera.main.WorldToScreenPoint(hpbarPos);
+            }
+            else characters.Add(info.Key); 
+        }
+        if (characters.Count > 0)
+        {
+            foreach (var character in characters)
+            {
+                hpbarInfos.Remove(character);
+            }
+            characters.Clear();
         }
     }
     public void InsertHpbar(Character target, Vector3 hpbarPosOffset) 
@@ -44,9 +57,7 @@ public class HpbarControl : MonoBehaviour
     {
         if (hpbarInfos.ContainsKey(target))
         {
-            CharacterWithHpbarInfo info = hpbarInfos[target];
-            hpbarInfos.Remove(target);
-            info.hpbar.Disable();
+            hpbarInfos[target].hpbar.Disable();
         }
         else print("등록되지 않은 캐릭터입니다"); 
     }
