@@ -8,7 +8,7 @@ public class DamageFont : MonoBehaviour
     [SerializeField] private TextMeshProUGUI damageText;
     public void EnableDamage(float damage) 
     {
-        damageText.text = damage + "";
+        damageText.text = damage.ToString("N0");
     }
     public void Disable() 
     {

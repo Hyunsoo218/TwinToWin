@@ -23,7 +23,7 @@ public class DamageFontControl : MonoBehaviour
     public void EnableDamageFont(Vector3 targetPos, DamageType type, float damage)
     {
         List<DamageFont> poolingObj = GetPooler(type);
-        for (int i = 0; poolingObj.Count > 0;) 
+        for (int i = 0; poolingObj.Count > 0; i++) 
         {
             if (!poolingObj[i].gameObject.activeSelf)
             {
@@ -48,16 +48,17 @@ public class DamageFontControl : MonoBehaviour
     }
     private void AddPoolingObj(List<DamageFont> poolingObj, DamageType type) 
     {
-        GameObject obj;
+        GameObject addObj = null;
         switch (type)
         {
-            case DamageType.normal:     obj = damageFont; break;
-            case DamageType.red:        obj = damageFontRed; break;
-            case DamageType.blue:       obj = damageFontBlue; break;
+            case DamageType.normal:     addObj = damageFont; break;
+            case DamageType.red:        addObj = damageFontRed; break;
+            case DamageType.blue:       addObj = damageFontBlue; break;
         }
         for (int i = 0; i < 5; i++)
         {
-            poolingObj.Add(Instantiate(damageFont, transform).GetComponent<DamageFont>());
+            GameObject obj = Instantiate(addObj, transform);
+            poolingObj.Add(obj.GetComponent<DamageFont>());
         }
     }
 }
