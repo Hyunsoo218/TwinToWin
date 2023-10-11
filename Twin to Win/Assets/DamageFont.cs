@@ -6,9 +6,10 @@ using TMPro;
 public class DamageFont : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI damageText;
-    public void EnableDamage(float damage) 
+    public void EnableDamage(float damage, Vector3 targetPos) 
     {
         damageText.text = damage.ToString("N0");
+        transform.position = Camera.main.WorldToScreenPoint(targetPos);
     }
     public void Disable() 
     {

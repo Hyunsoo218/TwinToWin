@@ -58,7 +58,7 @@ public class PlayerStateUI : MonoBehaviour
             cAnimator.SetTrigger(animationTrigger);
 		}
 	}
-	public void OnButton(KeyCode key) 
+	public void OnButton(KeyCode key, bool stay = false, bool stayEnd = false)
 	{
 		PlayerbleCharacter cWTD = Player.instance.GetTwinSword();
 		PlayerbleCharacter cCur = Player.instance.cCurrentCharacter;
@@ -68,12 +68,15 @@ public class PlayerStateUI : MonoBehaviour
 		Animator animator = null;
 		switch (key)
 		{
-			case KeyCode.Q: animator = animators[0]; break; 
+			case KeyCode.Q: animator = animators[0]; break;
 			case KeyCode.W: animator = animators[1]; break;
 			case KeyCode.E: animator = animators[2]; break;
 			case KeyCode.R: animator = animators[3]; break;
 		}
-		animator.SetTrigger("On");
+
+		string trigger = stay ? "Stay" : "On";
+		trigger = (stay && stayEnd) ? "StayEnd" : "Stay";
+		animator.SetTrigger(trigger);
 	}
 	public void SetSkillFill() 
 	{

@@ -27,8 +27,7 @@ public class DamageFontControl : MonoBehaviour
         {
             if (!poolingObj[i].gameObject.activeSelf)
             {
-                poolingObj[i].EnableDamage(damage);
-                poolingObj[i].gameObject.transform.position = Camera.main.WorldToScreenPoint(targetPos);
+                poolingObj[i].EnableDamage(damage, targetPos);
                 poolingObj[i].gameObject.SetActive(true);
                 return;
             }
