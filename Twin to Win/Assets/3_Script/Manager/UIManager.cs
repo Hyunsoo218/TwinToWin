@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private TalkUI cTalkUI;
 	[SerializeField] private HpbarControl cHpC;
 	[SerializeField] private DamageFontControl cDFC;
+	[SerializeField] private GameObject playerDie;
 	public static UIManager instance;
 	private void Awake()
 	{
@@ -23,6 +24,7 @@ public class UIManager : MonoBehaviour
         cTalkUI.gameObject.SetActive(true);
         cHpC.gameObject.SetActive(true);
         cDFC.gameObject.SetActive(true);
+		playerDie.SetActive(false);
 	}
     private void Update()
     {
@@ -78,4 +80,8 @@ public class UIManager : MonoBehaviour
     {
         cDFC.EnableDamageFont(targetPos, type, dmage);
     }
+	public void OnPlayerDie() 
+	{
+		playerDie.SetActive(true);
+	}
 }

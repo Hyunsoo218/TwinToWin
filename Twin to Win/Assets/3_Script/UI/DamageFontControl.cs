@@ -23,7 +23,7 @@ public class DamageFontControl : MonoBehaviour
     public void EnableDamageFont(Vector3 targetPos, DamageType type, float damage)
     {
         List<DamageFont> poolingObj = GetPooler(type);
-        for (int i = 0; poolingObj.Count > 0; i++) 
+        for (int i = 0; i < poolingObj.Count; i++) 
         {
             if (!poolingObj[i].gameObject.activeSelf)
             {

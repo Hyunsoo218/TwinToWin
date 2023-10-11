@@ -72,7 +72,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         float finalDamage = ChangeDamageToRandom(damage);
         obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
-    }
+	}
 
     public override void Damage(float fAmount)
     {

@@ -49,6 +49,24 @@ public class CameraManager : MonoBehaviour
     {
         foreach (GameObject cam in cams) cam.SetActive(false);
     }
+    public void OnPlayerDie() 
+    {
+        StartCoroutine(ZoomInPlayer());
+    }
+    private IEnumerator ZoomInPlayer() 
+    {
+        float time = 5f;
+        float runTime = 0;
+        float startDist = cMainCam.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance;
+        float targetDist = 3f;
+        float moveDist = startDist - targetDist;
+		while (runTime < time)
+		{
+            runTime += Time.deltaTime;
+            cMainCam.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = startDist - moveDist * runTime / time;
+            yield return null;
+		}
+    }
 }
 public enum CamType 
 {

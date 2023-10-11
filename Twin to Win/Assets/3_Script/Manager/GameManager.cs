@@ -19,11 +19,19 @@ public class GameManager : MonoBehaviour
     {
         Stage1Start();
     }
-    public void AsynchronousExecution(IEnumerator enumerator) 
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+
+        GameLose();
+		}
+
+    }
+	public void AsynchronousExecution(IEnumerator enumerator) 
 	{
 		StartCoroutine(enumerator);
 	}
-
 	public void AsynchronousExecution(Queue<Action> qAsynchronousAction, int nOneFrameActionCount)
 	{
 		StartCoroutine(AsynchronousExecutors(qAsynchronousAction, nOneFrameActionCount));
@@ -112,13 +120,16 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitFotInputKey(KeyCode.Tab));
             Player.instance.cCurrentCharacter.UseSkillWithoutPressKey(SkillType.Tag);
             UIManager.instance.OffTutorial();
+            EnemyManager.instance.StartActionAllEnemy();
+
             yield return new WaitForSeconds(0.5f);
 
+            EnemyManager.instance.StopAllEnemy();
             UIManager.instance.OnTutorial(TutorialType.WGS_E);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.E));
             Player.instance.cCurrentCharacter.UseSkillWithoutPressKey(SkillType.ESkill, new Vector3(8f, 0, 8f));
             UIManager.instance.OffTutorial();
-            yield return new WaitForSeconds(5.5f);
+            yield return new WaitForSeconds(5f);
 
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "ÀßÇÑ´Ù ¾Ù¸®½º! ´Ù ¾µ¾î¹ö·Á!"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "....."));
@@ -152,6 +163,11 @@ public class GameManager : MonoBehaviour
 			yield return null;
 		}
 	}
+    public void GameLose() 
+    {
+        CameraManager.instance.OnPlayerDie();
+        UIManager.instance.OnPlayerDie();
+    }
 }
 
 public enum Phase
