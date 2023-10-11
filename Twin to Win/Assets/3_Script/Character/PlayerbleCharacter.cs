@@ -46,6 +46,9 @@ public class PlayerbleCharacter : Character
         StateInitalizeOnExit();
         InitializeRightMouseState();
         InitializeLeftMouseState();
+        fQSkillTimer = srtQSkill.fSkillCoolDown;
+        fWSkillTimer = srtWSkill.fSkillCoolDown;
+        fESkillTimer = srtESkill.fSkillCoolDown;
     }
     protected virtual void FixedUpdate()
     {
@@ -615,15 +618,15 @@ public class PlayerbleCharacter : Character
 
         if (fQSkillTimer > 0f && fQSkillTimer <= srtQSkill.fSkillCoolDown == false)
         {
-            fQSkillTimer = 99f;
+            fQSkillTimer = srtQSkill.fSkillCoolDown;
         }
         if (fWSkillTimer > 0f && fWSkillTimer <= srtWSkill.fSkillCoolDown == false)
         {
-            fWSkillTimer = 99f;
+            fWSkillTimer = srtWSkill.fSkillCoolDown;
         }
         if (fESkillTimer > 0f && fESkillTimer <= srtESkill.fSkillCoolDown == false)
         {
-            fESkillTimer = 99f;
+            fESkillTimer = srtESkill.fSkillCoolDown;
         }
     }
 
@@ -771,19 +774,19 @@ public class PlayerbleCharacter : Character
         return mouseNormalizedYPosition;
     }
 
-    public float GetSkillTimer(SkillType skill)
+    public PlayerSkillTimeInfo GetSkillTimer(SkillType skill)
     {
         switch (skill)
         {
             case SkillType.QSkill:
-                return fQSkillTimer / srtQSkill.fSkillCoolDown;
+                return new PlayerSkillTimeInfo(srtQSkill.fSkillCoolDown, fQSkillTimer);
             case SkillType.WSkill:
-                return fWSkillTimer / srtWSkill.fSkillCoolDown;
+                return new PlayerSkillTimeInfo(srtWSkill.fSkillCoolDown, fWSkillTimer);
             case SkillType.ESkill:
-                return fESkillTimer / srtESkill.fSkillCoolDown;
+                return new PlayerSkillTimeInfo(srtESkill.fSkillCoolDown, fESkillTimer);
             case SkillType.Tag:
-                return Player.instance.fTagTimer / Player.instance.fTagCoolDown;
+                return new PlayerSkillTimeInfo(Player.instance.fTagCoolDown, Player.instance.fTagTimer);
         }
-        return 0f;
+        return new PlayerSkillTimeInfo(0,0);
     }
 }

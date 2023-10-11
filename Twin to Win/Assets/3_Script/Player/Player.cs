@@ -132,9 +132,9 @@ public class Player : MonoBehaviour
     {
         return cGreatSword;
     }
-    public float GetTagTimer() 
+    public PlayerSkillTimeInfo GetTagTimer() 
     {
-        return fTagTimer / fTagCoolDown;
+        return new PlayerSkillTimeInfo(fTagCoolDown, fTagTimer);
     }
     public bool CanDodge() 
     {

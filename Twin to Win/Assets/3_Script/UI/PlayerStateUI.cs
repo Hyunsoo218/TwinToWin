@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerStateUI : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class PlayerStateUI : MonoBehaviour
 	[SerializeField] private List<Animator> arrWGSSkills;
 	[SerializeField] private List<Image> arrSkillFill_WTD;
 	[SerializeField] private List<Image> arrSkillFill_WGS;
-	[SerializeField] private Animator cConvertUIAnimator;
+    [SerializeField] private List<TextMeshProUGUI> skillTimes_WTD;
+    [SerializeField] private List<TextMeshProUGUI> skillTimes_WGS;
+    [SerializeField] private Animator cConvertUIAnimator;
 	[SerializeField] private Image imgConvertFill;
 	[SerializeField] private Transform tWTDState;
 	[SerializeField] private Slider sHp;
@@ -20,18 +23,8 @@ public class PlayerStateUI : MonoBehaviour
 	[SerializeField] private Sprite WGS_R_ON;
 	[SerializeField] private Hpbar hpbar;
     private Animator cAnimator;
-    private float hp = 500f;
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            hp -= 10;
-            hpbar.Set(hp);
-        }
-    }
     private void Awake()
 	{
-        hpbar.Initialize(hp, 0, hp);
         cAnimator = GetComponent<Animator>();
 	}
     private void Start()
@@ -84,30 +77,74 @@ public class PlayerStateUI : MonoBehaviour
 	}
 	public void SetSkillFill() 
 	{
-		PlayerbleCharacter cWTD = Player.instance.GetTwinSword();
-		arrSkillFill_WTD[0].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.QSkill);
-        arrSkillFill_WTD[1].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.WSkill);
-        arrSkillFill_WTD[2].fillAmount = 1f - cWTD.GetSkillTimer(SkillType.ESkill);
-		arrSkillFill_WTD[3].fillAmount = RSkillGauge.Instance.GetRSkillGauge(cWTD);
+		PlayerbleCharacter character;
+		// WTD part
+        character = Player.instance.GetTwinSword();
+		SetSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.QSkill);
+        SetSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.WSkill);
+        SetSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.ESkill);
+        SetRSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.RSkill);
 
-        PlayerbleCharacter cWGS = Player.instance.GetGreatSword();
-		arrSkillFill_WGS[0].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.QSkill);
-		arrSkillFill_WGS[1].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.WSkill);
-		arrSkillFill_WGS[2].fillAmount = 1f - cWGS.GetSkillTimer(SkillType.ESkill);
-        arrSkillFill_WGS[3].fillAmount = RSkillGauge.Instance.GetRSkillGauge(cWGS);
+		// WGS part
+        character = Player.instance.GetGreatSword();
+		SetSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.QSkill);
+		SetSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.WSkill);
+        SetSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.ESkill);
+        SetRSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.RSkill);
 
-        imgConvertFill.fillAmount = 1f - Player.instance.GetTagTimer();
+		// etc
+        imgConvertFill.fillAmount = Player.instance.GetTagTimer().percentage;
 		sStamina.value = Player.instance.fCurrentStamina;
-
-        arrSkillFill_WTD[3].fillAmount = RSkillGauge.Instance.GetRSkillGauge(cWTD);
-        arrSkillFill_WTD[3].sprite = arrSkillFill_WTD[3].fillAmount == 1f ? WTD_R_ON : WTD_R_OFF;
-
-        arrSkillFill_WGS[3].fillAmount = RSkillGauge.Instance.GetRSkillGauge(cWGS);
-        arrSkillFill_WGS[3].sprite = arrSkillFill_WGS[3].fillAmount == 1f ? WGS_R_ON : WGS_R_OFF;
     }
 	public void SetPlayerHealthPoint() 
 	{
 		float hp = Player.instance.GetPlayerHp();
 		hpbar.Set(hp);
 	}
+	private void SetSkillInfo(List<Image> images, List<TextMeshProUGUI> times, PlayerbleCharacter character, SkillType type) 
+	{
+        PlayerSkillTimeInfo info = character.GetSkillTimer(type);
+        images[(int)type].fillAmount = info.percentage;
+
+        string text = "";
+        if (info.percentage != 0)
+		{
+			float remainingTime = info.maxTime - info.currentTime;
+			if (remainingTime > 10f)
+            {
+                text = remainingTime.ToString("N0") + "s";
+            }
+			else if(remainingTime > 0f)
+            {
+                text = remainingTime.ToString("N1") + "s";
+            }
+		}
+        times[(int)type].text = text;
+    }
+    private void SetRSkillInfo(List<Image> images, List<TextMeshProUGUI> times, PlayerbleCharacter character, SkillType type)
+    {
+		float gauge = RSkillGauge.Instance.GetRSkillGauge(character);
+        images[(int)type].fillAmount = gauge;
+        images[(int)type].sprite = (gauge >= 1f) ? WTD_R_ON : WTD_R_OFF;
+
+		string text = "";
+		if (images[(int)type].sprite != WTD_R_ON)
+		{
+			gauge = gauge * 99f;
+			text = gauge.ToString("N0") + "%";
+		}
+        times[(int)type].text = text;
+    }
+}
+public struct PlayerSkillTimeInfo 
+{
+	public PlayerSkillTimeInfo(float maxTime, float currentTime) 
+	{
+		this.maxTime = maxTime;
+		this.currentTime = currentTime;
+		percentage = 1f - currentTime / maxTime;
+    }
+    public float maxTime;
+	public float currentTime;
+	public float percentage;
 }
