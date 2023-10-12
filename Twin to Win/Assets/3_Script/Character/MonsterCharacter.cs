@@ -145,7 +145,7 @@ public class MonsterCharacter : Character
 		cAgent.speed *= amount;
 		yield return new WaitForSeconds(time);
 		cAnimator.speed = 1f;
-		cAgent.speed *= currentSpeed;
+		cAgent.speed = currentSpeed;
 	}
 	public void ResetState()
 	{

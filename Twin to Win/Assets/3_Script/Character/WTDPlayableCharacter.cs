@@ -328,23 +328,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     private int fRSkillConsumeTime = 10;
     public void OnRSkill(InputAction.CallbackContext ctx)
     {
-        if (ctx.started)
-        {
-            UIManager.instance.OnSkillBtn(KeyCode.R);
-        }
-        //if (FeverGauge.Instance.IsDoubleFeverGaugeFull() == false && FeverGauge.Instance.IsFeverGaugeFull() == true && IsFeverTime() == false)
-        //{
-        //    CutCoolDown(fCoolDownCutAndRestoreTime);
-        //    SetIsFeverTime(true);
-        //    StartCoroutine(FeverGauge.Instance.StartRedFeverTime());
-        //}
-
         if (ctx.started && EnableSkill() == true && RSkillGauge.Instance.IsRSkillGaugeFull() == true && IsRSkillTime() == false)
         {
+            UIManager.instance.OnSkillBtn(KeyCode.R, true);
             CutCoolDown(fCoolDownCutAndRestoreTime);
             SetIsRSkillTime(true);
             srtCurrentSkill = srtRSkill;
             StartCoroutine(StartRedRSkillTime(fRSkillConsumeTime));
+            EnemyManager.instance.SlowAllEnemy(10f, 0.1f);
         }
     }
 
@@ -362,6 +353,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             fRedGaugeTimer += Time.deltaTime;
             yield return null;
         }
+        UIManager.instance.OnSkillBtn(KeyCode.R, true, true);
         RSkillGauge.Instance.fRedGauge = 0f;
         RestoreCoolDown(fCoolDownCutAndRestoreTime);
         SetIsRSkillTime(false);

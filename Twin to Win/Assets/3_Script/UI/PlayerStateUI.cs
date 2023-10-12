@@ -75,7 +75,11 @@ public class PlayerStateUI : MonoBehaviour
 		}
 
 		string trigger = stay ? "Stay" : "On";
-		trigger = (stay && stayEnd) ? "StayEnd" : "Stay";
+
+		if (stay && stayEnd)
+		{
+			trigger = "StayEnd";
+        }
 		animator.SetTrigger(trigger);
 	}
 	public void SetSkillFill() 

@@ -34,9 +34,9 @@ public class UIManager : MonoBehaviour
 	{
 		cPSUI.Convert();
 	}
-	public void OnSkillBtn(KeyCode key) 
+	public void OnSkillBtn(KeyCode key, bool stay = false, bool stayEnd = false) 
 	{
-		cPSUI.OnButton(key);
+		cPSUI.OnButton(key, stay, stayEnd);
 	}
 	public void OnStageUI(StageNumber number) 
 	{

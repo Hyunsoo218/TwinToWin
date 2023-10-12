@@ -650,6 +650,7 @@ public class PlayerbleCharacter : Character
     {
         cStateMachine.ChangeState(cDeadState);
         Player.instance.EnablePlayerInput(false);
+        GameManager.instance.GameLose();
     }
 
     public override void ChangeState(State cNextState)
