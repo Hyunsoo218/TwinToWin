@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Rendering;
 
 public class CameraManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private GameObject WTD_tutorialCam;
     private List<GameObject> cams = new List<GameObject>();
+
+    [SerializeField] private Volume volume;
 
     private void Awake()
     {
@@ -66,6 +69,10 @@ public class CameraManager : MonoBehaviour
             cMainCam.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = startDist - moveDist * runTime / time;
             yield return null;
 		}
+    }
+    public void Vignette(bool active) 
+    {
+        
     }
 }
 public enum CamType 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using static UnityEditor.Progress;
 
 public class TalkUI : MonoBehaviour
 {
@@ -12,15 +14,20 @@ public class TalkUI : MonoBehaviour
     [SerializeField] private Image line;
     [SerializeField] private GameObject nextObj;
     [SerializeField] private GameObject nextClickObj;
-    [SerializeField] private List<TextMeshProUGUI> choiceBtns;
+    [SerializeField] private List<ChoiceBtnInfo> choiceBtnInfos;
+    [SerializeField] private Sprite normalBtnImg;
+    [SerializeField] private Sprite selectedBtnImg;
+    [SerializeField] private RectTransform cursor;
+
     private int playersChoice;
     private bool waitChoice;
     private void Awake()
     {
         talkBox.SetActive(false);
-        foreach (var item in choiceBtns)
+        cursor.gameObject.SetActive(false);
+        foreach (var item in choiceBtnInfos)
         {
-            item.transform.parent.gameObject.SetActive(false);
+            item.image.gameObject.SetActive(false);
         }
     }
     public IEnumerator ShowText(string name, string script, float autoClickTime = -1f) 
@@ -103,28 +110,63 @@ public class TalkUI : MonoBehaviour
 
 		for (int i = 0; i < options.Count; i++)
 		{
-            choiceBtns[i].text = options[i];
-            choiceBtns[i].transform.parent.gameObject.SetActive(true);
+            choiceBtnInfos[i].text.text = options[i];
+            choiceBtnInfos[i].image.gameObject.SetActive(true);
         }
         waitChoice = true;
+        SelectBtn(0);
+        cursor.gameObject.SetActive(true);
 
         while (waitChoice)
 		{
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                Choice(playersChoice);
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow)) 
+            {
+                playersChoice = playersChoice + 1 == options.Count ? 0 : playersChoice + 1;
+                SelectBtn(playersChoice);
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                playersChoice = playersChoice - 1 == -1 ? options.Count - 1 : playersChoice - 1;
+                SelectBtn(playersChoice);
+            }
             yield return null;
 		}
-		foreach (var item in choiceBtns)
+		foreach (var item in choiceBtnInfos)
 		{
-            item.transform.parent.gameObject.SetActive(false);
+            item.image.gameObject.SetActive(false);
         }
         talkBox.SetActive(false);
     }
-    public void Choice(int number) 
+    public void Choice(int number)
     {
         playersChoice = number;
         waitChoice = false;
+        cursor.gameObject.SetActive(false);
     }
-    public int GetPlayersChoice() 
+    public int GetPlayersChoice()
     {
         return playersChoice;
     }
+    public void SelectBtn(int num) 
+    {
+        float addYPos = num * 80f;
+        float cursorYPos = -210f + addYPos;
+        cursor.anchoredPosition = new Vector2(390f, cursorYPos);
+        playersChoice = num;
+        foreach (var item in choiceBtnInfos) 
+        {
+            item.image.sprite = normalBtnImg;
+        }
+        choiceBtnInfos[num].image.sprite = selectedBtnImg;
+    }
+}
+[Serializable]
+public struct ChoiceBtnInfo 
+{
+    public Image image;
+    public TextMeshProUGUI text;
 }

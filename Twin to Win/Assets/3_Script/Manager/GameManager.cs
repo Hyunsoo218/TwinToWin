@@ -60,6 +60,12 @@ public class GameManager : MonoBehaviour
         Player.instance.EnablePlayerInput(false);
         options.Add("아니요");
         options.Add("네");
+        options.Add("ㄴ");
+        options.Add("ㄴㄴ");
+        options.Add("안돼요");
+        options.Add("싫어요");
+        options.Add("하지마세요");
+        options.Add("꺄아아아아악");
         yield return StartCoroutine(WaitForChoice("", "튜토리얼을 건너뛰시겠습니까?", options));
         options.Clear();
         playersChoice = UIManager.instance.GetPlayersChoice();
