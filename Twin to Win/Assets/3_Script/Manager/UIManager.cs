@@ -113,4 +113,13 @@ public class UIManager : MonoBehaviour
 	{
 		return cTalkUI.GetPlayersChoice();
 	}
+    public void InitializeBossHp(float max) 
+    {
+        cBSUI.Initialize(max);
+        cBSUI.gameObject.SetActive(true);
+    }
+    public void SetBossHpbar(float hp) 
+    {
+        cBSUI.Set(hp);
+    }
 }

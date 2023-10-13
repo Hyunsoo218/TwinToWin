@@ -818,13 +818,13 @@ GameObject:
   - component: {fileID: 3766686721128566543}
   - component: {fileID: 6587006619733976438}
   - component: {fileID: 2094474243595600224}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5256407753990607919
 Transform:
   m_ObjectHideFlags: 0
@@ -909,8 +909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ee0025d2826944285ccba159c8d6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fMaxHealthPoint: 5000
-  fHealthPoint: 5000
+  fMaxHealthPoint: 10000
+  fHealthPoint: 10000
   fPower: 100
   fAttackDistance: 4.5
   fAttackDelayTime: 3
@@ -978,7 +978,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4597346
+  m_Radius: 0.64
   m_Height: 1.2925308
   m_Direction: 1
   m_Center: {x: 0, y: 0.6462654, z: 0}

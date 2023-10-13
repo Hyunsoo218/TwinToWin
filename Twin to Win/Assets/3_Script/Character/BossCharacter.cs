@@ -20,22 +20,16 @@ public class BossCharacter : MonsterCharacter
 	protected State cStateAttack6 = new State("Attack6");  // 원거리 돌진
 	protected State cStateAttack6_Finish = new State("Attack6 Finish");  // 원거리 돌진 마지막
 	protected State cStateBreakTile = new State("BreakTile");  
-	protected int nAttackCount = 0;
-	protected List<State> arrAttackRanged = new List<State>();
-	protected List<State> arrAttackMelee = new List<State>();
 	protected Coroutine coLookTarget;
 
 	protected Dictionary<State, GameObject> dAttackEffects = new Dictionary<State, GameObject>();
 
+	private List<BossPattern> bossPatterns = new List<BossPattern>();
+	private List<BossPattern> curretBossPattern = new List<BossPattern>();
+
 	protected override void Awake()
 	{
 		base.Awake();
-		arrAttackMelee.Add(cStateAttack3);
-		arrAttackMelee.Add(cStateAttack4);
-
-		arrAttackRanged.Add(cStateAttack5);
-		arrAttackRanged.Add(cStateAttack6);
-
 		//arrAttackRanged.Add(cStateBreakTile);
 
 		dAttackEffects.Add(cStateAttack, objAttackEffectPrefab);
@@ -46,6 +40,16 @@ public class BossCharacter : MonsterCharacter
 		dAttackEffects.Add(cStateAttack6, objAttack6EffectPrefab);
 		dAttackEffects.Add(cStateAttack6_Finish, objAttack6FinishEffectPrefab);
 		dAttackEffects.Add(cStateBreakTile, objAttackBreakTilePrefab);
+
+		bossPatterns.Add(BossPattern.Normal);
+		bossPatterns.Add(BossPattern.Spin_Internal); 
+		bossPatterns.Add(BossPattern.Normal);
+		bossPatterns.Add(BossPattern.Spin_Outside); 
+		bossPatterns.Add(BossPattern.Normal);
+		bossPatterns.Add(BossPattern.Thorn); 
+		bossPatterns.Add(BossPattern.Normal);
+		bossPatterns.Add(BossPattern.Rush);
+		bossPatterns.Add(BossPattern.Normal);
 	}
 	protected override void StateInitializeOnEnter()
 	{
@@ -190,31 +194,37 @@ public class BossCharacter : MonsterCharacter
     }
 	protected void ChangeAttackStateRanged()
 	{
-		if (nAttackCount < 2)
+		BossPattern pattern = GetRandomPattern();
+		switch (pattern)
 		{
-			nAttackCount++;
-			ChangeState(cStateAttack);
-		}
-		else
-		{
-			nAttackCount = 0;
-			int nPatternCount = Random.Range(0, arrAttackRanged.Count);
-			ChangeState(arrAttackRanged[nPatternCount]);
+			case BossPattern.Normal:		ChangeState(cStateAttack);	break;
+			case BossPattern.Spin_Internal:	ChangeState(cStateAttack3);	break;
+			case BossPattern.Spin_Outside:	ChangeState(cStateAttack4);	break;
+			case BossPattern.Thorn:			ChangeState(cStateAttack5);	break;
+			case BossPattern.Rush:			ChangeState(cStateAttack6);	break;
 		}
 	}
 	protected void ChangeAttackStateMelee()
 	{
-		if (nAttackCount < 2)
+		BossPattern pattern = GetRandomPattern();
+		switch (pattern)
 		{
-			nAttackCount++;
-			ChangeState(cStateAttack2);
+			case BossPattern.Normal:		ChangeState(cStateAttack2); break;
+			case BossPattern.Spin_Internal: ChangeState(cStateAttack3); break;
+			case BossPattern.Spin_Outside:	ChangeState(cStateAttack4); break;
+			case BossPattern.Thorn:			ChangeState(cStateAttack5); break;
+			case BossPattern.Rush:			ChangeState(cStateAttack6); break;
 		}
-		else
-		{
-			nAttackCount = 0;
-			int nPatternCount = Random.Range(0, arrAttackMelee.Count);
-			ChangeState(arrAttackMelee[nPatternCount]);
-		}
+	}
+	private BossPattern GetRandomPattern() 
+	{
+		if (curretBossPattern.Count == 0)
+			foreach (var item in bossPatterns) 
+				curretBossPattern.Add(item); 
+		int patternNum = Random.Range(0, curretBossPattern.Count);
+		BossPattern pattern = curretBossPattern[patternNum];
+		curretBossPattern.RemoveAt(patternNum);
+		return pattern;
 	}
 	public override void Attack()
 	{
@@ -271,6 +281,33 @@ public class BossCharacter : MonsterCharacter
 	}
     protected override void InsertHpbar()
     {
-        // 보스 hp ui 띄우기
-    }
+		UIManager.instance.InitializeBossHp(fMaxHealthPoint);
+	}
+	protected override void SetHp()
+	{
+		UIManager.instance.SetBossHpbar(fHealthPoint);
+	}
+	public override void Damage(float fAmount)
+	{
+		if (cStateMachine.GetCurrentState() == cStateDie) return;
+
+		fHealthPoint -= fAmount;
+		SetHp();
+		if (fHealthPoint <= 0)
+		{
+			Die();
+			//isEnterMonsterDeath = true;
+		}
+		StartCoroutine(OnHitEffect());
+	}
+	private IEnumerator OnHitEffect()
+	{
+		cSMR.material = EffectManager.instance.GetHitEffect();
+		yield return new WaitForSeconds(0.1f);
+		cSMR.material = mDefaultMaterial;
+	}
+}
+public enum BossPattern 
+{
+	Normal, Spin_Internal, Spin_Outside, Thorn, Rush
 }

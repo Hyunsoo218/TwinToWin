@@ -37,8 +37,6 @@ public class EnemyManager : MonoBehaviour
         {
             clones.Add(Instantiate(prefabs[i]));
         }
-
-        print("몬스터 세트 클론 만듬 수 - " + clones.Count);
     }
     public void OnActiveEnemy(StageEnemySet set)
     {
@@ -60,6 +58,12 @@ public class EnemyManager : MonoBehaviour
         EffectManager.instance.DisableAllEnemyEffect();
         foreach (var item in MonsterCharacter.allMonsterCharacters)
             item.Slow(time, amount);
+    }
+    public void SlowEndAllEnemy()
+    {
+        EffectManager.instance.DisableAllEnemyEffect();
+        foreach (var item in MonsterCharacter.allMonsterCharacters)
+            item.SlowEnd();
     }
 }
 public enum StageEnemySet 

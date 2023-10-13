@@ -28,6 +28,7 @@ public class MonsterCharacter : Character
 	protected float fTargetDist = 99f;
 	protected Material mDefaultMaterial;
 	protected Coroutine coAttackDelay;
+	protected float defultSpeed;
 
 	private bool isEnterMonsterDeath = false;
 
@@ -42,7 +43,7 @@ public class MonsterCharacter : Character
 		StateInitializeOnExit();
 		mDefaultMaterial = cSMR.material;
 	}
-    private void OnEnable()
+    protected void OnEnable()
     {
         GetComponent<Collider>().enabled = true;
         cAgent.enabled = true;
@@ -51,7 +52,7 @@ public class MonsterCharacter : Character
         StartCoroutine(SetTarget());
         InsertHpbar();
     }
-    private void OnDisable()
+	protected void OnDisable()
     {
         allMonsterCharacters.Remove(this);
         UIManager.instance.RemoveHpbar(this);
@@ -141,17 +142,14 @@ public class MonsterCharacter : Character
     }
 	public void Slow(float time, float amount) 
 	{
-		StartCoroutine(SlowAction(time, amount));
-	}
-	protected IEnumerator SlowAction(float time, float amount) 
-	{
-		ChangeState(cStateIdle);
-		float currentSpeed = cAgent.speed;
+		defultSpeed = cAgent.speed;
 		cAnimator.speed *= amount;
 		cAgent.speed *= amount;
-		yield return new WaitForSeconds(time);
-		cAnimator.speed = 1f;
-		cAgent.speed = currentSpeed;
+	}
+	public void SlowEnd()
+	{
+		cAnimator.speed *= cAgent.speed;
+		cAgent.speed *= 1f;
 	}
 	public void ResetState()
 	{
@@ -205,8 +203,8 @@ public class MonsterCharacter : Character
 		if (cStateMachine.GetCurrentState() == cStateDie) return;
 
 		fHealthPoint -= fAmount;
-        UIManager.instance.SetHp(this);
-        if (fHealthPoint <= 0)
+		SetHp();
+		if (fHealthPoint <= 0)
 		{
 			Die();
 			isEnterMonsterDeath = true;
@@ -239,6 +237,10 @@ public class MonsterCharacter : Character
 	{
         UIManager.instance.InsertHpbar(this, hpbarOffset);
     }
+	protected virtual void SetHp()
+	{
+		UIManager.instance.SetHp(this);
+	}
 
 	public bool GetIsEnterMonsterDead()
 	{

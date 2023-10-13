@@ -210,7 +210,7 @@ public class GameManager : MonoBehaviour
             else
                 yield return StartCoroutine(WaitForTalk("", "만족하셨다니 정말 다행이네요", 2.5f));
 
-            yield return StartCoroutine(WaitForTalk("", "이대로라면 당신은 그저 평화로운 숲을 어지럽힌 테러리스트로 기록될 것이며", 2.5f));
+            yield return StartCoroutine(WaitForTalk("", "당신은 평화로운 숲을 어지럽힌 죄인으로 기록될 것이며", 2.5f));
         }
 
         options.Add("상관없어요         [타이틀로]"); options.Add("그런 건 싫어요    [다시하기]");
@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
         playersChoice = UIManager.instance.GetPlayersChoice();
 
         if (playersChoice == 0) { 
-            yield return StartCoroutine(WaitForTalk("", "그렇군요. 그럼 조심히 잘 가시길", 2.5f));
+            yield return StartCoroutine(WaitForTalk("", "알겠습니다. 그럼 조심히 잘 가시길", 2.5f));
             GoTitle();
         }
         else { 
