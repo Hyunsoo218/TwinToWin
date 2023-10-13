@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public readonly float fMaxStamina = 10f;
     public float fUsingDodgeStamina = 3f;
 
-    private readonly float fPlayerMaxHealthPoint = 3000f;
+    private readonly float fPlayerMaxHealthPoint = 1000f;
     private float fPlayerCurrentHealthPoint = 0f;
 
 
@@ -63,7 +63,8 @@ public class Player : MonoBehaviour
     }
     public void ConvertCharacter()
     {
-        ResetRSkill();
+        ResetWTDRSkillGauge();
+        ResetPrevAllSkillButton();
         InActiveCurrentCharacter();
 
         cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
@@ -80,7 +81,7 @@ public class Player : MonoBehaviour
 
     public float GetPlayerHp()
     {
-        return fPlayerCurrentHealthPoint >= 0f ? fPlayerCurrentHealthPoint : 0f;
+        return fPlayerCurrentHealthPoint > 0f ? fPlayerCurrentHealthPoint : 0f;
     }
 
     public void SetPlayerHp(float hp)
@@ -88,10 +89,18 @@ public class Player : MonoBehaviour
         this.fPlayerCurrentHealthPoint = hp;
     }
 
-    private void ResetRSkill()
+    private void ResetWTDRSkillGauge()
     {
         cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
         RSkillGauge.Instance.ResetGaugeWhenTag();
+    }
+
+    private void ResetPrevAllSkillButton()
+    {
+        UIManager.instance.OnSkillBtn(KeyCode.Q);
+        UIManager.instance.OnSkillBtn(KeyCode.W);
+        UIManager.instance.OnSkillBtn(KeyCode.E);
+        UIManager.instance.OnSkillBtn(KeyCode.R);
     }
 
     private void InActiveCurrentCharacter()

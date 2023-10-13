@@ -12633,8 +12633,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6bea8203ab2b140b22c812ef4ef92e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tStage1Enemy1: {fileID: 3705273381746571756, guid: 7506e124bae994640aeef3d3707d0bd6,
-    type: 3}
   WTD_tutorial: {fileID: 8182147067905775617, guid: 7be5894124fded64d999a42db78f276c,
     type: 3}
   WGS_tutorial_1: {fileID: 8608611339684289891, guid: 87c0a0543d46ab24a90b8736c23c598c,
@@ -12642,6 +12640,8 @@ MonoBehaviour:
   WGS_tutorial_2: {fileID: 7688718327061796211, guid: 83c54d3ebf7c439438f67a1ad6863335,
     type: 3}
   WGS_tutorial_3: {fileID: 2693662418744541692, guid: e4a651f2662ce3b4b9b1306907809bbe,
+    type: 3}
+  tStage1Enemy1: {fileID: 3705273381746571756, guid: 7506e124bae994640aeef3d3707d0bd6,
     type: 3}
 --- !u!1 &3879887191105981555
 GameObject:
@@ -24775,7 +24775,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 0, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 64
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -29984,6 +29984,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3863753365733435606, guid: 7a9ed9497197edc49b736f6902d91396,
+        type: 3}
+      propertyPath: m_LayerMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 5774396720112795155, guid: 7a9ed9497197edc49b736f6902d91396,
         type: 3}

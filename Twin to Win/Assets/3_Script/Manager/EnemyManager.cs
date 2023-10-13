@@ -61,7 +61,6 @@ public class EnemyManager : MonoBehaviour
     }
     public void SlowEndAllEnemy()
     {
-        EffectManager.instance.DisableAllEnemyEffect();
         foreach (var item in MonsterCharacter.allMonsterCharacters)
             item.SlowEnd();
     }

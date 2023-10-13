@@ -1,23 +1,11 @@
 {
   "dependencies": {
-    "com.jimmycushnie.noisynodes": {
-      "version": "https://github.com/JimmyCushnie/Noisy-Nodes.git",
+    "com.cyanilux.urp-blitrenderfeature": {
+      "version": "https://github.com/Cyanilux/URP_BlitRenderFeature.git",
       "depth": 0,
       "source": "git",
-      "dependencies": {
-        "com.unity.shadergraph": "7.1.8"
-      },
-      "hash": "1f212c268860dc1dc260bbd60d03246908508b79"
-    },
-    "com.tojynick.shaders.stylizedwater": {
-      "version": "https://github.com/tojynick/Stylized-Water-Shader-Unity-URP.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.render-pipelines.universal": "12.0.0",
-        "com.unity.probuilder": "5.0.0"
-      },
-      "hash": "4a4beb2ce1df30f578f4eb116856d3017186a926"
+      "dependencies": {},
+      "hash": "751e97de92157f21ee184377188c71aed5c6de92"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

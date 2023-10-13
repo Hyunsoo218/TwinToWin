@@ -119,7 +119,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
         ReduceHP(fAmount);
         UIManager.instance.SetPlayerHealthPoint();
-        if (Player.instance.GetPlayerHp() <= 0)
+        if (Player.instance.GetPlayerHp() <= 0f)
         {
             Die();
         }
@@ -153,14 +153,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         {
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtQSkill;
-            cStateMachine.ChangeState(cQSkillState);
+            ChangeState(cQSkillState);
         }
     }
 
     private void UseQSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtQSkill;
-        cStateMachine.ChangeState(cQSkillState);
+        ChangeState(cQSkillState);
         transform.LookAt(target);
     }
 
@@ -199,13 +199,13 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         {
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtWSkill;
-            cStateMachine.ChangeState(cWSkillState);
+            ChangeState(cWSkillState);
         }
     }
     private void UseWSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtWSkill;
-        cStateMachine.ChangeState(cWSkillState);
+        ChangeState(cWSkillState);
         transform.LookAt(target);
     }
 
@@ -245,14 +245,14 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             StartWTDESkillCoolDownCoroutine();
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtESkill;
-            cStateMachine.ChangeState(cESkillState);
+            ChangeState(cESkillState);
             GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
         }
     }
     private void UseESkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtESkill;
-        cStateMachine.ChangeState(cESkillState);
+        ChangeState(cESkillState);
         transform.LookAt(target);
         GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
     }
@@ -287,7 +287,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
         yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
-        cStateMachine.ChangeState(cToStandState);
+        ChangeState(cToStandState);
     }
 
     private bool DoJumpAndRotate(Vector3 startPos, Vector3 _endPos, float parabolaHighestHeight, float parabolaSpeed, ref bool isHitWall)
@@ -334,7 +334,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             CutCoolDown(fCoolDownCutAndRestoreTime);
             SetIsRSkillTime(true);
             srtCurrentSkill = srtRSkill;
-            StartCoroutine(StartRedRSkillTime(fRSkillConsumeTime));
+            GameManager.instance.AsynchronousExecution(StartRedRSkillTime(fRSkillConsumeTime));
             EnemyManager.instance.SlowAllEnemy(10f, 0.1f);
         }
     }
@@ -346,7 +346,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
         while (isUsed == false)
         {
-            if (fRedGaugeTimer >= rSkillTime)
+            if (fRedGaugeTimer >= rSkillTime || Input.GetKeyDown(KeyCode.Tab))
             {
                 isUsed = true;
             }
@@ -354,6 +354,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             yield return null;
         }
         UIManager.instance.OnSkillBtn(KeyCode.R, true, true);
+        EnemyManager.instance.SlowEndAllEnemy();
         RSkillGauge.Instance.fRedGauge = 0f;
         RestoreCoolDown(fCoolDownCutAndRestoreTime);
         SetIsRSkillTime(false);

@@ -32,7 +32,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         base.StateInitalizeOnExit();
         cQSkillState.onExit += () => { UIManager.instance.OnSkillBtn(KeyCode.Q, true, true); };
-        cESkillState.onExit += () => { UIManager.instance.OnSkillBtn(KeyCode.E, true, true); };
+        cESkillState.onExit += () => { UIManager.instance.OnSkillBtn(KeyCode.E, true, true); StartWGSESkillCoolDownCoroutine(); };
     }
     #endregion
 
@@ -129,14 +129,14 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             UIManager.instance.OnSkillBtn(KeyCode.Q, true);
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtQSkill;
-            cStateMachine.ChangeState(cQSkillState);
+            ChangeState(cQSkillState);
         }
     }
 
     private void UseQSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtQSkill;
-        cStateMachine.ChangeState(cQSkillState);
+        ChangeState(cQSkillState);
         transform.LookAt(target);
     }
 
@@ -169,14 +169,14 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtWSkill;
-            cStateMachine.ChangeState(cWSkillState);
+            ChangeState(cWSkillState);
         }
     }
 
     private void UseWSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtWSkill;
-        cStateMachine.ChangeState(cWSkillState);
+        ChangeState(cWSkillState);
         transform.LookAt(target);
     }
 
@@ -207,14 +207,14 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             UIManager.instance.OnSkillBtn(KeyCode.E, true);
             RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtESkill;
-            cStateMachine.ChangeState(cESkillState);
+            ChangeState(cESkillState);
         }
     }
 
     private void UseESkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtESkill;
-        cStateMachine.ChangeState(cESkillState);
+        ChangeState(cESkillState);
         transform.LookAt(target);
     }
 
@@ -252,7 +252,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     private void StopESkill()
     {
         //ReturnToIdleWithHold();
-        cStateMachine.ChangeState(cToStandState);
+        ChangeState(cToStandState);
         transform.localRotation = GetMouseAngle();
         fESkillHoldTimer = 0f;
     }
@@ -282,14 +282,14 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         {
             RSkillGauge.Instance.fBlueGauge = 0f;
             srtCurrentSkill = srtRSkill;
-            cStateMachine.ChangeState(cRSkillState);
+            ChangeState(cRSkillState);
         }
     }
 
     private void UseRSkillWithoutKey(Vector3 target)
     {
         srtCurrentSkill = srtRSkill;
-        cStateMachine.ChangeState(cRSkillState);
+        ChangeState(cRSkillState);
         transform.LookAt(target);
     }
 

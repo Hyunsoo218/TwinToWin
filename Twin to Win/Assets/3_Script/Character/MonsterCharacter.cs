@@ -142,14 +142,15 @@ public class MonsterCharacter : Character
     }
 	public void Slow(float time, float amount) 
 	{
-		defultSpeed = cAgent.speed;
-		cAnimator.speed *= amount;
+        defultSpeed = cAgent.speed;
+        cAnimator.speed *= amount;
 		cAgent.speed *= amount;
 	}
 	public void SlowEnd()
 	{
-		cAnimator.speed *= cAgent.speed;
-		cAgent.speed *= 1f;
+        defultSpeed = cAgent.speed;
+        cAnimator.speed = cAgent.speed;
+		cAgent.speed = 1f;
 	}
 	public void ResetState()
 	{
