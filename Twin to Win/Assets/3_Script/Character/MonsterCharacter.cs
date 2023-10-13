@@ -33,7 +33,6 @@ public class MonsterCharacter : Character
 
 	protected virtual void Awake()
 	{
-		allMonsterCharacters.Add(this);
         cSMR = GetComponentInChildren<SkinnedMeshRenderer>();
 		cStateMachine = GetComponent<StateMachine>();
 		cAnimator = GetComponent<Animator>();
@@ -42,13 +41,20 @@ public class MonsterCharacter : Character
 		StateInitializeOnStay();
 		StateInitializeOnExit();
 		mDefaultMaterial = cSMR.material;
-		fMaxHealthPoint = fHealthPoint;
 	}
-	protected void Start()
+    private void OnEnable()
     {
+        GetComponent<Collider>().enabled = true;
+        cAgent.enabled = true;
+        allMonsterCharacters.Add(this);
         cAgent.isStopped = true;
-		StartCoroutine(SetTarget());
-		InsertHpbar();
+        StartCoroutine(SetTarget());
+        InsertHpbar();
+    }
+    private void OnDisable()
+    {
+        allMonsterCharacters.Remove(this);
+        UIManager.instance.RemoveHpbar(this);
     }
 	protected virtual void StateInitializeOnEnter()
 	{

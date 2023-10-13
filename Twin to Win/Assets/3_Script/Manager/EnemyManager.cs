@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,31 +7,42 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
 
-    [SerializeField] private GameObject objBoss;
-    [SerializeField] private GameObject objBeez;
-    [SerializeField] private GameObject objTree;
-    [SerializeField] private GameObject objPlanta;
-    [SerializeField] private GameObject objTurnipa;
-    [SerializeField] private GameObject tStage1Enemy1;
     [SerializeField] private GameObject WTD_tutorial;
     [SerializeField] private GameObject WGS_tutorial_1;
     [SerializeField] private GameObject WGS_tutorial_2;
     [SerializeField] private GameObject WGS_tutorial_3;
+    [SerializeField] private GameObject tStage1Enemy1;
 
+    private List<GameObject> prefabs = new List<GameObject>();
+    private List<GameObject> clones = new List<GameObject>();
+    
     private void Awake()
     {
-        instance = this;
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+        prefabs.Add(WTD_tutorial);   
+        prefabs.Add(WGS_tutorial_1);   
+        prefabs.Add(WGS_tutorial_2);
+        prefabs.Add(WGS_tutorial_3);   
+        prefabs.Add(tStage1Enemy1);   
+    }
+    public void SetTitle()
+    {
+        clones.Clear();
+    }
+    public void SetGame()
+    {
+        clones.Clear();
+        for (int i = 0;i < prefabs.Count; i++) 
+        {
+            clones.Add(Instantiate(prefabs[i]));
+        }
+
+        print("몬스터 세트 클론 만듬 수 - " + clones.Count);
     }
     public void OnActiveEnemy(StageEnemySet set)
     {
-        switch (set)
-        {
-            case StageEnemySet.WTD_tutorial: WTD_tutorial.SetActive(true); break;
-            case StageEnemySet.WGS_tutorial_1: WGS_tutorial_1.SetActive(true); break;
-            case StageEnemySet.WGS_tutorial_2: WGS_tutorial_2.SetActive(true); break;
-            case StageEnemySet.WGS_tutorial_3: WGS_tutorial_3.SetActive(true); break;
-            case StageEnemySet.Stage1_1: tStage1Enemy1.SetActive(true); break;
-        }
+        clones[(int)set].SetActive(true);
         StartActionAllEnemy();
     }
     public void StopAllEnemy() 

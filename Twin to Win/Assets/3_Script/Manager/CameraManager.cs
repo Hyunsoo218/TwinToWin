@@ -11,27 +11,31 @@ public class CameraManager : MonoBehaviour
     private CinemachineVirtualCamera cMainCam;
     private CinemachineBrain brainCam;
 
-    [SerializeField] private GameObject WTD_tutorialCam;
-    private List<GameObject> cams = new List<GameObject>();
-
-    [SerializeField] private Volume volume;
-
+    [SerializeField] private CinemachineVirtualCamera WTD_tutorialCam;
+    [SerializeField] private CinemachineVirtualCamera PlayerDieCam;
+    private List<CinemachineVirtualCamera> cams = new List<CinemachineVirtualCamera>();
     private void Awake()
     {
-        instance = this;
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+        cams.Add(WTD_tutorialCam);
+        cams.Add(PlayerDieCam);
+        SetTitle();
+    }
+    public void SetTitle() 
+    {
+        OffCamActive();
+    }
+    public void SetGame() 
+    {
         GameObject objMainCamera = Instantiate(objCamera);
         cMainCam = objMainCamera.GetComponent<CinemachineVirtualCamera>();
-
         brainCam = Camera.main.GetComponent<CinemachineBrain>();
 
-        cams.Add(WTD_tutorialCam);
-
-        foreach (GameObject cam in cams) 
-            cam.SetActive(false); 
-    }
-    private void Start()
-    {
+        OffCamActive();
         ResetCamera();
+
+        print("카메라 끄고, 세팅");
     }
     public void ResetCamera() 
     {
@@ -41,20 +45,24 @@ public class CameraManager : MonoBehaviour
     {
         brainCam.m_DefaultBlend.m_Time = camMoveTime;
 
-        foreach (GameObject cam in cams) cam.SetActive(false);
+        foreach (CinemachineVirtualCamera cam in cams) cam.gameObject.SetActive(false);
 
         switch (type)
         {
-            case CamType.WTD_tutorial: WTD_tutorialCam.SetActive(true); break;
+            case CamType.WTD_tutorial: 
+                WTD_tutorialCam.gameObject.SetActive(true); 
+                break;
+            case CamType.PlayerDie: 
+                PlayerDieCam.gameObject.SetActive(true); 
+                PlayerDieCam.transform.position = Player.instance.cCurrentCharacter.transform.position;
+                PlayerDieCam.m_LookAt = Player.instance.cCurrentCharacter.transform;
+                PlayerDieCam.m_Follow = Player.instance.cCurrentCharacter.transform;
+                break;
         }
     }
     public void OffCamActive() 
     {
-        foreach (GameObject cam in cams) cam.SetActive(false);
-    }
-    public void OnPlayerDie() 
-    {
-        StartCoroutine(ZoomInPlayer());
+        foreach (CinemachineVirtualCamera cam in cams) cam.gameObject.SetActive(false);
     }
     private IEnumerator ZoomInPlayer() 
     {
@@ -70,12 +78,8 @@ public class CameraManager : MonoBehaviour
             yield return null;
 		}
     }
-    public void Vignette(bool active) 
-    {
-        
-    }
 }
 public enum CamType 
 {
-    WTD_tutorial
+    WTD_tutorial, PlayerDie, FirstPersonPerspective
 }

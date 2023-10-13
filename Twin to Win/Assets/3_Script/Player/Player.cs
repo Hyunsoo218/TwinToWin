@@ -41,8 +41,13 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
+    public void SetGame() 
+    {
         fPlayerCurrentHealthPoint = fPlayerMaxHealthPoint;
+        UIManager.instance.SetPlayerHealthPoint();
         StartCoroutine(RecoverStamina());
         GameObject wtd = Instantiate(objWTD, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
         GameObject wgs = Instantiate(objWGS, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
@@ -53,6 +58,8 @@ public class Player : MonoBehaviour
         cGreatSword.gameObject.SetActive(false);
 
         cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
+
+        print("플레이어 피회복, 스테미너 회복, WTD WGS 생성");
     }
     public void ConvertCharacter()
     {

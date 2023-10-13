@@ -648,6 +648,7 @@ public class PlayerbleCharacter : Character
 
     public override void Die()
     {
+        if (cStateMachine.GetCurrentState() == cDeadState) return;
         cStateMachine.ChangeState(cDeadState);
         Player.instance.EnablePlayerInput(false);
         GameManager.instance.GameLose();

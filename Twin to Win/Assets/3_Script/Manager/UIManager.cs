@@ -16,19 +16,40 @@ public class UIManager : MonoBehaviour
 	public static UIManager instance;
 	private void Awake()
 	{
-		instance = this;
-		cPSUI.gameObject.SetActive(true);
-		cBSUI.gameObject.SetActive(false);
-		cSUI.gameObject.SetActive(true);
-		cTUI.gameObject.SetActive(true);
+        if (instance == null) instance = this; 
+		else Destroy(gameObject);
+        SetTitle();
+    }
+    public void SetTitle() 
+    {
+        cPSUI.gameObject.SetActive(false);
+        cBSUI.gameObject.SetActive(false);
+        cSUI.gameObject.SetActive(false);
+        cTUI.gameObject.SetActive(false);
+        cTalkUI.gameObject.SetActive(false);
+        cHpC.gameObject.SetActive(false);
+        cDFC.gameObject.SetActive(false);
+        playerDie.SetActive(false);
+    }
+	public void SetGame() 
+	{
+        cPSUI.gameObject.SetActive(true);
+        cBSUI.gameObject.SetActive(false);
+        cSUI.gameObject.SetActive(true);
+        cTUI.gameObject.SetActive(true);
         cTalkUI.gameObject.SetActive(true);
         cHpC.gameObject.SetActive(true);
         cDFC.gameObject.SetActive(true);
-		playerDie.SetActive(false);
-	}
+        playerDie.SetActive(false);
+
+        print("ui ¼¼ÆÃ");
+    }
     private void Update()
-    {
-		cPSUI.SetSkillFill();
+	{
+		if (GameManager.instance.gameStage == GameStage.Game)
+        {
+            cPSUI.SetSkillFill();
+        }
     }
     public void ConvertPlayer() 
 	{
@@ -84,11 +105,11 @@ public class UIManager : MonoBehaviour
     {
         cDFC.EnableDamageFont(targetPos, type, dmage);
     }
-	public void OnPlayerDie() 
+	public void OnPlayerDie()
 	{
 		playerDie.SetActive(true);
 	}
-	public int GetPlayersChoice() 
+	public int GetPlayersChoice()
 	{
 		return cTalkUI.GetPlayersChoice();
 	}

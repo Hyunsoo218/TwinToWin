@@ -20,7 +20,11 @@ public class StageManager : MonoBehaviour
 	[SerializeField] private float fUpdateInterval = 0.5f;
 	[SerializeField] private NavMeshSurface cNMS;
 
-	private void Awake() => instance = this;
+	private void Awake() 
+	{
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
 	private void Start()
 	{
 		if(bMakeMapRuntime) MakeMap();
@@ -56,5 +60,6 @@ public class StageManager : MonoBehaviour
 	public void UpdateNavMeshOne() 
 	{
 		cNMS.BuildNavMesh();
+		print("매쉬꾸움");
 	}
 }

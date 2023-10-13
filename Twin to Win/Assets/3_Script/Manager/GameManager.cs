@@ -4,29 +4,30 @@ using UnityEngine;
 using System;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditorInternal;
+using TreeEditor;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
 	public Phase phase;
+	public GameStage gameStage;
 	private Queue<Action> qAsynchronousAction = new Queue<Action>();
 
 	private void Awake()
 	{
-		instance = this;
+        if (instance == null) 
+        {
+            gameStage = GameStage.Title;
+            instance = this;
+            DontDestroyOnLoad(transform.parent.gameObject);
+        }
+        else Destroy(transform.parent.gameObject); 
     }
     private void Start()
     {
-        Stage1Start();
-    }
-	private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-
-        GameLose();
-		}
-
+        Player.instance.SetPlayerHp(100f);
     }
 	public void AsynchronousExecution(IEnumerator enumerator) 
 	{
@@ -60,14 +61,7 @@ public class GameManager : MonoBehaviour
         Player.instance.EnablePlayerInput(false);
         options.Add("아니요");
         options.Add("네");
-        options.Add("ㄴ");
-        options.Add("ㄴㄴ");
-        options.Add("안돼요");
-        options.Add("싫어요");
-        options.Add("하지마세요");
-        options.Add("꺄아아아아악");
         yield return StartCoroutine(WaitForChoice("", "튜토리얼을 건너뛰시겠습니까?", options));
-        options.Clear();
         playersChoice = UIManager.instance.GetPlayersChoice();
         if (playersChoice == 0) 
         {
@@ -170,6 +164,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForChoice(string name, string script, List<string> Options)
     {
         yield return StartCoroutine(UIManager.instance.WaitForChoice(name, script, Options));
+        Options.Clear();
     }
     private IEnumerator WaitFotInputKey(KeyCode key) 
 	{
@@ -183,8 +178,88 @@ public class GameManager : MonoBehaviour
 	}
     public void GameLose() 
     {
-        CameraManager.instance.OnPlayerDie();
-        UIManager.instance.OnPlayerDie();
+        print("실행");
+        StartCoroutine(Lose());
+    }
+    private IEnumerator Lose()
+    {
+        CameraManager.instance.OnCamActive(CamType.PlayerDie, 0); // 히트 카메라 무빙
+        Time.timeScale = 0.2f; // 타임스케일 줄이기
+        yield return new WaitForSeconds(1.5f);
+        Time.timeScale = 1f; // 타임스케일 복귀
+        UIManager.instance.OnPlayerDie();// 화면 페이드 아웃
+        yield return new WaitForSeconds(3.5f);
+
+        int playersChoice;  // 선택지
+        List<string> options = new List<string>();
+
+        options.Add("아니요"); options.Add("네");
+        yield return StartCoroutine(WaitForChoice("", "대화를 건너뛰시겠습니까?", options));
+        playersChoice = UIManager.instance.GetPlayersChoice();
+
+        if (playersChoice == 0)
+        {
+            yield return StartCoroutine(WaitForTalk("", "당신의 모험은 여기까지인 것 같네요", 2.5f));
+
+            options.Add("아니요"); options.Add("네");
+            yield return StartCoroutine(WaitForChoice("", "만족스러운 여행이었습니까?", options));
+            playersChoice = UIManager.instance.GetPlayersChoice();
+
+            if (playersChoice == 0)
+                yield return StartCoroutine(WaitForTalk("", "그러셨군요 그거참 유감이네요", 2.5f));
+            else
+                yield return StartCoroutine(WaitForTalk("", "만족하셨다니 정말 다행이네요", 2.5f));
+
+            yield return StartCoroutine(WaitForTalk("", "이대로라면 당신은 그저 평화로운 숲을 어지럽힌 테러리스트로 기록될 것이며", 2.5f));
+        }
+
+        options.Add("상관없어요         [타이틀로]"); options.Add("그런 건 싫어요    [다시하기]");
+        yield return StartCoroutine(WaitForChoice("", "그 누구도 당신을 기억하는 사람은 없을 것입니다", options));
+        playersChoice = UIManager.instance.GetPlayersChoice();
+
+        if (playersChoice == 0) { 
+            yield return StartCoroutine(WaitForTalk("", "그렇군요. 그럼 조심히 잘 가시길", 2.5f));
+            GoTitle();
+        }
+        else { 
+            yield return StartCoroutine(WaitForTalk("", "그렇다면 이번엔 부디 원하는 바를 이루시길", 2.5f));
+            GameStart();
+        }
+    }
+    public void GoTitle()
+    {
+        SceneManager.LoadScene(0);
+        gameStage = GameStage.Title;
+        StartCoroutine(GoTitleCo());
+    }
+    private IEnumerator GoTitleCo()
+    {
+        yield return null;
+
+        UIManager.instance.SetTitle();
+        CameraManager.instance.SetTitle();
+        EnemyManager.instance.SetTitle();
+        EffectManager.instance.SetTitle();
+    }
+    public void GameStart() 
+    {
+        SceneManager.LoadScene(1);
+        StartCoroutine(GameStartCo());
+    }
+    private IEnumerator GameStartCo() 
+    {
+        yield return null;
+
+        StageManager.instance.UpdateNavMeshOne();
+        UIManager.instance.SetGame();
+        Player.instance.SetGame();
+        CameraManager.instance.SetGame();
+        EnemyManager.instance.SetGame();
+        EffectManager.instance.SetGame();
+
+        yield return null;
+        gameStage = GameStage.Game;
+        Stage1Start();
     }
 }
 
@@ -193,4 +268,8 @@ public enum Phase
 	Phase_1,
 	Phase_2,
 	Phase_3
+}
+public enum GameStage 
+{
+    Title, Game
 }

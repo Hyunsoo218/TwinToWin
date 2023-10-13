@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectPooler : MonoBehaviour
+public class EffectPooler
 {
 	private GameObject objOrigin;
 	private List<GameObject> arrEffects = new List<GameObject>();
@@ -29,7 +29,7 @@ public class EffectPooler : MonoBehaviour
 	{
 		for (int i = 0; i < nCount; i++)
 		{
-			GameObject obj = Instantiate(objOrigin, EffectManager.instance.transform);
+			GameObject obj = EffectManager.instance.GetClone(objOrigin);
 			arrEffects.Add(obj);
 			obj.SetActive(false);
 		}

@@ -13,7 +13,7 @@ public class HpbarControl : MonoBehaviour
     {
         foreach (var info in hpbarInfos)
         {
-            if (info.Value.hpbar.gameObject.activeSelf)
+            if (info.Value.hpbar.gameObject.activeSelf && info.Value.target != null)
             {
                 Vector3 hpbarPos = info.Value.target.transform.position + info.Value.hpbarPosOffset;
                 info.Value.hpbar.transform.position = Camera.main.WorldToScreenPoint(hpbarPos);

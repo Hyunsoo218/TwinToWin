@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
@@ -47,11 +48,12 @@ public class TitleManager : MonoBehaviour
 		if (!bGameStart)
 		{
 			print("Ω√¿€");
-			bGameStart = true;
+            bGameStart = true;
 			StopCoroutine(coFade);
 			StopCoroutine(coMoveCamPos);
 			StartCoroutine(TouchToStartFadeOutAll());
 			arrCamPos[0].Priority = nCamPosCount;
+			GameManager.instance.GameStart();
 		}
 		else
 		{

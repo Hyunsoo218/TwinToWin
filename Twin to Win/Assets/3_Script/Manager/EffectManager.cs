@@ -12,22 +12,32 @@ public class EffectManager : MonoBehaviour
 
 	private Dictionary<GameObject, EffectPooler> dicEnemyPoolers = new Dictionary<GameObject, EffectPooler>();
 	private Dictionary<GameObject, EffectPooler> dicPlayerPoolers = new Dictionary<GameObject, EffectPooler>();
-
+	private List<GameObject> allEffects = new List<GameObject>();
 	private void Awake()
 	{
-		instance = this;
-		foreach (var item in enemyPoolingEffect)
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+        foreach (var item in enemyPoolingEffect)
 		{
 			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
 			dicEnemyPoolers.Add(item.gameObject, cAddPooler);
-		}
+
+        }
 		foreach (var item in playerPoolingEffect)
 		{
 			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
 			dicPlayerPoolers.Add(item.gameObject, cAddPooler);
 		}
 	}
-	public GameObject GetEffect(GameObject objPrefab)
+	public void SetGame() 
+	{
+		DisableAllEffect(); 
+	}
+    public void SetTitle()
+    {
+		DisableAllEffect();
+    }
+    public GameObject GetEffect(GameObject objPrefab)
 	{
 		if (dicEnemyPoolers.ContainsKey(objPrefab))
 		{
@@ -49,5 +59,17 @@ public class EffectManager : MonoBehaviour
 		{
 			item.Value.DisableAllEffect();
 		}
+	}
+    public void DisableAllEffect()
+    {
+		DisableAllEnemyEffect();
+        foreach (var item in dicPlayerPoolers)
+        {
+            item.Value.DisableAllEffect();
+        }
+    }
+	public GameObject GetClone(GameObject prefab) 
+	{
+		return Instantiate(prefab, transform);
 	}
 }
