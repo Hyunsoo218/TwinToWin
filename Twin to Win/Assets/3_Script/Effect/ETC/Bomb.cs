@@ -15,7 +15,7 @@ public class Bomb : Effect
 		tExplosion.gameObject.SetActive(false);
 		StartCoroutine(BombMoveToTarget());
 	}
-	protected override void InPool()
+	protected override void InPoolEvent()
 	{
 		tExplosion.gameObject.SetActive(false);
 		base.InPool();

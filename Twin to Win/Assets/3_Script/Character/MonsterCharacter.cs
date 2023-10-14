@@ -148,8 +148,7 @@ public class MonsterCharacter : Character
 	}
 	public void SlowEnd()
 	{
-        defultSpeed = cAgent.speed;
-        cAnimator.speed = cAgent.speed;
+		cAnimator.speed = defultSpeed;
 		cAgent.speed = 1f;
 	}
 	public void ResetState()

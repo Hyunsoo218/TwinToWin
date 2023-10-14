@@ -41,4 +41,21 @@ public class EffectPooler
 			item.SetActive(false);
 		}
 	}
+	public void SlowAllEffect(bool active, float slowAmount)
+	{
+		if (active)
+		{
+			foreach (var item in arrEffects)
+			{
+				item.GetComponent<Effect>()?.Slow(slowAmount);
+			}
+		}
+		else
+		{
+			foreach (var item in arrEffects)
+			{
+				item.GetComponent<Effect>()?.SlowEnd();
+			}
+		}
+	}
 }

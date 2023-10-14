@@ -8,12 +8,12 @@ public class EffectPhysics : Effect
 	protected Transform tUser;
 	protected float fDamage;
 	protected int nTargetLayer;
-	protected void Awake()
+	protected override void Awake()
 	{
 		cCollider = GetComponent<Collider>();
 		cCollider.enabled = false;
 	}
-	protected override void InPool()
+	protected override void InPoolEvent()
 	{
 		base.InPool();
 		cCollider.enabled = false;

@@ -65,7 +65,7 @@ public class BossAttackEffect3 : Effect
 			yield return new WaitForSeconds(0.1f);
 		}
 	}
-	protected override void InPool()
+	protected override void InPoolEvent()
 	{
 		base.InPool();
 		StopCoroutine(coTrackUser);

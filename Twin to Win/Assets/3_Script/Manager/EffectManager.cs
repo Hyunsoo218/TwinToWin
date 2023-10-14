@@ -29,6 +29,17 @@ public class EffectManager : MonoBehaviour
 			dicPlayerPoolers.Add(item.gameObject, cAddPooler);
 		}
 	}
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.I))
+		{
+			SlowEffect(true);
+		}
+		if (Input.GetKeyDown(KeyCode.O))
+		{
+			SlowEffect(false);
+		}
+	}
 	public void SetGame() 
 	{
 		DisableAllEffect(); 
@@ -71,5 +82,12 @@ public class EffectManager : MonoBehaviour
 	public GameObject GetClone(GameObject prefab) 
 	{
 		return Instantiate(prefab, transform);
+	}
+	public void SlowEffect(bool active, float slowAmount = 0.1f) 
+	{
+		foreach (var poolers in dicEnemyPoolers)
+		{
+			poolers.Value.SlowAllEffect(active, slowAmount);
+		}
 	}
 }
