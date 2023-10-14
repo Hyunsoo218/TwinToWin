@@ -58,8 +58,6 @@ public class Player : MonoBehaviour
         cGreatSword.gameObject.SetActive(false);
 
         cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
-
-        print("플레이어 피회복, 스테미너 회복, WTD WGS 생성");
     }
     public void ConvertCharacter()
     {

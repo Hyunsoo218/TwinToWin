@@ -41,8 +41,6 @@ public class UIManager : MonoBehaviour
         cHpC.gameObject.SetActive(true);
         cDFC.gameObject.SetActive(true);
         playerDie.SetActive(false);
-
-        print("ui ¼¼ÆÃ");
     }
     private void Update()
 	{

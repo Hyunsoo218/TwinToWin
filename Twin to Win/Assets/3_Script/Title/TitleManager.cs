@@ -47,17 +47,12 @@ public class TitleManager : MonoBehaviour
 	{
 		if (!bGameStart)
 		{
-			print("Ω√¿€");
             bGameStart = true;
 			StopCoroutine(coFade);
 			StopCoroutine(coMoveCamPos);
 			StartCoroutine(TouchToStartFadeOutAll());
 			arrCamPos[0].Priority = nCamPosCount;
 			GameManager.instance.GameStart();
-		}
-		else
-		{
-
 		}
 	}
 	private IEnumerator MoveCamPos() 

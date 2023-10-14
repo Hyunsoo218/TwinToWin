@@ -34,8 +34,6 @@ public class CameraManager : MonoBehaviour
 
         OffCamActive();
         ResetCamera();
-
-        print("카메라 끄고, 세팅");
     }
     public void ResetCamera() 
     {

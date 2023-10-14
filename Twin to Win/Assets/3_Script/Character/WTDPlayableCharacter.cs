@@ -335,7 +335,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             SetIsRSkillTime(true);
             srtCurrentSkill = srtRSkill;
             GameManager.instance.AsynchronousExecution(StartRedRSkillTime(fRSkillConsumeTime));
-            EnemyManager.instance.SlowAllEnemy(10f, 0.1f);
+            EnemyManager.instance.SlowAllEnemy(0.1f);
         }
     }
 

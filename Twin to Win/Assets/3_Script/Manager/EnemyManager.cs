@@ -53,11 +53,11 @@ public class EnemyManager : MonoBehaviour
         foreach (var item in MonsterCharacter.allMonsterCharacters) 
             item.StartAction();
     }
-    public void SlowAllEnemy(float time, float amount) 
+    public void SlowAllEnemy(float amount) 
     {
         EffectManager.instance.DisableAllEnemyEffect();
         foreach (var item in MonsterCharacter.allMonsterCharacters)
-            item.Slow(time, amount);
+            item.Slow(amount);
     }
     public void SlowEndAllEnemy()
     {

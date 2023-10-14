@@ -60,6 +60,5 @@ public class StageManager : MonoBehaviour
 	public void UpdateNavMeshOne() 
 	{
 		cNMS.BuildNavMesh();
-		print("매쉬꾸움");
 	}
 }

@@ -134,22 +134,22 @@ public class MonsterCharacter : Character
 	{
         ChangeState(cStateIdle);
         cAnimator.speed = 1f;
-    }
+	}
 	public void StopAction() 
 	{
 		ChangeState(null);
 		cAnimator.speed = 0;
-    }
-	public void Slow(float time, float amount) 
+	}
+	public void Slow(float amount) 
 	{
         defultSpeed = cAgent.speed;
-        cAnimator.speed *= amount;
+        cAnimator.speed = amount;
 		cAgent.speed *= amount;
 	}
 	public void SlowEnd()
 	{
-		cAnimator.speed = defultSpeed;
-		cAgent.speed = 1f;
+		cAnimator.speed = 1f;
+		cAgent.speed = defultSpeed;
 	}
 	public void ResetState()
 	{
