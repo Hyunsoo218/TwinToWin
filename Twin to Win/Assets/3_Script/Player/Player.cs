@@ -16,9 +16,8 @@ public class Player : MonoBehaviour
     public readonly float fMaxStamina = 10f;
     public float fUsingDodgeStamina = 3f;
 
-    private readonly float fPlayerMaxHealthPoint = 1000f;
-    private float fPlayerCurrentHealthPoint = 0f;
-
+    [SerializeField] private float fPlayerMaxHealthPoint = 1000f;
+    [SerializeField] private float fPlayerCurrentHealthPoint = 0f;
 
     #region Dodge Var
 

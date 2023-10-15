@@ -42,6 +42,7 @@ public class MonsterCharacter : Character
 		StateInitializeOnStay();
 		StateInitializeOnExit();
 		mDefaultMaterial = cSMR.material;
+		defultSpeed = cAgent.speed;
 	}
     protected void OnEnable()
     {
@@ -142,7 +143,6 @@ public class MonsterCharacter : Character
 	}
 	public void Slow(float amount) 
 	{
-        defultSpeed = cAgent.speed;
         cAnimator.speed = amount;
 		cAgent.speed *= amount;
 	}
@@ -196,6 +196,7 @@ public class MonsterCharacter : Character
 	}
 	public override void ChangeState(State cNextState)
 	{
+		if (cStateMachine.GetCurrentState() == cStateDie) return;
 		cStateMachine.ChangeState(cNextState);
 	}
 	public override void Damage(float fAmount)
@@ -216,12 +217,13 @@ public class MonsterCharacter : Character
 	}
 	public override void Die()
 	{
-		allMonsterCharacters.Remove(this);
         ChangeState(cStateDie);
+		allMonsterCharacters.Remove(this);
         cAgent.enabled = false;
 		GetComponent<Collider>().enabled = false;
         UIManager.instance.RemoveHpbar(this);
-    }
+		EnemyManager.instance.MonsterDie();
+	}
 	public override void Move()
 	{
 		if(cAgent.enabled)

@@ -12,9 +12,13 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private GameObject WGS_tutorial_2;
     [SerializeField] private GameObject WGS_tutorial_3;
     [SerializeField] private GameObject tStage1Enemy1;
+    [SerializeField] private GameObject tStage1Enemy2;
+    [SerializeField] private GameObject tStage1Enemy3;
+    [SerializeField] private GameObject tStage1Enemy4;
 
     private List<GameObject> prefabs = new List<GameObject>();
     private List<GameObject> clones = new List<GameObject>();
+    private int monsterSetNum;
     
     private void Awake()
     {
@@ -25,6 +29,9 @@ public class EnemyManager : MonoBehaviour
         prefabs.Add(WGS_tutorial_2);
         prefabs.Add(WGS_tutorial_3);   
         prefabs.Add(tStage1Enemy1);   
+        prefabs.Add(tStage1Enemy2);   
+        prefabs.Add(tStage1Enemy3);   
+        prefabs.Add(tStage1Enemy4);   
     }
     public void SetTitle()
     {
@@ -40,7 +47,8 @@ public class EnemyManager : MonoBehaviour
     }
     public void OnActiveEnemy(StageEnemySet set)
     {
-        clones[(int)set].SetActive(true);
+        monsterSetNum = (int)set;
+        clones[monsterSetNum].SetActive(true);
         StartActionAllEnemy();
     }
     public void StopAllEnemy() 
@@ -63,6 +71,16 @@ public class EnemyManager : MonoBehaviour
     {
         foreach (var item in MonsterCharacter.allMonsterCharacters)
             item.SlowEnd();
+    }
+    public void MonsterDie() 
+    {
+        if (monsterSetNum < 4) return;
+        int monsterCount = MonsterCharacter.allMonsterCharacters.Count;
+		if (monsterCount == 0)
+		{
+            monsterSetNum++;
+            OnActiveEnemy((StageEnemySet)monsterSetNum);
+        }
     }
 }
 public enum StageEnemySet 

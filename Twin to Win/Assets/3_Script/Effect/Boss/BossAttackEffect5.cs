@@ -16,8 +16,9 @@ public class BossAttackEffect5 : Effect
 	private int nTargetLayer;
 	private int nDSCNum;
 	private int nOverlapNum;
-	private void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		cAnimator = GetComponent<Animator>();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)

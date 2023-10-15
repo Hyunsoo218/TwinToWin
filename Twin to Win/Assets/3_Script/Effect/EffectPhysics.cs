@@ -10,12 +10,12 @@ public class EffectPhysics : Effect
 	protected int nTargetLayer;
 	protected override void Awake()
 	{
+		base.Awake();
 		cCollider = GetComponent<Collider>();
 		cCollider.enabled = false;
 	}
 	protected override void InPoolEvent()
 	{
-		base.InPool();
 		cCollider.enabled = false;
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)

@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class TitleManager : MonoBehaviour
 {
 	[SerializeField] private List<CinemachineVirtualCamera> arrCamPos;
-	[SerializeField] private List<movementBlock> arrBlock;
 	[SerializeField] private GameObject btnStart;
 	[SerializeField] private Image imgLogo;
 	[SerializeField] private Image imgBackground;
@@ -33,16 +32,6 @@ public class TitleManager : MonoBehaviour
 	{
 		coFade = StartCoroutine(ImgFadeInOut());
 	}
-	private void Update()
-    {
-		if (!bGameStart)
-		{
-			foreach (movementBlock item in arrBlock)
-			{
-				item.MoveBlock();
-			}
-		}
-    }
 	public void GameStart() 
 	{
 		if (!bGameStart)
@@ -130,19 +119,6 @@ public class TitleManager : MonoBehaviour
 		{
 			imgTouchToStart.color = new Color(1f, 1f, 1f, imgTouchToStart.color.a - Time.deltaTime * 1f);
 			yield return null;
-		}
-	}
-	[Serializable]
-	private class movementBlock
-	{
-		[SerializeField] private Transform tBlock;
-		public void MoveBlock() 
-		{
-			tBlock.localPosition -= Vector3.forward * Time.deltaTime;
-			if (tBlock.localPosition.z <= -51.6f)
-			{
-				tBlock.localPosition += Vector3.forward * 154.8f;
-			}
 		}
 	}
 }

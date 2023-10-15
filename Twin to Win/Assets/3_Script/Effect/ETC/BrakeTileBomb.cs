@@ -6,11 +6,12 @@ public class BrakeTileBomb : Effect
 {
     [SerializeField] private DamagableSpaceControl cDSC;
     private Animator cAnimator;
-    private void Awake()
-    {
+	protected override void Awake()
+	{
+		base.Awake();
         cAnimator = GetComponent<Animator>();
     }
-    public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
+	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
     {
         cAnimator.SetTrigger("Action");
         Vector3 pos = Player.instance.cCurrentCharacter.transform.position;

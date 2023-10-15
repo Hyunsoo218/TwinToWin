@@ -9,8 +9,9 @@ public class BossAttackEffect4 : Effect
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
-	private void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		cAnimator = GetComponent<Animator>();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
