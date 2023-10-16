@@ -114,7 +114,7 @@ public class BossAttackEffect2 : Effect
 	}
 	protected override void InPoolEvent()
 	{
-		base.InPool();
+		base.InPoolEvent();
 		nExplosionCount = 0;
 	}
 }

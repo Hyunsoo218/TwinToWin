@@ -84,7 +84,6 @@ public class BossAttackEffect5 : Effect
 		if (nTargetHitNum > 0 )
 		{
 			cTarget.Damage(fDamage);
-			print($"가시가 {cTarget.name}에게 {fDamage}의 데미지 입힘");
 		}
 	}
 	private IEnumerator MakeParabolicBomb()

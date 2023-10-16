@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        Player.instance.SetPlayerHp(100f);
+        //StartCoroutine(CutSceneManager.instance.PlayCutScene(CutSceneType.Stage1to2));
     }
 	public void AsynchronousExecution(IEnumerator enumerator) 
 	{
@@ -75,9 +75,9 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¹¹¾î¾î¾î¾î¾î¾î¾î¾î¾î¾î?!"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "ÀÏ´Ü Á» ÁøÁ¤ÇØ ¾ð´Ï"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¾î¶»°Ô ÁøÁ¤À»---", 0.4f));
-            EnemyManager.instance.OnActiveEnemy(StageEnemySet.WTD_tutorial);
+            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WTD_tutorial);
             EnemyManager.instance.StopAllEnemy();
-            CameraManager.instance.OnCamActive(CamType.WTD_tutorial);
+            CameraManager.instance.OnCamActive(CamType.WTD_tutorial, 2f);
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "¾ð´Ï. ¸ó½ºÅÍ¾ß ÀüÅõ ÁØºñÇØ"));
             CameraManager.instance.OffCamActive();
@@ -103,17 +103,17 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "ÇÏÇÏ! ºÃ´À³Ä! ÀÌ ½ºÄ®·¿ ´ÔÀÇ ½Ç·ÂÀ»!"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "¾ð´Ï. ¾ÆÁ÷ ¾È ³¡³µ¾î"));
 
-            EnemyManager.instance.OnActiveEnemy(StageEnemySet.WGS_tutorial_1);
+            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WGS_tutorial_1);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "ÀÌ¹ø¿¡µµ ÇÑ ¹æ¿¡---", 0.4f));
 
-            EnemyManager.instance.OnActiveEnemy(StageEnemySet.WGS_tutorial_2);
+            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WGS_tutorial_2);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã ³¢±ã"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¸ç, ¸î ¸¶¸®°¡ ¿Àµç ÀÌ ½ºÄ®·¿ ´ÔÀÌ---", 0.4f));
 
-            EnemyManager.instance.OnActiveEnemy(StageEnemySet.WGS_tutorial_3);
+            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WGS_tutorial_3);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã ³¢±ã ³¢±ã ³¢±ã ³¢±ã"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", ".....")); 
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "....."));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¹¹¾ß ±× ´«ºûÀº!"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "....."));
-            EnemyManager.instance.OnActiveEnemy(StageEnemySet.Stage1_1);
+            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.Stage1_1);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "Å©Èì! ¾Æ¹«Æ° ÀÌ³à¼®µé °è¼Ó ¸ô·Á¿À³×. ÀÌÁ¦ºÎÅÏ ³ªµµ Áø½ÉÀ¸·Î ½Î¿ö¾ß°Ú¾î"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "....."));
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         }
 
         UIManager.instance.OnStageUI(StageNumber.one);
-        EnemyManager.instance.OnActiveEnemy(StageEnemySet.Stage1_1);
+        EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.Stage1_1);
         EnemyManager.instance.StopAllEnemy();
         yield return new WaitForSeconds(3.5f);
         Player.instance.EnablePlayerInput(true);
@@ -232,6 +232,12 @@ public class GameManager : MonoBehaviour
         gameStage = GameStage.Title;
         StartCoroutine(GoTitleCo());
     }
+    public void GameStart() 
+    {
+        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
+        StartCoroutine(GameStartCo());
+    }
     private IEnumerator GoTitleCo()
     {
         yield return null;
@@ -240,27 +246,77 @@ public class GameManager : MonoBehaviour
         CameraManager.instance.SetTitle();
         EnemyManager.instance.SetTitle();
         EffectManager.instance.SetTitle();
-    }
-    public void GameStart() 
-    {
-        SceneManager.LoadScene(0);
-        SceneManager.LoadScene(1);
-        StartCoroutine(GameStartCo());
+        CutSceneManager.instance.SetTitle();
     }
     private IEnumerator GameStartCo() 
     {
         yield return null;
-
+        phase = Phase.Phase_1;
         StageManager.instance.UpdateNavMeshOne();
         UIManager.instance.SetGame();
         Player.instance.SetGame();
         CameraManager.instance.SetGame();
         EnemyManager.instance.SetGame();
+        EnemyManager.instance.SetStage(phase);
         EffectManager.instance.SetGame();
-
+        CutSceneManager.instance.SetGame();
         yield return null;
         gameStage = GameStage.Game;
         Stage1Start();
+    }
+    public void StageClear() 
+    {
+        EffectManager.instance.DisableAllEffect();
+		switch (phase)
+		{
+			case Phase.Phase_1:
+                phase = Phase.Phase_2;
+                EnemyManager.instance.SetStage(phase);
+                StartCoroutine(Stage1to2());
+                break;
+			case Phase.Phase_2:
+                phase = Phase.Phase_3;
+                EnemyManager.instance.SetStage(phase);
+                StartCoroutine(Stage2to3());
+                break;
+			case Phase.Phase_3:
+                // °ÔÀÓ Å¬¸®¾î
+				break;
+		}
+	}
+    private IEnumerator Stage1to2() 
+    {
+        Player.instance.EnablePlayerInput(false);
+        yield return new WaitForSeconds(2f);
+
+        Player.instance.cCurrentCharacter.gameObject.SetActive(false);
+        yield return StartCoroutine(CutSceneManager.instance.PlayCutScene(CutSceneType.Stage1to2));
+
+        UIManager.instance.OnStageUI(StageNumber.twe);
+        Player.instance.cCurrentCharacter.gameObject.SetActive(true);
+        EnemyManager.instance.OnActiveEnemy(Stage2EnemySet.Boss_normal);
+        EnemyManager.instance.StopAllEnemy();
+        yield return new WaitForSeconds(3.5f);
+
+        Player.instance.EnablePlayerInput(true);
+        EnemyManager.instance.StartActionAllEnemy();
+    }
+    private IEnumerator Stage2to3 ()
+    {
+        Player.instance.EnablePlayerInput(false);
+        yield return new WaitForSeconds(2f);
+
+        Player.instance.cCurrentCharacter.gameObject.SetActive(false);
+        yield return StartCoroutine(CutSceneManager.instance.PlayCutScene(CutSceneType.Stage2to3));
+
+        UIManager.instance.OnStageUI(StageNumber.three);
+        Player.instance.cCurrentCharacter.gameObject.SetActive(true);
+        EnemyManager.instance.OnActiveEnemy(Stage3EnemySet.Boss_angry);
+        EnemyManager.instance.StopAllEnemy();
+        yield return new WaitForSeconds(3.5f);
+
+        Player.instance.EnablePlayerInput(true);
+        EnemyManager.instance.StartActionAllEnemy();
     }
 }
 

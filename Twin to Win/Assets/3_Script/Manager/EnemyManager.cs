@@ -15,10 +15,16 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private GameObject tStage1Enemy2;
     [SerializeField] private GameObject tStage1Enemy3;
     [SerializeField] private GameObject tStage1Enemy4;
+    [SerializeField] private GameObject tStage2;
+    [SerializeField] private GameObject tStage3;
 
     private List<GameObject> prefabs = new List<GameObject>();
-    private List<GameObject> clones = new List<GameObject>();
-    private int monsterSetNum;
+
+    private List<GameObject> stage1Clones = new List<GameObject>();
+    private List<GameObject> stage2Clones = new List<GameObject>();
+    private List<GameObject> stage3Clones = new List<GameObject>();
+    private List<GameObject> clones;
+    private int monsterSetNum = 0;
     
     private void Awake()
     {
@@ -35,21 +41,78 @@ public class EnemyManager : MonoBehaviour
     }
     public void SetTitle()
     {
-        clones.Clear();
+        stage1Clones.Clear();
+        stage2Clones.Clear();
+        stage3Clones.Clear();
     }
     public void SetGame()
     {
-        clones.Clear();
+        stage1Clones.Clear();
+        stage2Clones.Clear();
+        stage3Clones.Clear();
         for (int i = 0;i < prefabs.Count; i++) 
         {
-            clones.Add(Instantiate(prefabs[i]));
+            stage1Clones.Add(Instantiate(prefabs[i]));
         }
+        stage2Clones.Add(Instantiate(tStage2));
+        stage3Clones.Add(Instantiate(tStage3));
     }
-    public void OnActiveEnemy(StageEnemySet set)
+    public void SetStage(Phase phase) 
+    {
+		switch (phase)
+		{
+			case Phase.Phase_1:
+                clones = stage1Clones;
+                break;
+			case Phase.Phase_2:
+                clones = stage2Clones;
+                break;
+			case Phase.Phase_3:
+                clones = stage3Clones;
+                break;
+		}
+	}
+    public void OnActiveEnemy(Stage1EnemySet set)
     {
         monsterSetNum = (int)set;
-        clones[monsterSetNum].SetActive(true);
-        StartActionAllEnemy();
+		if (clones.Count != monsterSetNum)
+        {
+            clones[monsterSetNum].SetActive(true);
+            StartActionAllEnemy();
+        }
+		else
+		{
+            monsterSetNum = 0;
+            GameManager.instance.StageClear();
+		}
+    }
+    public void OnActiveEnemy(Stage2EnemySet set)
+    {
+        monsterSetNum = (int)set;
+        if (clones.Count != monsterSetNum)
+        {
+            clones[monsterSetNum].SetActive(true);
+            StartActionAllEnemy();
+        }
+        else
+        {
+            monsterSetNum = 0;
+            GameManager.instance.StageClear();
+        }
+    }
+    public void OnActiveEnemy(Stage3EnemySet set)
+    {
+        monsterSetNum = (int)set;
+        if (clones.Count != monsterSetNum)
+        {
+            clones[monsterSetNum].SetActive(true);
+            StartActionAllEnemy();
+        }
+        else
+        {
+            monsterSetNum = 0;
+            GameManager.instance.StageClear();
+        }
     }
     public void StopAllEnemy() 
     {
@@ -74,16 +137,23 @@ public class EnemyManager : MonoBehaviour
     }
     public void MonsterDie() 
     {
-        if (monsterSetNum < 4) return;
         int monsterCount = MonsterCharacter.allMonsterCharacters.Count;
 		if (monsterCount == 0)
 		{
             monsterSetNum++;
-            OnActiveEnemy((StageEnemySet)monsterSetNum);
+            OnActiveEnemy((Stage1EnemySet)monsterSetNum);
         }
     }
 }
-public enum StageEnemySet 
+public enum Stage1EnemySet 
 {
     WTD_tutorial, WGS_tutorial_1, WGS_tutorial_2, WGS_tutorial_3, Stage1_1
+}
+public enum Stage2EnemySet
+{
+    Boss_normal
+}
+public enum Stage3EnemySet
+{
+    Boss_angry
 }

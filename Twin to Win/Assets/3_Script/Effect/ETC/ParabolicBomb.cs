@@ -95,7 +95,6 @@ public class ParabolicBomb : Effect
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
 				cTarget.Damage(fDamage);
-				print($"포물선폭탄이 {cTarget.name}에게 {fDamage}의 데미지 입힘");
 				// 지우지 마영 - 디버그용							  		   
 			}
 		}

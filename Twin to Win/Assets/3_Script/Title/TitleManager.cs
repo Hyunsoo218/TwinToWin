@@ -8,13 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
-	[SerializeField] private List<CinemachineVirtualCamera> arrCamPos;
 	[SerializeField] private GameObject btnStart;
 	[SerializeField] private Image imgLogo;
 	[SerializeField] private Image imgBackground;
 	[SerializeField] private Image imgTouchToStart;
 	private Coroutine coFade;
-	private Coroutine coMoveCamPos;
 	private bool bGameStart = false;
 	private int nCamPosCount = 10;
 
@@ -38,23 +36,8 @@ public class TitleManager : MonoBehaviour
 		{
             bGameStart = true;
 			StopCoroutine(coFade);
-			StopCoroutine(coMoveCamPos);
 			StartCoroutine(TouchToStartFadeOutAll());
-			arrCamPos[0].Priority = nCamPosCount;
 			GameManager.instance.GameStart();
-		}
-	}
-	private IEnumerator MoveCamPos() 
-	{
-		int nCamPosIdx = 0;
-		while (true)
-		{
-			arrCamPos[nCamPosIdx].Priority = nCamPosCount;
-			nCamPosCount++;
-			nCamPosIdx++;
-
-			nCamPosIdx = (arrCamPos.Count == nCamPosIdx) ? 0 : nCamPosIdx;
-			yield return new WaitForSeconds(5f);
 		}
 	}
 	private IEnumerator ImgFadeInOut()
@@ -63,7 +46,7 @@ public class TitleManager : MonoBehaviour
 		StartCoroutine(BackgroundFadeOut());
 		yield return StartCoroutine(LogoFadeOut());
 		btnStart.SetActive(true);
-		coMoveCamPos = StartCoroutine(MoveCamPos());
+
 		while (true)
 		{
 			yield return StartCoroutine(TouchToStartFadeIn());

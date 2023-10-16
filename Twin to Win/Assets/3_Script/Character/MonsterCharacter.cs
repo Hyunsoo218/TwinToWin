@@ -223,6 +223,12 @@ public class MonsterCharacter : Character
 		GetComponent<Collider>().enabled = false;
         UIManager.instance.RemoveHpbar(this);
 		EnemyManager.instance.MonsterDie();
+		StartCoroutine(Hide());
+	}
+	protected IEnumerator Hide() 
+	{
+		yield return new WaitForSeconds(2.5f);
+		gameObject.SetActive(false);
 	}
 	public override void Move()
 	{

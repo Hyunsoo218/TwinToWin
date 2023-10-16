@@ -18,7 +18,7 @@ public class Bomb : Effect
 	protected override void InPoolEvent()
 	{
 		tExplosion.gameObject.SetActive(false);
-		base.InPool();
+		base.InPoolEvent();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{

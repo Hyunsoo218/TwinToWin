@@ -7,12 +7,14 @@ public class UIManager : MonoBehaviour
 {
 	[SerializeField] private PlayerStateUI cPSUI;
 	[SerializeField] private BossStateUI cBSUI;
-	[SerializeField] private StageUI cSUI;
 	[SerializeField] private TutorialUI cTUI;
 	[SerializeField] private TalkUI cTalkUI;
 	[SerializeField] private HpbarControl cHpC;
 	[SerializeField] private DamageFontControl cDFC;
 	[SerializeField] private GameObject playerDie;
+    [SerializeField] private GameObject stageUIPrefab;
+    [SerializeField] private Transform canvas;
+	private StageUI cSUI;
 	public static UIManager instance;
 	private void Awake()
 	{
@@ -24,12 +26,15 @@ public class UIManager : MonoBehaviour
     {
         cPSUI.gameObject.SetActive(false);
         cBSUI.gameObject.SetActive(false);
-        cSUI.gameObject.SetActive(false);
         cTUI.gameObject.SetActive(false);
         cTalkUI.gameObject.SetActive(false);
         cHpC.gameObject.SetActive(false);
         cDFC.gameObject.SetActive(false);
         playerDie.SetActive(false);
+		if (cSUI != null)
+            Destroy(cSUI.gameObject);
+        cSUI = Instantiate(stageUIPrefab, canvas).GetComponent<StageUI>();
+        cSUI.gameObject.SetActive(false);
     }
 	public void SetGame() 
 	{

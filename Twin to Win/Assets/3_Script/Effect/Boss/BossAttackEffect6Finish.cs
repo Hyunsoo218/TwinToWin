@@ -35,7 +35,6 @@ public class BossAttackEffect6Finish : Effect
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
 				cTarget.Damage(fDamage);
-				print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
 				// 지우지 마영 - 디버그용							  		   
 			}
 		}
@@ -50,15 +49,9 @@ public class BossAttackEffect6Finish : Effect
 				if (cItem.TryGetComponent<Character>(out cTarget))
 				{
 					float dist = Vector3.Distance(transform.position, cTarget.transform.position);
-					print("거리 : " + dist);
 					if (dist > 5f)
 					{
 						cTarget.Damage(fDamage);
-						print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
-					}
-					else
-					{
-						print($"안쪽에 있음");
 					}
 					// 지우지 마영 - 디버그용							  		   
 				}

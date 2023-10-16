@@ -20,9 +20,12 @@ public class CameraManager : MonoBehaviour
         else Destroy(gameObject);
         cams.Add(WTD_tutorialCam);
         cams.Add(PlayerDieCam);
+    }
+	private void Start()
+    {
         SetTitle();
     }
-    public void SetTitle() 
+	public void SetTitle() 
     {
         OffCamActive();
     }
@@ -32,6 +35,7 @@ public class CameraManager : MonoBehaviour
         cMainCam = objMainCamera.GetComponent<CinemachineVirtualCamera>();
         brainCam = Camera.main.GetComponent<CinemachineBrain>();
 
+        brainCam.m_DefaultBlend.m_Time = 0;
         OffCamActive();
         ResetCamera();
     }
@@ -39,7 +43,7 @@ public class CameraManager : MonoBehaviour
     {
         cMainCam.Follow = Player.instance.cCurrentCharacter.transform;
     }
-    public void OnCamActive(CamType type, float camMoveTime = 1f)
+    public void OnCamActive(CamType type, float camMoveTime = 0)
     {
         brainCam.m_DefaultBlend.m_Time = camMoveTime;
 
@@ -61,6 +65,8 @@ public class CameraManager : MonoBehaviour
     public void OffCamActive() 
     {
         foreach (CinemachineVirtualCamera cam in cams) cam.gameObject.SetActive(false);
+        if(GameManager.instance.gameStage == GameStage.Game)
+            StartCoroutine(ResetBrainCamBlendTime());
     }
     private IEnumerator ZoomInPlayer() 
     {
@@ -75,6 +81,11 @@ public class CameraManager : MonoBehaviour
             cMainCam.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = startDist - moveDist * runTime / time;
             yield return null;
 		}
+    }
+    private IEnumerator ResetBrainCamBlendTime() 
+    {
+        yield return new WaitForSeconds(brainCam.m_DefaultBlend.m_Time);
+        brainCam.m_DefaultBlend.m_Time = 0;
     }
 }
 public enum CamType 

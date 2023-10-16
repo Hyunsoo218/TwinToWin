@@ -26,6 +26,7 @@ public class BossCharacter : MonsterCharacter
 
 	private List<BossPattern> bossPatterns = new List<BossPattern>();
 	private List<BossPattern> curretBossPattern = new List<BossPattern>();
+	private bool phase3FristAttack = true;
 
 	protected override void Awake()
 	{
@@ -87,13 +88,20 @@ public class BossCharacter : MonsterCharacter
 			cAgent.enabled = true;
 			cAgent.isStopped = true;
 			cAgent.radius = 0;
-		};//
+		};
         cStateBreakTile.onEnter = () => {
             ChangeAnimation(cStateBreakTile.strStateName);
             transform.position = (Vector3.forward + Vector3.right) * 14f;
             cAgent.enabled = false;
-        };//cStateBreakTile
+			GetComponent<Collider>().enabled = false;
+			StartCoroutine(dd());
+        };
     }
+	IEnumerator dd() 
+	{
+		yield return new WaitForSeconds(12f);
+		ChangeState(cStateAttack6_Finish);
+	}
 	protected override void StateInitializeOnStay()
 	{
 		cStateIdle.onStay = () => {
@@ -188,12 +196,20 @@ public class BossCharacter : MonsterCharacter
 		};
         cStateBreakTile.onExit = () => {
             cAgent.enabled = true;
-            cAgent.isStopped = true;
-            cAgent.radius = 0.5f;
-        };//cStateBreakTile
+			GetComponent<Collider>().enabled = true;
+		};//cStateBreakTile
     }
 	protected void ChangeAttackStateRanged()
 	{
+		if (phase3FristAttack)
+		{
+			if (GameManager.instance.phase == Phase.Phase_3)
+			{
+				phase3FristAttack = false;
+				ChangeState(cStateBreakTile);
+				return;
+			}
+		}
 		BossPattern pattern = GetRandomPattern();
 		switch (pattern)
 		{
@@ -206,6 +222,15 @@ public class BossCharacter : MonsterCharacter
 	}
 	protected void ChangeAttackStateMelee()
 	{
+		if (phase3FristAttack)
+		{
+			if (GameManager.instance.phase == Phase.Phase_3)
+			{
+				phase3FristAttack = false;
+				ChangeState(cStateBreakTile);
+				return;
+			}
+		}
 		BossPattern pattern = GetRandomPattern();
 		switch (pattern)
 		{
@@ -305,6 +330,10 @@ public class BossCharacter : MonsterCharacter
 		cSMR.material = EffectManager.instance.GetHitEffect();
 		yield return new WaitForSeconds(0.1f);
 		cSMR.material = mDefaultMaterial;
+	}
+	public override void Die()
+	{
+		base.Die();
 	}
 }
 public enum BossPattern 

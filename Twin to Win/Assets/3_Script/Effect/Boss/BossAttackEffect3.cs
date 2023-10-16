@@ -67,7 +67,7 @@ public class BossAttackEffect3 : Effect
 	}
 	protected override void InPoolEvent()
 	{
-		base.InPool();
+		base.InPoolEvent();
 		StopCoroutine(coTrackUser);
 	}
 }
