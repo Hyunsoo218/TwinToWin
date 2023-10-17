@@ -282,15 +282,15 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         bool isHitWall = false;
         Vector3 startPos = transform.position;
         Vector3 endPos = transform.position + transform.forward * parabolaPower;
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
 
-        
         fParabolaTimer = 0f;
         fFreeFallTimer = 0f;
-        yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall) == true);
+        yield return new WaitUntil(() => DoJumpAndRotate(startPos, endPos, parabolaHighestHeight, parabolaSpeed, ref isHitWall, obj) == true);
         ChangeState(cToStandState);
     }
 
-    private bool DoJumpAndRotate(Vector3 startPos, Vector3 _endPos, float parabolaHighestHeight, float parabolaSpeed, ref bool isHitWall)
+    private bool DoJumpAndRotate(Vector3 startPos, Vector3 _endPos, float parabolaHighestHeight, float parabolaSpeed, ref bool isHitWall, GameObject effect)
     {
         RaycastHit hit;
         Vector3 endPos = _endPos;
@@ -317,6 +317,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             fFreeFallTimer += Time.deltaTime;
             transform.position = FreeFall(Parabola(transform.position, hit.point, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
+        effect.GetComponent<Effect>().OnAction(transform, 0f, 1 << 7);
         return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
     }
 

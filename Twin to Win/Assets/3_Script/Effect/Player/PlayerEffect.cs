@@ -5,7 +5,6 @@ using static UnityEditor.Progress;
 
 public class PlayerEffect : EffectOverlap
 {
-    
     public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
     {
         base.OnAction(tUser, fDamage, nTargetLayer);

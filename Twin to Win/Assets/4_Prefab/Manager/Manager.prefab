@@ -24033,6 +24033,8 @@ MonoBehaviour:
   - {fileID: -3070532496794228176, guid: d764afbc8da6cd44a92dc84e4799a247, type: 3}
   - {fileID: 8848862220605914638, guid: c86683e3f8aad844491d49e0b6f33c7d, type: 3}
   - {fileID: 6926086484264133507, guid: 0a897a89c8da03c4a9e1843939845a68, type: 3}
+  - {fileID: -3068060543260068630, guid: 409b969e3efeca54fb886b83b9fa1a65, type: 3}
+  - {fileID: 182246049150786228, guid: 74454ccceaf83014fab7b945e18c7df9, type: 3}
 --- !u!1 &8228989012919490815
 GameObject:
   m_ObjectHideFlags: 0
@@ -27581,6 +27583,11 @@ PrefabInstance:
         type: 3}
       propertyPath: arrPoolingEffect.Array.size
       value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 180353046399145841, guid: 09a9a1ad0af50294eaee6e798ca8b696,
+        type: 3}
+      propertyPath: playerPoolingEffect.Array.size
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4356526197955133139, guid: 09a9a1ad0af50294eaee6e798ca8b696,
         type: 3}
