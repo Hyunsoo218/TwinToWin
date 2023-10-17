@@ -178,7 +178,6 @@ public class GameManager : MonoBehaviour
 	}
     public void GameLose() 
     {
-        print("½ÇÇà");
         StartCoroutine(Lose());
     }
     private IEnumerator Lose()
