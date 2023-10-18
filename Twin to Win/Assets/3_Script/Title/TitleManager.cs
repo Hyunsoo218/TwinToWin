@@ -17,5 +17,6 @@ public class TitleManager : CutScene
 	public void SceneLoad() => GameManager.instance.GameStart();
 	public void ControlAnimatorWGS(int num) => WGS_animator.SetTrigger("Trigger_" + num);
 	public void ControlAnimatorWTD(int num) => WTD_animator.SetTrigger("Trigger_" + num);
+	public void SkipBtn() => animator.SetTrigger("Skip");
 	public override IEnumerator Play() => throw new NotImplementedException(); 
 }

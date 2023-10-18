@@ -29,13 +29,13 @@ public class CutSceneManager : MonoBehaviour
     }
     public IEnumerator PlayCutScene(CutSceneType type) 
     {
-        UIManager.instance.gameObject.SetActive(false);
+        UIManager.instance.AcriveAllUI(false);
 		switch (type)
 		{
 			case CutSceneType.Stage1to2: yield return StartCoroutine(cutSceneStage1to2.Play()); break;
 			case CutSceneType.Stage2to3: yield return StartCoroutine(cutSceneStage2to3.Play()); break;
 		}
-        UIManager.instance.gameObject.SetActive(true);
+        UIManager.instance.AcriveAllUI(true);
     }
 }
 public enum CutSceneType 

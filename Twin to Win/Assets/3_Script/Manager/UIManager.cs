@@ -132,4 +132,8 @@ public class UIManager : MonoBehaviour
     {
         gameClear.SetActive(true);
     }
+    public void AcriveAllUI(bool active) 
+    {
+        canvas.gameObject.SetActive(active);
+    }
 }
