@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private DamageFontControl cDFC;
 	[SerializeField] private GameObject playerDie;
     [SerializeField] private GameObject stageUIPrefab;
+    [SerializeField] private GameObject gameClear;
     [SerializeField] private Transform canvas;
 	private StageUI cSUI;
 	public static UIManager instance;
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
         cHpC.gameObject.SetActive(false);
         cDFC.gameObject.SetActive(false);
         playerDie.SetActive(false);
+        gameClear.SetActive(false);
 		if (cSUI != null)
             Destroy(cSUI.gameObject);
         cSUI = Instantiate(stageUIPrefab, canvas).GetComponent<StageUI>();
@@ -46,6 +48,7 @@ public class UIManager : MonoBehaviour
         cHpC.gameObject.SetActive(true);
         cDFC.gameObject.SetActive(true);
         playerDie.SetActive(false);
+        gameClear.SetActive(false);
     }
     private void Update()
 	{
@@ -124,5 +127,9 @@ public class UIManager : MonoBehaviour
     public void SetBossHpbar(float hp) 
     {
         cBSUI.Set(hp);
+    }
+    public void OnGameClear()
+    {
+        gameClear.SetActive(true);
     }
 }

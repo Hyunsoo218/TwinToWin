@@ -192,36 +192,21 @@ public class GameManager : MonoBehaviour
         int playersChoice;  // 선택지
         List<string> options = new List<string>();
 
+        yield return StartCoroutine(WaitForTalk("", "모험이 도중에 중단되었습니다", 3f));
+
         options.Add("아니요"); options.Add("네");
-        yield return StartCoroutine(WaitForChoice("", "대화를 건너뛰시겠습니까?", options));
-        playersChoice = UIManager.instance.GetPlayersChoice();
-
-        if (playersChoice == 0)
-        {
-            yield return StartCoroutine(WaitForTalk("", "당신의 모험은 여기까지인 것 같네요", 2.5f));
-
-            options.Add("아니요"); options.Add("네");
-            yield return StartCoroutine(WaitForChoice("", "만족스러운 여행이었습니까?", options));
-            playersChoice = UIManager.instance.GetPlayersChoice();
-
-            if (playersChoice == 0)
-                yield return StartCoroutine(WaitForTalk("", "그러셨군요 그거참 유감이네요", 2.5f));
-            else
-                yield return StartCoroutine(WaitForTalk("", "만족하셨다니 정말 다행이네요", 2.5f));
-
-            yield return StartCoroutine(WaitForTalk("", "당신은 평화로운 숲을 어지럽힌 죄인으로 기록될 것이며", 2.5f));
-        }
-
-        options.Add("상관없어요         [타이틀로]"); options.Add("그런 건 싫어요    [다시하기]");
-        yield return StartCoroutine(WaitForChoice("", "그 누구도 당신을 기억하는 사람은 없을 것입니다", options));
+        yield return StartCoroutine(WaitForChoice("", "다시 플레이 하시겠습니까?", options));
         playersChoice = UIManager.instance.GetPlayersChoice();
 
         if (playersChoice == 0) { 
-            yield return StartCoroutine(WaitForTalk("", "알겠습니다. 그럼 조심히 잘 가시길", 2.5f));
+            yield return StartCoroutine(WaitForTalk("", "플레이해 주셔서 감사합니다. 안녕히 가십시오", 2.5f));
             GoTitle();
         }
-        else { 
-            yield return StartCoroutine(WaitForTalk("", "그렇다면 이번엔 부디 원하는 바를 이루시길", 2.5f));
+        else {
+            yield return StartCoroutine(WaitForTalk("", "모험을 다시 시작합니다", 2f));
+            yield return StartCoroutine(WaitForTalk("", "3", 1f));
+            yield return StartCoroutine(WaitForTalk("", "2", 1f));
+            yield return StartCoroutine(WaitForTalk("", "1", 1f));
             GameStart();
         }
     }
@@ -279,8 +264,10 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(Stage2to3());
                 break;
 			case Phase.Phase_3:
-                // 게임 클리어
-				break;
+                phase = Phase.Phase_1;
+                EnemyManager.instance.SetStage(phase);
+                StartCoroutine(GameClear());
+                break;
 		}
 	}
     private IEnumerator Stage1to2() 
@@ -316,6 +303,38 @@ public class GameManager : MonoBehaviour
 
         Player.instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
+    }
+    private IEnumerator GameClear() 
+    {
+        Player.instance.EnablePlayerInput(false);
+        Time.timeScale = 0.2f; // 타임스케일 줄이기
+        yield return new WaitForSeconds(1f);
+        Time.timeScale = 1f; // 타임스케일 복귀
+        UIManager.instance.OnGameClear(); // 화면 페이드 아웃
+        yield return new WaitForSeconds(5.5f);
+
+        yield return StartCoroutine(WaitForTalk("", "축하드립니다. 모험을 성공적으로 마쳤습니다", 3f));
+
+        int playersChoice;  // 선택지
+        List<string> options = new List<string>();
+
+        options.Add("아니요"); options.Add("네");
+        yield return StartCoroutine(WaitForChoice("", "다시 플레이 하시겠습니까?", options));
+        playersChoice = UIManager.instance.GetPlayersChoice();
+
+        if (playersChoice == 0)
+        {
+            yield return StartCoroutine(WaitForTalk("", "플레이해 주셔서 감사합니다. 안녕히 가십시오", 2.5f));
+            GoTitle();
+        }
+        else
+        {
+            yield return StartCoroutine(WaitForTalk("", "모험을 다시 시작합니다", 2f));
+            yield return StartCoroutine(WaitForTalk("", "3", 1f));
+            yield return StartCoroutine(WaitForTalk("", "2", 1f));
+            yield return StartCoroutine(WaitForTalk("", "1", 1f));
+            GameStart();
+        }
     }
 }
 

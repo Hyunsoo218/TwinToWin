@@ -17,36 +17,27 @@ public class EffectManager : MonoBehaviour
 	{
         if (instance == null) instance = this;
         else Destroy(gameObject);
-        foreach (var item in enemyPoolingEffect)
+        
+	}
+	public void SetGame() 
+	{
+		dicEnemyPoolers.Clear();
+		dicPlayerPoolers.Clear();
+		foreach (var item in enemyPoolingEffect)
 		{
 			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
 			dicEnemyPoolers.Add(item.gameObject, cAddPooler);
-
-        }
+		}
 		foreach (var item in playerPoolingEffect)
 		{
 			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
 			dicPlayerPoolers.Add(item.gameObject, cAddPooler);
 		}
-	}
-	private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.I))
-		{
-			SlowEffect(true);
-		}
-		if (Input.GetKeyDown(KeyCode.O))
-		{
-			SlowEffect(false);
-		}
-	}
-	public void SetGame() 
-	{
 		DisableAllEffect(); 
 	}
     public void SetTitle()
     {
-		DisableAllEffect();
+
     }
     public GameObject GetEffect(GameObject objPrefab)
 	{
@@ -81,7 +72,7 @@ public class EffectManager : MonoBehaviour
     }
 	public GameObject GetClone(GameObject prefab) 
 	{
-		return Instantiate(prefab, transform);
+		return Instantiate(prefab);
 	}
 	public void SlowEffect(bool active, float slowAmount = 0.1f) 
 	{
