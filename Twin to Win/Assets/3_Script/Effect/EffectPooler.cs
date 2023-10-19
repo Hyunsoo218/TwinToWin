@@ -7,10 +7,9 @@ public class EffectPooler
 	private GameObject objOrigin;
 	private List<GameObject> arrEffects = new List<GameObject>();
 
-	public EffectPooler(GameObject objOrigin, int defaultCount)
+	public EffectPooler(GameObject objOrigin)
 	{
 		this.objOrigin = objOrigin;
-		AddObject(defaultCount);
 	}
 	public GameObject OutPool()
 	{
@@ -25,7 +24,7 @@ public class EffectPooler
 		AddObject(10);
 		return OutPool();
 	}
-	private void AddObject(int nCount)
+	public void AddObject(int nCount)
 	{
 		for (int i = 0; i < nCount; i++)
 		{

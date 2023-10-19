@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 		yield return null;
         List<string> options = new List<string>();
         int playersChoice;
-        Player.instance.EnablePlayerInput(false);
+
         options.Add("¾Æ´Ï¿ä");
         options.Add("³×");
         yield return StartCoroutine(WaitForChoice("", "Æ©Åä¸®¾óÀ» °Ç³Ê¶Ù½Ã°Ú½À´Ï±î?", options));
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¹¹¾î¾î¾î¾î¾î¾î¾î¾î¾î¾î?!"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "ÀÏ´Ü Á» ÁøÁ¤ÇØ ¾ð´Ï"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¾î¶»°Ô ÁøÁ¤À»---", 0.4f));
-            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WTD_tutorial);
+            EnemyManager.instance.OnActiveEnemy(TutorialEnemySet.WTD_tutorial);
             EnemyManager.instance.StopAllEnemy();
             CameraManager.instance.OnCamActive(CamType.WTD_tutorial, 2f);
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã"));
@@ -103,17 +103,17 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "ÇÏÇÏ! ºÃ´À³Ä! ÀÌ ½ºÄ®·¿ ´ÔÀÇ ½Ç·ÂÀ»!"));
             yield return StartCoroutine(WaitForTalk("¾Ù¸®½º", "¾ð´Ï. ¾ÆÁ÷ ¾È ³¡³µ¾î"));
 
-            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WGS_tutorial_1);
+            EnemyManager.instance.OnActiveEnemy(TutorialEnemySet.WGS_tutorial_1);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "ÀÌ¹ø¿¡µµ ÇÑ ¹æ¿¡---", 0.4f));
 
-            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WGS_tutorial_2);
+            EnemyManager.instance.OnActiveEnemy(TutorialEnemySet.WGS_tutorial_2);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã ³¢±ã"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¸ç, ¸î ¸¶¸®°¡ ¿Àµç ÀÌ ½ºÄ®·¿ ´ÔÀÌ---", 0.4f));
 
-            EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.WGS_tutorial_3);
+            EnemyManager.instance.OnActiveEnemy(TutorialEnemySet.WGS_tutorial_3);
             EnemyManager.instance.StopAllEnemy();
             yield return StartCoroutine(WaitForTalk("¸ó½ºÅÍ", "³¢±ã ³¢±ã ³¢±ã ³¢±ã ³¢±ã"));
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", ".....")); 
@@ -150,7 +150,11 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitForTalk("½ºÄ®·¿", "¾Æ ÁøÂ¥! Áö±Ý±îÁø Áø½ÉÀÌ ¾Æ´Ï¾ú´Ù°í!"));
         }
 
+        phase = Phase.Phase_1;
+        EnemyManager.instance.SetStage(phase);
+
         UIManager.instance.OnStageUI(StageNumber.one);
+
         EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.Stage1_1);
         EnemyManager.instance.StopAllEnemy();
         yield return new WaitForSeconds(3.5f);
@@ -235,16 +239,21 @@ public class GameManager : MonoBehaviour
     private IEnumerator GameStartCo() 
     {
         yield return null;
-        phase = Phase.Phase_1;
+
+        phase = Phase.Tutorial;
         StageManager.instance.UpdateNavMeshOne();
         UIManager.instance.SetGame();
         Player.instance.SetGame();
         CameraManager.instance.SetGame();
         EnemyManager.instance.SetGame();
         EnemyManager.instance.SetStage(phase);
-        EffectManager.instance.SetGame();
         CutSceneManager.instance.SetGame();
-        yield return null;
+
+        Player.instance.EnablePlayerInput(false);
+
+        UIManager.instance.ActiveLodingUI(true);
+        yield return StartCoroutine(EffectManager.instance.SetGame());
+        UIManager.instance.ActiveLodingUI(false);
         gameStage = GameStage.Game;
         Stage1Start();
     }
@@ -268,6 +277,11 @@ public class GameManager : MonoBehaviour
                 EnemyManager.instance.SetStage(phase);
                 StartCoroutine(GameClear());
                 break;
+            case Phase.Tutorial:
+                phase = Phase.Phase_1;
+                EnemyManager.instance.SetStage(phase);
+                break;
+               
 		}
 	}
     private IEnumerator Stage1to2() 
@@ -342,7 +356,8 @@ public enum Phase
 {
 	Phase_1,
 	Phase_2,
-	Phase_3
+	Phase_3,
+    Tutorial
 }
 public enum GameStage 
 {

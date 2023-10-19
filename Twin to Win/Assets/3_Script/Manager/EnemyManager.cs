@@ -18,8 +18,10 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private GameObject tStage2;
     [SerializeField] private GameObject tStage3;
 
-    private List<GameObject> prefabs = new List<GameObject>();
+    private List<GameObject> tutirialPrefabs = new List<GameObject>();
+    private List<GameObject> stage1Prefabs = new List<GameObject>();
 
+    private List<GameObject> tutirialClones = new List<GameObject>();
     private List<GameObject> stage1Clones = new List<GameObject>();
     private List<GameObject> stage2Clones = new List<GameObject>();
     private List<GameObject> stage3Clones = new List<GameObject>();
@@ -30,30 +32,35 @@ public class EnemyManager : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
-        prefabs.Add(WTD_tutorial);   
-        prefabs.Add(WGS_tutorial_1);   
-        prefabs.Add(WGS_tutorial_2);
-        prefabs.Add(WGS_tutorial_3);   
-        prefabs.Add(tStage1Enemy1);   
-        prefabs.Add(tStage1Enemy2);   
-        prefabs.Add(tStage1Enemy3);   
-        prefabs.Add(tStage1Enemy4);   
+
+        tutirialPrefabs.Add(WTD_tutorial);   
+        tutirialPrefabs.Add(WGS_tutorial_1);   
+        tutirialPrefabs.Add(WGS_tutorial_2);
+        tutirialPrefabs.Add(WGS_tutorial_3);   
+
+        stage1Prefabs.Add(tStage1Enemy1);   
+        stage1Prefabs.Add(tStage1Enemy2);   
+        stage1Prefabs.Add(tStage1Enemy3);
+        stage1Prefabs.Add(tStage1Enemy4);   
     }
     public void SetTitle()
     {
         stage1Clones.Clear();
         stage2Clones.Clear();
         stage3Clones.Clear();
+        tutirialClones.Clear();
     }
     public void SetGame()
     {
         stage1Clones.Clear();
         stage2Clones.Clear();
         stage3Clones.Clear();
-        for (int i = 0;i < prefabs.Count; i++) 
-        {
-            stage1Clones.Add(Instantiate(prefabs[i]));
-        }
+        tutirialClones.Clear();
+
+        for (int i = 0;i < stage1Prefabs.Count; i++)  
+            stage1Clones.Add(Instantiate(stage1Prefabs[i]));
+        for (int i = 0; i < tutirialPrefabs.Count; i++)
+            tutirialClones.Add(Instantiate(tutirialPrefabs[i]));
         stage2Clones.Add(Instantiate(tStage2));
         stage3Clones.Add(Instantiate(tStage3));
     }
@@ -70,8 +77,25 @@ public class EnemyManager : MonoBehaviour
 			case Phase.Phase_3:
                 clones = stage3Clones;
                 break;
+            case Phase.Tutorial:
+                clones = tutirialClones;
+                break;
 		}
 	}
+    public void OnActiveEnemy(TutorialEnemySet set)
+    {
+        monsterSetNum = (int)set;
+        if (clones.Count != monsterSetNum)
+        {
+            clones[monsterSetNum].SetActive(true);
+            StartActionAllEnemy();
+        }
+        else
+        {
+            monsterSetNum = 0;
+            GameManager.instance.StageClear();
+        }
+    }
     public void OnActiveEnemy(Stage1EnemySet set)
     {
         monsterSetNum = (int)set;
@@ -137,6 +161,7 @@ public class EnemyManager : MonoBehaviour
     }
     public void MonsterDie() 
     {
+        if (clones == tutirialClones) return;
         int monsterCount = MonsterCharacter.allMonsterCharacters.Count;
 		if (monsterCount == 0)
 		{
@@ -145,9 +170,13 @@ public class EnemyManager : MonoBehaviour
         }
     }
 }
+public enum TutorialEnemySet
+{
+    WTD_tutorial, WGS_tutorial_1, WGS_tutorial_2, WGS_tutorial_3
+}
 public enum Stage1EnemySet 
 {
-    WTD_tutorial, WGS_tutorial_1, WGS_tutorial_2, WGS_tutorial_3, Stage1_1
+    Stage1_1
 }
 public enum Stage2EnemySet
 {

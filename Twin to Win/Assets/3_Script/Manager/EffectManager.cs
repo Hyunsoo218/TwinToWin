@@ -5,6 +5,8 @@ using UnityEngine;
 public class EffectManager : MonoBehaviour
 {
 	public static EffectManager instance;
+	public int finishedPoolingObjCount = 0;
+	public int poolingObjCount = 0;
 
 	[SerializeField] private Material mHitEffectRed;
 	[SerializeField] private List<Effect> enemyPoolingEffect;
@@ -19,30 +21,53 @@ public class EffectManager : MonoBehaviour
 	{
         if (instance == null) instance = this;
         else Destroy(gameObject);
-        
+		poolingObjCount = enemyPoolingEffect.Count * 5;
+		poolingObjCount += playerPoolingEffect.Count * 5;
+		poolingObjCount += enemyPoolingEffectBomb.Count * 310;
 	}
-	public void SetGame() 
+	public IEnumerator SetGame() 
 	{
 		dicEnemyPoolers.Clear();
 		dicPlayerPoolers.Clear();
 		dicEnemyBombPoolers.Clear();
+		finishedPoolingObjCount = 0;
+
 		foreach (var item in enemyPoolingEffect)
 		{
-			EffectPooler cAddPooler = new EffectPooler(item.gameObject, 5);
+			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
+			for (int i = 0; i < 5; i++)
+			{
+				cAddPooler.AddObject(1);
+				finishedPoolingObjCount++;
+				yield return null;
+			}
 			dicEnemyPoolers.Add(item.gameObject, cAddPooler);
 		}
 		foreach (var item in playerPoolingEffect)
 		{
-			EffectPooler cAddPooler = new EffectPooler(item.gameObject, 5);
+			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
+			for (int i = 0; i < 5; i++)
+			{
+				cAddPooler.AddObject(1);
+				finishedPoolingObjCount++;
+				yield return null;
+			}
 			dicPlayerPoolers.Add(item.gameObject, cAddPooler);
 		}
 		foreach (var item in enemyPoolingEffectBomb)
 		{
-			EffectPooler cAddPooler = new EffectPooler(item.gameObject, 308);
+			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
+			for (int i = 0; i < 310; i++)
+			{
+				cAddPooler.AddObject(1);
+				finishedPoolingObjCount++;
+				yield return null;
+			}
 			dicEnemyBombPoolers.Add(item.gameObject, cAddPooler);
 		}
 		DisableAllEffect(); 
 	}
+
     public void SetTitle()
     {
 

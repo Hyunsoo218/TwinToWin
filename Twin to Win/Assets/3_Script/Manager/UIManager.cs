@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject stageUIPrefab;
     [SerializeField] private GameObject gameClear;
     [SerializeField] private Transform canvas;
+    [SerializeField] private LodingUI cLUI;
 	private StageUI cSUI;
 	public static UIManager instance;
 	private void Awake()
@@ -37,6 +38,7 @@ public class UIManager : MonoBehaviour
             Destroy(cSUI.gameObject);
         cSUI = Instantiate(stageUIPrefab, canvas).GetComponent<StageUI>();
         cSUI.gameObject.SetActive(false);
+        cLUI.gameObject.SetActive(false);
     }
 	public void SetGame() 
 	{
@@ -49,6 +51,7 @@ public class UIManager : MonoBehaviour
         cDFC.gameObject.SetActive(true);
         playerDie.SetActive(false);
         gameClear.SetActive(false);
+        cLUI.gameObject.SetActive(false);
     }
     private void Update()
 	{
@@ -135,5 +138,9 @@ public class UIManager : MonoBehaviour
     public void AcriveAllUI(bool active) 
     {
         canvas.gameObject.SetActive(active);
+    }
+    public void ActiveLodingUI(bool active) 
+    {
+        cLUI.gameObject.SetActive(active);
     }
 }
