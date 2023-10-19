@@ -4,8 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEditorInternal;
-using TreeEditor;
+//using UnityEditorInternal;
+//using TreeEditor;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour

@@ -46,11 +46,11 @@ public class BossCharacter : MonsterCharacter
 		bossPatterns.Add(BossPattern.Spin_Internal); 
 		bossPatterns.Add(BossPattern.Normal);
 		bossPatterns.Add(BossPattern.Spin_Outside); 
-		bossPatterns.Add(BossPattern.Normal);
-		bossPatterns.Add(BossPattern.Thorn); 
-		bossPatterns.Add(BossPattern.Normal);
-		bossPatterns.Add(BossPattern.Rush);
-		bossPatterns.Add(BossPattern.Normal);
+		//bossPatterns.Add(BossPattern.Normal);
+		//bossPatterns.Add(BossPattern.Thorn); 
+		//bossPatterns.Add(BossPattern.Normal);
+		//bossPatterns.Add(BossPattern.Rush);
+		//bossPatterns.Add(BossPattern.Normal);
 	}
 	protected override void StateInitializeOnEnter()
 	{

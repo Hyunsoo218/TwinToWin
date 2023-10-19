@@ -6,6 +6,7 @@ public class ParabolicBomb : Effect
 {
 	[SerializeField] private TargetType eTargetType;
 	[SerializeField] private DamagableSpaceControl cDSC;
+	[SerializeField] private GameObject bomb;
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
@@ -15,10 +16,12 @@ public class ParabolicBomb : Effect
 		this.fDamage = fDamage;
 		this.nTargetLayer = nTargetLayer;
 
+		bomb.SetActive(true);
+
 		transform.SetParent(tUser);
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		transform.localScale = Vector3.one;
 
 		StartCoroutine(MoveToTarget());
@@ -88,6 +91,15 @@ public class ParabolicBomb : Effect
 	}
 	public void Explosion() 
 	{
+		bomb.SetActive(false);
+		switch (eTargetType)
+		{
+			case TargetType.Player:
+			case TargetType.Player_forward:
+			case TargetType.Player_look:
+				soundComponent.PlayOneShot(clip);
+				break;
+		}
 		Collider[] colliders = Physics.OverlapSphere(transform.position, 1f, nTargetLayer);
 		foreach (Collider cItem in colliders)
 		{

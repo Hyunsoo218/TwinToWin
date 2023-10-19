@@ -5,6 +5,9 @@ using UnityEngine;
 public class Effect : MonoBehaviour
 {
 	[SerializeField] protected float fRunTime = 3f;
+	[SerializeField] protected AudioSource soundComponent;
+	[SerializeField] protected AudioClip clip;
+
 	protected List<Animator> animators = new List<Animator>();
 	protected List<ParticleSystem> particles = new List<ParticleSystem>();
 	protected float _MasterSpeed;
@@ -26,16 +29,16 @@ public class Effect : MonoBehaviour
 		}
 	}
 
-	protected virtual void Awake()
+	public virtual void Initialize()
 	{
 		Animator animator;
 		Animator[] inChildrenAnimators = GetComponentsInChildren<Animator>();
 		ParticleSystem particle;
 		ParticleSystem[] inChildrenParticles = GetComponentsInChildren<ParticleSystem>();
-		if (TryGetComponent<Animator>(out animator))		animators.Add(animator);
-		if (TryGetComponent<ParticleSystem>(out particle))	particles.Add(particle);
-		foreach (var item in inChildrenAnimators)			animators.Add(item);
-		foreach (var item in inChildrenParticles)			particles.Add(item);
+		if (TryGetComponent<Animator>(out animator)) animators.Add(animator);
+		if (TryGetComponent<ParticleSystem>(out particle)) particles.Add(particle);
+		foreach (var item in inChildrenAnimators) animators.Add(item);
+		foreach (var item in inChildrenParticles) particles.Add(item);
 		MasterSpeed = 1f;
 	}
 	protected virtual void OnEnable() => StartCoroutine(InPool());

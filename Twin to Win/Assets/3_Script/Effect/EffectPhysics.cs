@@ -8,9 +8,10 @@ public class EffectPhysics : Effect
 	protected Transform tUser;
 	protected float fDamage;
 	protected int nTargetLayer;
-	protected override void Awake()
+
+	public override void Initialize()
 	{
-		base.Awake();
+		base.Initialize();
 		cCollider = GetComponent<Collider>();
 		cCollider.enabled = false;
 	}
@@ -23,7 +24,7 @@ public class EffectPhysics : Effect
 		transform.SetParent(tUser);
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 
 		cCollider.enabled = true;
 		this.tUser = tUser;

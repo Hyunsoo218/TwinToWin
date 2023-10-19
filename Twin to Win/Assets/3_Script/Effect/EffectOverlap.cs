@@ -12,7 +12,7 @@ public class EffectOverlap : Effect
 		transform.SetParent(tUser);
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 
 		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
 

@@ -1,7 +1,7 @@
 
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 public class PlayerEffect : EffectOverlap
 {

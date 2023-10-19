@@ -22,6 +22,7 @@ public class PlayerStateUI : MonoBehaviour
 	[SerializeField] private Sprite WGS_R_OFF;
 	[SerializeField] private Sprite WGS_R_ON;
 	[SerializeField] private Hpbar hpbar;
+
     private Animator cAnimator;
     private void Awake()
 	{
@@ -34,7 +35,14 @@ public class PlayerStateUI : MonoBehaviour
 		float hp = Player.instance.GetPlayerHp();
 		hpbar.Initialize(maxHp, 0 , hp);
 	}
-    public void Convert()
+	private void OnEnable()
+	{
+		PlayerbleCharacter cWTD = Player.instance.GetTwinSword();
+		PlayerbleCharacter cCur = Player.instance.cCurrentCharacter;
+		string animationTrigger = (cCur == cWTD) ? "ToWTD" : "ToWGS";
+		cAnimator.SetTrigger(animationTrigger);
+	}
+	public void Convert()
 	{
 		cConvertUIAnimator.SetTrigger("On");
 

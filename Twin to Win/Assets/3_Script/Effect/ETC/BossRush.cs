@@ -12,9 +12,10 @@ public class BossRush : Effect
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
-	protected override void Awake()
+
+	public override void Initialize()
 	{
-		base.Awake();
+		base.Initialize();
 		cAnimator = GetComponent<Animator>();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)

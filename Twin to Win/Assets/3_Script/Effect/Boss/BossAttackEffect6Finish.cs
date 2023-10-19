@@ -19,7 +19,7 @@ public class BossAttackEffect6Finish : Effect
 		transform.SetParent(tUser.GetChild(1));
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		transform.localScale = Vector3.one;
 
 		cDSC.OnAction(1.5f, FillType.X_Y);

@@ -6,9 +6,9 @@ public class BrakeTileBomb : Effect
 {
     [SerializeField] private DamagableSpaceControl cDSC;
     private Animator cAnimator;
-	protected override void Awake()
-	{
-		base.Awake();
+    public override void Initialize()
+    {
+        base.Initialize();
         cAnimator = GetComponent<Animator>();
     }
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)

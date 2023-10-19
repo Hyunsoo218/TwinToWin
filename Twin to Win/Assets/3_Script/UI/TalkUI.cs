@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 public class TalkUI : MonoBehaviour
 {
@@ -64,7 +64,7 @@ public class TalkUI : MonoBehaviour
             bool wait = true;
             while (wait)
             {
-                if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+                if (Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0))
                     wait = false;
                 yield return null;
             }

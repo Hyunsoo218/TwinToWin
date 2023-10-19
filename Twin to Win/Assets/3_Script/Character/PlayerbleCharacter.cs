@@ -565,10 +565,10 @@ public class PlayerbleCharacter : Character
 
     private void DoTagWithoutPressKey()
     {
-        UIManager.instance.ConvertPlayer();
         Player.instance.ConvertCharacter();
         ChangeState(cTagState);
         CameraManager.instance.ResetCamera();
+        UIManager.instance.ConvertPlayer();
     }
 
     #endregion

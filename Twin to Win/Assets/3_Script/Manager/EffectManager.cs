@@ -8,9 +8,11 @@ public class EffectManager : MonoBehaviour
 
 	[SerializeField] private Material mHitEffectRed;
 	[SerializeField] private List<Effect> enemyPoolingEffect;
+	[SerializeField] private List<Effect> enemyPoolingEffectBomb;
 	[SerializeField] private List<Effect> playerPoolingEffect;
 
 	private Dictionary<GameObject, EffectPooler> dicEnemyPoolers = new Dictionary<GameObject, EffectPooler>();
+	private Dictionary<GameObject, EffectPooler> dicEnemyBombPoolers = new Dictionary<GameObject, EffectPooler>();
 	private Dictionary<GameObject, EffectPooler> dicPlayerPoolers = new Dictionary<GameObject, EffectPooler>();
 	private List<GameObject> allEffects = new List<GameObject>();
 	private void Awake()
@@ -23,15 +25,21 @@ public class EffectManager : MonoBehaviour
 	{
 		dicEnemyPoolers.Clear();
 		dicPlayerPoolers.Clear();
+		dicEnemyBombPoolers.Clear();
 		foreach (var item in enemyPoolingEffect)
 		{
-			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
+			EffectPooler cAddPooler = new EffectPooler(item.gameObject, 5);
 			dicEnemyPoolers.Add(item.gameObject, cAddPooler);
 		}
 		foreach (var item in playerPoolingEffect)
 		{
-			EffectPooler cAddPooler = new EffectPooler(item.gameObject);
+			EffectPooler cAddPooler = new EffectPooler(item.gameObject, 5);
 			dicPlayerPoolers.Add(item.gameObject, cAddPooler);
+		}
+		foreach (var item in enemyPoolingEffectBomb)
+		{
+			EffectPooler cAddPooler = new EffectPooler(item.gameObject, 308);
+			dicEnemyBombPoolers.Add(item.gameObject, cAddPooler);
 		}
 		DisableAllEffect(); 
 	}
@@ -48,6 +56,10 @@ public class EffectManager : MonoBehaviour
 		if (dicPlayerPoolers.ContainsKey(objPrefab))
 		{
 			return dicPlayerPoolers[objPrefab].OutPool();
+		}
+		if (dicEnemyBombPoolers.ContainsKey(objPrefab))
+		{
+			return dicEnemyBombPoolers[objPrefab].OutPool();
 		}
 		return Instantiate(objPrefab);
 	}

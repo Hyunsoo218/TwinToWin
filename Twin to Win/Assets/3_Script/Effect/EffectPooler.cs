@@ -7,10 +7,10 @@ public class EffectPooler
 	private GameObject objOrigin;
 	private List<GameObject> arrEffects = new List<GameObject>();
 
-	public EffectPooler(GameObject objOrigin)
+	public EffectPooler(GameObject objOrigin, int defaultCount)
 	{
 		this.objOrigin = objOrigin;
-		AddObject(5);
+		AddObject(defaultCount);
 	}
 	public GameObject OutPool()
 	{
@@ -22,7 +22,7 @@ public class EffectPooler
 				return arrEffects[i];
 			}
 		}
-		AddObject(5);
+		AddObject(10);
 		return OutPool();
 	}
 	private void AddObject(int nCount)
@@ -31,6 +31,7 @@ public class EffectPooler
 		{
 			GameObject obj = EffectManager.instance.GetClone(objOrigin);
 			arrEffects.Add(obj);
+			obj.GetComponent<Effect>().Initialize();
 			obj.SetActive(false);
 		}
 	}

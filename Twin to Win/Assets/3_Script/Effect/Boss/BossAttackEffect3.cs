@@ -19,7 +19,7 @@ public class BossAttackEffect3 : Effect
 		transform.SetParent(tUser.GetChild(1));
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		transform.localScale = Vector3.one;
 
 		coTrackUser = StartCoroutine(TrackUser());
@@ -39,9 +39,10 @@ public class BossAttackEffect3 : Effect
 	}
 	private IEnumerator Overlap() 
 	{
+		Collider[] arrOverlapObj;
 		for (int i = 0; i < 10; i++)
 		{
-			Collider[] arrOverlapObj = Physics.OverlapSphere(transform.position, 4.5f, nTargetLayer);
+			arrOverlapObj = Physics.OverlapSphere(transform.position, 4.5f, nTargetLayer);
 
 			foreach (Collider cItem in arrOverlapObj)
 			{
@@ -49,8 +50,6 @@ public class BossAttackEffect3 : Effect
 				if (cItem.TryGetComponent<Character>(out cTarget))
 				{
 					cTarget.Damage(fDamage);
-					print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
-					// 지우지 마영 - 디버그용							  		   
 				}
 			}
 			yield return new WaitForSeconds(0.33f);

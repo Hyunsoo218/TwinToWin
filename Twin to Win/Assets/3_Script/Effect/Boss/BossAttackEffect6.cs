@@ -14,9 +14,9 @@ public class BossAttackEffect6 : Effect
 	private float fDamage;
 	private int nTargetLayer;
 
-	protected override void Awake()
+	public override void Initialize()
 	{
-		base.Awake();
+		base.Initialize();
 		cAnimator = GetComponent<Animator>();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
@@ -39,7 +39,7 @@ public class BossAttackEffect6 : Effect
 	private IEnumerator OnAction()
 	{
 		float time = Time.time;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		transform.localScale = Vector3.one;
 
 		transform.SetParent(tUser.GetChild(1));
@@ -48,7 +48,7 @@ public class BossAttackEffect6 : Effect
 
 		yield return new WaitForSeconds(1f);
 
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
 		Collider[] arrOverlapObj = Physics.OverlapBox(vOverlapPos, vAttackAreaSize, transform.rotation, nTargetLayer);
 		foreach (Collider cItem in arrOverlapObj)

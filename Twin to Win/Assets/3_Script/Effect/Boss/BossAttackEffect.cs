@@ -8,15 +8,17 @@ public class BossAttackEffect : Effect
 	[SerializeField] private float fSpeed = 1f;
 	[SerializeField] private List<Transform> arrExplosionPos;
 	[SerializeField] private List<DamagableSpaceControl> arrDecalProjector;
+	[SerializeField] private Animator bombAnimator;
+	[SerializeField] private GameObject bomb;
 	private Animator cAnimator;
 	private int nExplosionCount = 0;
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
 
-	protected override void Awake()
+	public override void Initialize()
 	{
-		base.Awake();
+		base.Initialize();
 		cAnimator = GetComponent<Animator>();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
@@ -28,8 +30,11 @@ public class BossAttackEffect : Effect
 		transform.SetParent(tUser.GetChild(1));
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		transform.localScale = Vector3.one;
+
+		bomb.SetActive(true);
+		bombAnimator.SetTrigger("Move");
 
 		string strAnimationTrigger = "Action";
 		if (GameManager.instance.phase == Phase.Phase_3)
@@ -55,10 +60,14 @@ public class BossAttackEffect : Effect
 
 			yield return null;
 		}
+		bombAnimator.SetTrigger("Explosion");
 	}
 	public void Explosion()
 	{
+		bomb.SetActive(false);
 		nExplosionCount++;
+		soundComponent.PlayOneShot(clip);
+
 		switch (nExplosionCount)
 		{
 			case 1:

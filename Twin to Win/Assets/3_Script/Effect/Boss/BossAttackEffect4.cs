@@ -9,9 +9,9 @@ public class BossAttackEffect4 : Effect
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
-	protected override void Awake()
+	public override void Initialize()
 	{
-		base.Awake();
+		base.Initialize();
 		cAnimator = GetComponent<Animator>();
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
@@ -23,9 +23,9 @@ public class BossAttackEffect4 : Effect
 		transform.SetParent(tUser.GetChild(1));
 		transform.localPosition = Vector3.zero;
 		transform.localEulerAngles = Vector3.zero;
-		transform.SetParent(EffectManager.instance.transform);
+		transform.SetParent(null);
 		transform.localScale = Vector3.one;
-		transform.position = tUser.position;
+		//transform.position = tUser.position;
 
 		StartCoroutine(MakeParabolicBomb());
 		//if (GameManager.instance.phase == Phase.Phase_3)
