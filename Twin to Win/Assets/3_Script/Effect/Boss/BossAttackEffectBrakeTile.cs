@@ -20,7 +20,7 @@ public class BossAttackEffectBrakeTile : Effect
     }
     private IEnumerator OnAction() 
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             yield return new WaitForSeconds(2.5f);
             GameObject effect = EffectManager.instance.GetEffect(objEffect);

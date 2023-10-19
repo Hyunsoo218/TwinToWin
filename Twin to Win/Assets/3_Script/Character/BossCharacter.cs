@@ -99,7 +99,7 @@ public class BossCharacter : MonsterCharacter
     }
 	IEnumerator dd() 
 	{
-		yield return new WaitForSeconds(12f);
+		yield return new WaitForSeconds(15f);
 		ChangeState(cStateAttack6_Finish);
 	}
 	protected override void StateInitializeOnStay()

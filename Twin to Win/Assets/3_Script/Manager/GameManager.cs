@@ -193,6 +193,9 @@ public class GameManager : MonoBehaviour
         UIManager.instance.OnPlayerDie();// 화면 페이드 아웃
         yield return new WaitForSeconds(3.5f);
 
+        EffectManager.instance.DisableAllEffect();
+        EnemyManager.instance.StopAllEnemy();
+
         int playersChoice;  // 선택지
         List<string> options = new List<string>();
 

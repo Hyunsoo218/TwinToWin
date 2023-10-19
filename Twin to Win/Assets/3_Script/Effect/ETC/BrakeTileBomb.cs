@@ -23,6 +23,7 @@ public class BrakeTileBomb : Effect
     {
         cDSC.OnAction(3f,FillType.X_Y);
         yield return new WaitForSeconds(3f);
+        soundComponent.PlayOneShot(clip);
         Collider[] arrOverlapObj = Physics.OverlapSphere(transform.position, 3f, 1 << 6);
         foreach (Collider cItem in arrOverlapObj)
         {
@@ -36,6 +37,15 @@ public class BrakeTileBomb : Effect
                     box.GetComponent<MeshRenderer>().enabled = false;
                     box.gameObject.layer = 0;
                 }
+            }
+        }
+        arrOverlapObj = Physics.OverlapSphere(transform.position, 3f, 1 << 8);
+        foreach (Collider cItem in arrOverlapObj) 
+        { 
+            PlayerbleCharacter cPlayerble;
+            if (cItem.TryGetComponent<PlayerbleCharacter>(out cPlayerble))
+            {
+                cPlayerble.Damage(9999999f);
             }
         }
         StageManager.instance.UpdateNavMeshOne();
