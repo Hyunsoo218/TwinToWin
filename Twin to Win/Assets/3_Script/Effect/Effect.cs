@@ -7,6 +7,7 @@ public class Effect : MonoBehaviour
 	[SerializeField] protected float fRunTime = 3f;
 	[SerializeField] protected AudioSource soundComponent;
 	[SerializeField] protected AudioClip clip;
+	[SerializeField] protected bool criticalHit = false;
 
 	protected List<Animator> animators = new List<Animator>();
 	protected List<ParticleSystem> particles = new List<ParticleSystem>();
