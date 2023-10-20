@@ -18,6 +18,10 @@ public class BossAttackEffect6 : Effect
 	{
 		base.Initialize();
 		cAnimator = GetComponent<Animator>();
+		foreach (var item in arrRush)
+		{
+			item.Initialize();
+		}
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{

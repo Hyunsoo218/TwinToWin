@@ -11,9 +11,15 @@ public class TitleManager : CutScene
 	[SerializeField] private Animator WGS_animator;
 	[SerializeField] private Animator WTD_animator;
 	private Animator animator;
+	private bool start = false;
 
-	private void Awake() => animator = GetComponent<Animator>(); 
-	public void GameStart() => animator.SetTrigger("Start"); 
+	private void Awake() => animator = GetComponent<Animator>();  
+	public void GameStart()
+	{
+		if (start) return;
+		start = true;
+		animator.SetTrigger("Start"); 
+	}
 	public void SceneLoad() => GameManager.instance.GameStart();
 	public void ControlAnimatorWGS(int num) => WGS_animator.SetTrigger("Trigger_" + num);
 	public void ControlAnimatorWTD(int num) => WTD_animator.SetTrigger("Trigger_" + num);

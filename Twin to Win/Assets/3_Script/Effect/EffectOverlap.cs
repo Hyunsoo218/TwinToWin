@@ -23,18 +23,7 @@ public class EffectOverlap : Effect
 			Character cTarget;
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
-                DamageType type = DamageType.red;
-
-                if (Random.Range(0,100) < 30) 
-				{
-					type = DamageType.red;
-                    fDamage = fDamage * Random.Range(1f, 1.5f);
-                }
-
-				cTarget.Damage(fDamage);
-				UIManager.instance.OnDamageFont(cTarget.transform.position, type, fDamage);
-				//print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
-				// 지우지 마영 - 디버그용							  		   
+				DamageCalculator.OnDamage(cTarget, fDamage);					  		   
 			}
 		}
 
