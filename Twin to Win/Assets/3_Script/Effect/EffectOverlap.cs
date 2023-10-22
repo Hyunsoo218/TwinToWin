@@ -23,7 +23,7 @@ public class EffectOverlap : Effect
 			Character cTarget;
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
-				DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);					  		   
+				DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 			}
 		}
 

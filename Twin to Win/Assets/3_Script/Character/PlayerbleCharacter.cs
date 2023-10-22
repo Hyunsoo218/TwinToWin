@@ -96,10 +96,15 @@ public class PlayerbleCharacter : Character
     public struct Skill
     {
         public GameObject objSkillEffect;
+        public GameObject[] objSkillArea;
         public float fSkillCoolDown;
+        public float[] fSkillDamage;
         public float fMoveTimeOnBySkill;
     }
     protected float fMoveOnBySkillTimer;
+    protected int fSkillDamageLinearCount = 0;
+    protected int fSkillAreaCount = 0;
+    [HideInInspector] public bool isSkillEffectFollowingPlayer = false;
     #endregion
 
     #region QSkill Var
@@ -162,10 +167,10 @@ public class PlayerbleCharacter : Character
 
     protected virtual void StateInitalizeOnExit()
     {
-        cQSkillState.onExit += () => { Player.instance.canTag = true; };
-        cWSkillState.onExit += () => { Player.instance.canTag = true; };
-        cESkillState.onExit += () => { Player.instance.canTag = true; };
-        cRSkillState.onExit += () => { Player.instance.canTag = true; };
+        cQSkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
+        cWSkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
+        cESkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
+        cRSkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
         cNormalAttack[0].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
         cNormalAttack[1].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
         cNormalAttack[2].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
@@ -476,11 +481,75 @@ public class PlayerbleCharacter : Character
         KeepHoldMove();
     }
 
-    protected void EnableAttackEffect(float damage)
+    /*
+    * 스킬 데미지 주는 방법
+    * 데미지 주는 방식은 총 4가지.
+    * 1. 이펙트 켬과 동시에 데미지 : OnNonLinearDamage를 애니메이션 이벤트 함수에 추가 후 float에는 데미지
+    * 2. 이펙트 켬과 동시에 순차적 데미지 : 플레이어 inspector 창에 있는 Damage 배열에 데미지 추가 후 애니메이션 이벤트에는 OnLinearDamage만 추가
+    * 3. 이펙트가 플레이어를 따라다니면서 일정 간격 지속 딜 :  OnFollowPlayerSkillDamage를 애니메이션 이벤트에 넣는데 float에 스킬 총 플레이 타임, int에 총 타격 횟수, 데미지는 2와 동일 [문제점: 코루틴이라 독딜처럼 딜이 들어감]
+    * 4. 이펙트와 데미지 따로 분리 : OnDamageWithoutEffect, OnEffectWithoutDamage 애니메이션 이벤트에 추가. [문제점 : 잠깐이지만 Clone 두 개 켜짐]  
+    *                               OnDamageWithoutEffect는 inspector에서 스킬 범위를 나타내는 프리펩을 따로 넣어야함
+    */
+
+    public void OnNonLinearDamage(float damage)
     {
-        GameObject obj = EffectManager.instance.GetEffect(objAttackEffect);
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
         float finalDamage = ChangeDamageToRandom(damage);
-        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
+
+        playerEffect.OnSkillEffect(transform);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+    }
+    public virtual void OnLinearDamage()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[fSkillDamageLinearCount]);
+
+        playerEffect.OnSkillEffect(transform);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+
+        if (fSkillDamageLinearCount != srtCurrentSkill.fSkillDamage.Length - 1)
+        {
+            fSkillDamageLinearCount++;
+        }
+    }
+
+    public void OnFollowPlayerSkillDamage(AnimationEvent skillEvent)
+    {
+        float finalDamage = 0f;
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        isSkillEffectFollowingPlayer = true;
+
+        for (int i = 0; i < srtCurrentSkill.fSkillDamage.Length; i++)
+        {
+            finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[i]);
+        }
+        obj.GetComponent<PlayerEffect>().OnSkillEffect(transform);
+        obj.GetComponent<PlayerEffect>().OnSkillContinueDamage(transform, finalDamage, 1 << 7, skillEvent.floatParameter, skillEvent.intParameter);
+    }
+
+    public void OnDamageWithoutEffect(float damage)
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillArea[fSkillAreaCount]);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(damage);
+
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+        
+
+        if (fSkillAreaCount != srtCurrentSkill.objSkillArea.Length - 1)
+        {
+            fSkillAreaCount++;
+        }
+    }
+
+    public void OnEffectWithoutDamage()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+
+        playerEffect.OnSkillEffect(transform);
     }
 
     protected void EnableRotationAttackEffect(float damage)

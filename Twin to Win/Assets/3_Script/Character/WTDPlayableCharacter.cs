@@ -67,19 +67,25 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             && cStateMachine.GetCurrentState() != cToStandState;
     }
 
-    public void EnableSkillEffect(float damage)
+    public override void OnLinearDamage()
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         Collider monster = obj.GetComponent<PlayerEffect>().GetMonsterInOverlap(transform);
-        float finalDamage = ChangeDamageToRandom(damage);
+        float finalDamage = 0f;
+
+        for (int i = 0; i < srtCurrentSkill.fSkillDamage.Length; i++)
+        {
+            finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[i]);
+        }
 
         if (monster != null && srtCurrentSkill.Equals(srtQSkill))
         {
             finalDamage = ReduceDamageToMonster(monster, finalDamage, 80f);
         }
-        
+
         obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
         ResetCoolDownWhenMonsterDie(srtCurrentSkill, monster);
+
     }
 
     private float ReduceDamageToMonster(Collider target, float damage, float percent)

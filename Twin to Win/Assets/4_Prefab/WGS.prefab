@@ -1610,28 +1610,39 @@ MonoBehaviour:
   objRotationAttackEffect: {fileID: 7777573416650849465, guid: b6b8143a30683f2469e4153318f661e3,
     type: 3}
   srtQSkill:
-    objSkillEffect: {fileID: 7777573416650849465, guid: a469e878a67a7f345baa80a738bfd066,
+    objSkillEffect: {fileID: 1687933637933312804, guid: 7af160710142b3641a88b97c3a38ecb7,
       type: 3}
     fSkillCoolDown: 15
+    fSkillDamage:
+    - 200
+    - 200
+    - 300
     fMoveTimeOnBySkill: 0
   srtWSkill:
-    objSkillEffect: {fileID: 7777573416650849465, guid: 87b856fa9bc0bfa42919f2ec05de56b5,
+    objSkillEffect: {fileID: 4968920877767275827, guid: 661379ada5f4d9648a4584d4014223d5,
       type: 3}
     fSkillCoolDown: 15
+    fSkillDamage:
+    - 70
     fMoveTimeOnBySkill: 0.2
   srtESkill:
-    objSkillEffect: {fileID: 7777573416650849465, guid: 25ee29cebcda72b4c8578dc6af0783f3,
+    objSkillEffect: {fileID: 4968920877767275827, guid: edb740669e7386947b5d71e349e7457e,
       type: 3}
     fSkillCoolDown: 15
+    fSkillDamage:
+    - 90
     fMoveTimeOnBySkill: 0
   srtRSkill:
-    objSkillEffect: {fileID: 0}
+    objSkillEffect: {fileID: 7124031472308039348, guid: 93b1270768814394391ed4b77062709b,
+      type: 3}
     fSkillCoolDown: 0
+    fSkillDamage: []
     fMoveTimeOnBySkill: 0
   objWGSMouseIndicator: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}
   objWTDMouseIndicator: {fileID: 1745249769378136, guid: 0a897a89c8da03c4a9e1843939845a68,
     type: 3}
+  isSkillEffectFollowingPlayer: 0
 --- !u!1 &3461530097919017278
 GameObject:
   m_ObjectHideFlags: 0

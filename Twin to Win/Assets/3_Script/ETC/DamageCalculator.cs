@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DamageCalculator
 {
-    public static void OnDamage(Character target, float defaultDamage, bool criticalHit = false) 
+    public static void OnDamage(Character target, float defaultDamage, bool criticalHit = false)
     {
         DamageType fontColor = DamageType.normal;
 

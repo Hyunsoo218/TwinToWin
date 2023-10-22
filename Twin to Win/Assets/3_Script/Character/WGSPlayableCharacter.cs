@@ -7,9 +7,13 @@ using UnityEngine.InputSystem;
 
 public class WGSPlayableCharacter : PlayerbleCharacter
 {
+    private GameObject objWeaponPrefab = null;
+    private GameObject objWeapon = null;
     protected override void Awake()
     {
         base.Awake();
+        objWeaponPrefab = GameObject.Find("Root/center/Hips/Spine/Chest/Upper_Chest/Clavicle_R/Upper_Arm_R/Lower_Arm_R/Hand_R/Prop_R/Prop_03_GreatSword");
+        objWeapon = GameObject.Find("Root/center/Hips/Spine/Chest/Upper_Chest/Clavicle_R/Upper_Arm_R/Lower_Arm_R/Hand_R/Prop_R/Prop_03_GreatSword/Prop_03_greatsword");
         Initialize();
     }
     protected override void FixedUpdate()
@@ -32,15 +36,15 @@ public class WGSPlayableCharacter : PlayerbleCharacter
     {
         base.StateInitalizeOnExit();
         cQSkillState.onExit += () => { UIManager.instance.OnSkillBtn(KeyCode.Q, true, true); };
-        cESkillState.onExit += () => { UIManager.instance.OnSkillBtn(KeyCode.E, true, true); StartWGSESkillCoolDownCoroutine(); };
+        cWSkillState.onExit += () => { isSkillEffectFollowingPlayer = false; };
+        cESkillState.onExit += () => { UIManager.instance.OnSkillBtn(KeyCode.E, true, true); StartWGSESkillCoolDownCoroutine(); isSkillEffectFollowingPlayer = false; };
+        cRSkillState.onExit += () => { isSkillEffectFollowingPlayer = false; objWeapon.SetActive(true); };
     }
+
     #endregion
 
     #region E Skill Var
     private float fESkillHoldTime = 3f;
-    #endregion
-
-    #region Skill Var
     #endregion
 
     #region Normal Attack Part
@@ -62,8 +66,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 
     #endregion
 
-
-
     private bool EnableSkill()
     {
         return cStateMachine.GetCurrentState() != cQSkillState
@@ -73,13 +75,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState;
     }
-
-    public void EnableSkillEffect(float damage)
-    {
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        float finalDamage = ChangeDamageToRandom(damage);
-        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
-	}
 
     public override void Damage(float fAmount)
     {
@@ -283,6 +278,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             RSkillGauge.Instance.fBlueGauge = 0f;
             srtCurrentSkill = srtRSkill;
             ChangeState(cRSkillState);
+            OnWGSRSkill();
         }
     }
 
@@ -319,6 +315,15 @@ public class WGSPlayableCharacter : PlayerbleCharacter
                 Debug.Log("SkillType is Null!");
                 break;
         }
+    }
+
+    private void OnWGSRSkill()
+    {
+        isSkillEffectFollowingPlayer = true;
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        obj.GetComponent<WGSR>().StartWGSREffect();
+        obj.GetComponent<PlayerEffect>().OnSkillEffect(objWeaponPrefab.transform);
+        objWeapon.SetActive(false);
     }
 
 }
