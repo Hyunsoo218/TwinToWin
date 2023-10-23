@@ -417,6 +417,83 @@ public class PlayerbleCharacter : Character
     #endregion
 
     #region Skill Part
+    /*
+    * 스킬 데미지 주는 방법
+    * 데미지 주는 방식은 총 4가지.
+    * 1. 이펙트 켬과 동시에 데미지 : OnNonLinearDamage를 애니메이션 이벤트 함수에 추가 후 float에는 데미지
+    * 2. 이펙트 켬과 동시에 순차적 데미지 : 플레이어 inspector 창에 있는 Damage 배열에 데미지 추가 후 애니메이션 이벤트에는 OnLinearDamage만 추가
+    * 3. 이펙트가 플레이어를 따라다니면서 일정 간격 지속 딜 :  OnFollowPlayerSkillDamage를 애니메이션 이벤트에 넣는데 float에 스킬 총 플레이 타임, int에 총 타격 횟수, 데미지는 2와 동일 [문제점: 코루틴이라 독딜처럼 딜이 들어감]
+    * 4. 이펙트와 데미지 따로 분리 : OnDamageWithoutEffect, OnEffectWithoutDamage 애니메이션 이벤트에 추가. [문제점 : 잠깐이지만 Clone 두 개 켜짐]  
+    *                               OnDamageWithoutEffect는 inspector에서 스킬 범위를 나타내는 프리펩을 따로 넣어야함
+    */
+
+    public void OnNonLinearDamage(float damage)
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(damage);
+
+        playerEffect.OnSkillEffect(transform);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+    }
+    public virtual void OnLinearDamage()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[fSkillDamageLinearCount]);
+
+        playerEffect.OnSkillEffect(transform);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+
+        if (fSkillDamageLinearCount != srtCurrentSkill.fSkillDamage.Length - 1)
+        {
+            fSkillDamageLinearCount++;
+        }
+    }
+
+    public void OnFollowPlayerSkillDamage(AnimationEvent skillEvent)
+    {
+        float finalDamage = 0f;
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        isSkillEffectFollowingPlayer = true;
+
+        for (int i = 0; i < srtCurrentSkill.fSkillDamage.Length; i++)
+        {
+            finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[i]);
+        }
+        obj.GetComponent<PlayerEffect>().OnSkillEffect(transform);
+        obj.GetComponent<PlayerEffect>().OnSkillContinueDamage(transform, finalDamage, 1 << 7, skillEvent.floatParameter, skillEvent.intParameter);
+    }
+
+    public void OnDamageWithoutEffect(float damage)
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillArea[fSkillAreaCount]);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(damage);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+
+
+        if (fSkillAreaCount != srtCurrentSkill.objSkillArea.Length - 1)
+        {
+            fSkillAreaCount++;
+        }
+    }
+
+    public void OnEffectWithoutDamage()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+
+        playerEffect.OnSkillEffect(transform);
+    }
+
+    protected void EnableRotationAttackEffect(float damage)
+    {
+        GameObject obj = EffectManager.instance.GetEffect(objRotationAttackEffect);
+        float finalDamage = ChangeDamageToRandom(damage);
+        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
+    }
+
 
     private void OnMoveOnBySkill(AnimationEvent skillEvent)   // 애니메이션 이벤트에서 power 수정
     {
@@ -479,84 +556,6 @@ public class PlayerbleCharacter : Character
         yield return new WaitUntil(() => fNormalAttackCancelTimer > 0.2f || cStateMachine.GetCurrentState() == cIdleState);
         fNormalAttackCancelTimer = 0f;
         KeepHoldMove();
-    }
-
-    /*
-    * 스킬 데미지 주는 방법
-    * 데미지 주는 방식은 총 4가지.
-    * 1. 이펙트 켬과 동시에 데미지 : OnNonLinearDamage를 애니메이션 이벤트 함수에 추가 후 float에는 데미지
-    * 2. 이펙트 켬과 동시에 순차적 데미지 : 플레이어 inspector 창에 있는 Damage 배열에 데미지 추가 후 애니메이션 이벤트에는 OnLinearDamage만 추가
-    * 3. 이펙트가 플레이어를 따라다니면서 일정 간격 지속 딜 :  OnFollowPlayerSkillDamage를 애니메이션 이벤트에 넣는데 float에 스킬 총 플레이 타임, int에 총 타격 횟수, 데미지는 2와 동일 [문제점: 코루틴이라 독딜처럼 딜이 들어감]
-    * 4. 이펙트와 데미지 따로 분리 : OnDamageWithoutEffect, OnEffectWithoutDamage 애니메이션 이벤트에 추가. [문제점 : 잠깐이지만 Clone 두 개 켜짐]  
-    *                               OnDamageWithoutEffect는 inspector에서 스킬 범위를 나타내는 프리펩을 따로 넣어야함
-    */
-
-    public void OnNonLinearDamage(float damage)
-    {
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
-        float finalDamage = ChangeDamageToRandom(damage);
-
-        playerEffect.OnSkillEffect(transform);
-        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
-    }
-    public virtual void OnLinearDamage()
-    {
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
-        float finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[fSkillDamageLinearCount]);
-
-        playerEffect.OnSkillEffect(transform);
-        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
-
-        if (fSkillDamageLinearCount != srtCurrentSkill.fSkillDamage.Length - 1)
-        {
-            fSkillDamageLinearCount++;
-        }
-    }
-
-    public void OnFollowPlayerSkillDamage(AnimationEvent skillEvent)
-    {
-        float finalDamage = 0f;
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        isSkillEffectFollowingPlayer = true;
-
-        for (int i = 0; i < srtCurrentSkill.fSkillDamage.Length; i++)
-        {
-            finalDamage = ChangeDamageToRandom(srtCurrentSkill.fSkillDamage[i]);
-        }
-        obj.GetComponent<PlayerEffect>().OnSkillEffect(transform);
-        obj.GetComponent<PlayerEffect>().OnSkillContinueDamage(transform, finalDamage, 1 << 7, skillEvent.floatParameter, skillEvent.intParameter);
-    }
-
-    public void OnDamageWithoutEffect(float damage)
-    {
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillArea[fSkillAreaCount]);
-        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
-        float finalDamage = ChangeDamageToRandom(damage);
-
-        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
-        
-
-        if (fSkillAreaCount != srtCurrentSkill.objSkillArea.Length - 1)
-        {
-            fSkillAreaCount++;
-        }
-    }
-
-    public void OnEffectWithoutDamage()
-    {
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
-
-        playerEffect.OnSkillEffect(transform);
-    }
-
-    protected void EnableRotationAttackEffect(float damage)
-    {
-        GameObject obj = EffectManager.instance.GetEffect(objRotationAttackEffect);
-        float finalDamage = ChangeDamageToRandom(damage);
-        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
     }
     protected virtual void IncreaseAttackCount() { print("You have not added anything"); }
 

@@ -1,7 +1,5 @@
 
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerEffect : EffectOverlap
@@ -9,9 +7,11 @@ public class PlayerEffect : EffectOverlap
     [SerializeField] bool isSphere = false;
     [SerializeField] float sphereAttackAreaRange = 0f;
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
+
         if (isSphere == true)
         {
             Gizmos.DrawWireSphere(transform.position, sphereAttackAreaRange);
@@ -22,6 +22,7 @@ public class PlayerEffect : EffectOverlap
         }
 
     }
+#endif
 
     public void OnSkillDamage(Transform tUser, float fDamage, int nTargetLayer)
     {
@@ -47,17 +48,9 @@ public class PlayerEffect : EffectOverlap
             Character cTarget;
             if (cItem.TryGetComponent<Character>(out cTarget))
             {
-                DamageCalculator.OnDamage(cTarget, fDamage, true);
+                DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
             }
         }
-    }
-
-    public void OnSkillDamageWithoutEffect(Transform tUser, float fDamage, int nTargetLayer)
-    {
-        transform.SetParent(tUser);
-        transform.localPosition = Vector3.zero;
-        transform.localEulerAngles = Vector3.zero;
-        transform.SetParent(null);
     }
 
     public void OnSkillEffect(Transform tUser)

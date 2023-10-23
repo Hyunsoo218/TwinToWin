@@ -439,6 +439,16 @@ PrefabInstance:
       propertyPath: srtWSkill.fSkillCoolDown
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8684553731372817573, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: srtQSkill.objSkillArea.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684553731372817573, guid: 00db585ca94e45d45ab217c7f3ca0dee,
+        type: 3}
+      propertyPath: srtRSkill.objSkillArea.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

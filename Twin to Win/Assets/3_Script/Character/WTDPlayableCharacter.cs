@@ -323,7 +323,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             fFreeFallTimer += Time.deltaTime;
             transform.position = FreeFall(Parabola(transform.position, hit.point, parabolaHighestHeight, fParabolaTimer / 1f).y, fFreeFallTimer);
         }
-        effect.GetComponent<Effect>().OnAction(transform, 0f, 1 << 7);
+        effect.GetComponent<PlayerEffect>().OnSkillEffect(transform);
         return Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Ground")) && fParabolaTimer >= 0.5f;
     }
 

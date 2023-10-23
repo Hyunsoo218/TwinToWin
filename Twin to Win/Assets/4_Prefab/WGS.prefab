@@ -1612,6 +1612,7 @@ MonoBehaviour:
   srtQSkill:
     objSkillEffect: {fileID: 1687933637933312804, guid: 7af160710142b3641a88b97c3a38ecb7,
       type: 3}
+    objSkillArea: []
     fSkillCoolDown: 15
     fSkillDamage:
     - 200
@@ -1621,6 +1622,7 @@ MonoBehaviour:
   srtWSkill:
     objSkillEffect: {fileID: 4968920877767275827, guid: 661379ada5f4d9648a4584d4014223d5,
       type: 3}
+    objSkillArea: []
     fSkillCoolDown: 15
     fSkillDamage:
     - 70
@@ -1628,6 +1630,8 @@ MonoBehaviour:
   srtESkill:
     objSkillEffect: {fileID: 4968920877767275827, guid: edb740669e7386947b5d71e349e7457e,
       type: 3}
+    objSkillArea:
+    - {fileID: 7777573416650849465, guid: 7ecb3a468d3f0f6498398cd72aaebab9, type: 3}
     fSkillCoolDown: 15
     fSkillDamage:
     - 90
@@ -1635,6 +1639,8 @@ MonoBehaviour:
   srtRSkill:
     objSkillEffect: {fileID: 7124031472308039348, guid: 93b1270768814394391ed4b77062709b,
       type: 3}
+    objSkillArea:
+    - {fileID: 7777573416650849465, guid: a98047da9a864144ca7c3134e03b2705, type: 3}
     fSkillCoolDown: 0
     fSkillDamage: []
     fMoveTimeOnBySkill: 0
