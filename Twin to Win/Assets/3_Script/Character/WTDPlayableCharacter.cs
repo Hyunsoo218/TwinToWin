@@ -70,6 +70,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     public override void OnLinearDamage()
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
         Collider monster = obj.GetComponent<PlayerEffect>().GetMonsterInOverlap(transform);
         float finalDamage = 0f;
 
@@ -83,13 +84,19 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             finalDamage = ReduceDamageToMonster(monster, finalDamage, 80f);
         }
 
-        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
+        playerEffect.OnSkillEffect(transform);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
         ResetCoolDownWhenMonsterDie(srtCurrentSkill, monster);
+
+        if (fSkillDamageLinearCount != srtCurrentSkill.fSkillDamage.Length - 1)
+        {
+            fSkillDamageLinearCount++;
+        }
 
     }
 
     private float ReduceDamageToMonster(Collider target, float damage, float percent)
-    {
+    { 
         if (target.GetComponent<MonsterCharacter>().GetMaxHP() > damage)
         {
             return damage;
@@ -343,6 +350,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             srtCurrentSkill = srtRSkill;
             GameManager.instance.AsynchronousExecution(StartRedRSkillTime(fRSkillConsumeTime));
             EnemyManager.instance.SlowAllEnemy(0.1f);
+            OnEffectWithoutDamage();
         }
     }
 

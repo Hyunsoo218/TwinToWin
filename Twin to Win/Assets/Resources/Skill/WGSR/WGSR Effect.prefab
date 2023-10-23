@@ -41,22 +41,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -3.7493994e-33
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -6.123234e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
-        type: 3}
-      propertyPath: m_LocalRotation.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
         type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
+        type: 3}
       propertyPath: m_LocalRotation.z
-      value: 6.123234e-17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d5b8a2dfe354537448a8dc78e77ee057,
         type: 3}
@@ -73,6 +73,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: d5b8a2dfe354537448a8dc78e77ee057,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 5099843062312174770, guid: 706f6c5fac2776e43b6ddf2551987b4f,
+        type: 3}
     - target: {fileID: -3887185075125053422, guid: d5b8a2dfe354537448a8dc78e77ee057,
         type: 3}
       propertyPath: m_DirtyAABB
@@ -199,10 +205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ed2dacb478d4e4cad0c3f014cc0457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fRunTime: 3
+  fRunTime: 5
   soundComponent: {fileID: 0}
   clip: {fileID: 0}
-  criticalHit: 0
+  criticalHit: 1
   bPreviewOverlapArea: 0
   vAttackAreaCenter: {x: 0, y: 1, z: 3}
   vAttackAreaSize: {x: 5, y: 1, z: 6}

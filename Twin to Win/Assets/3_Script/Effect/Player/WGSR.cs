@@ -11,6 +11,8 @@ public class WGSR : MonoBehaviour
     private Queue<Coroutine> qShapeKeys = new Queue<Coroutine>();
 
     private const int iTotalKey = 10;
+    private float maxTransparency = 1f;
+    private float minTransparency = 0f;
 
     private void Awake()
     {
@@ -21,13 +23,13 @@ public class WGSR : MonoBehaviour
     public void StartWGSREffect()
     {
         ResetTransparency();
-        StartCoroutine(StartIncreaseTransparency());
+        StartCoroutine(StartDecreaseTransparency());
         StartCoroutine(StartDecreaseShapesKey());
     }
 
     private void ResetTransparency()
     {
-        matWGSRSkill.SetFloat("_Transparency", 0.5f);
+        matWGSRSkill.SetFloat("_Transparency", maxTransparency);
     }
 
     private void ResetShapeKeys()
@@ -38,17 +40,31 @@ public class WGSR : MonoBehaviour
         }
     }
 
+    // 검이 땅에 박힐 때 투명도가 올라가는 방법 찾기
     private IEnumerator StartIncreaseTransparency()
     {
-        float minTransparency = -0.5f;
-        float transparencyDecreasingSpeed = 0.5f;
+        float transparencyDecreasingSpeed = 1.5f;
+
+        for (float i = matWGSRSkill.GetFloat("_Transparency"); i < maxTransparency; i += Time.deltaTime * transparencyDecreasingSpeed)
+        {
+            matWGSRSkill.SetFloat("_Transparency", i);
+            yield return null;
+        }
+        ResetTransparency();
+        ResetShapeKeys();
+    }
+
+    private IEnumerator StartDecreaseTransparency()
+    {
+
+        float transparencyDecreasingSpeed = 0.8f;
 
         for (float i = matWGSRSkill.GetFloat("_Transparency"); i > minTransparency; i -= Time.deltaTime * transparencyDecreasingSpeed)
         {
             matWGSRSkill.SetFloat("_Transparency", i);
             yield return null;
         }
-        ResetTransparency();
+        StartCoroutine(StartIncreaseTransparency());
     }
 
     private IEnumerator StartDecreaseShapesKey()
@@ -64,17 +80,12 @@ public class WGSR : MonoBehaviour
 
     private IEnumerator StartReduceIndividualShapesKey(int iCurrentKey)
     {
-        float decreasingSpeed = 100f;
+        float decreasingSpeed = 120f;
 
         for (float i = skinWGSRSkill.GetBlendShapeWeight(iCurrentKey); i > 0f; i -= Time.deltaTime * decreasingSpeed)
         {
             skinWGSRSkill.SetBlendShapeWeight(iCurrentKey, i);
             yield return null;
-        }
-
-        if (iCurrentKey == iTotalKey - 1)
-        {
-            ResetShapeKeys();
         }
 
         qShapeKeys.Dequeue();

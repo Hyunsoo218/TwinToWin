@@ -1,9 +1,8 @@
-
 using System.Collections;
 using UnityEngine;
-
 public class PlayerEffect : EffectOverlap
 {
+    [Header("Sphere Area")]
     [SerializeField] bool isSphere = false;
     [SerializeField] float sphereAttackAreaRange = 0f;
 

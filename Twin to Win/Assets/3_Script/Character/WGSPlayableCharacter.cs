@@ -322,7 +322,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         isSkillEffectFollowingPlayer = true;
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         obj.GetComponent<WGSR>().StartWGSREffect();
-        obj.GetComponent<PlayerEffect>().OnSkillEffect(objWeaponPrefab.transform);
+        obj.GetComponent<PlayerEffect>().OnSkillEffect(objWeaponPrefab.transform); // WGSR 애니메이션에 있는 OnSkillEffectWithoutDamage 때문에 WGSR이 두 개 클론되지만 땅에 박혀있는 것처럼 되어 있음
         objWeapon.SetActive(false);
     }
 

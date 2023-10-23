@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 public class RSkillGauge 
 {
@@ -19,9 +20,9 @@ public class RSkillGauge
     public float fBlueGauge = 0f;
     public float fIncreaseAttackGaugeAmount = 0.02f;
     public float fIncreaseSkillGaugeAmount = 1f; // default 0.1
+
     public RSkillGauge()
     {
-
     }
 
     public void IncreaseRSkillGaugeUsingAttack()

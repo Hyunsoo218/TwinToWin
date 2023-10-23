@@ -92,7 +92,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BackFresnel: -2
+    - _BackFresnel: 0.38
     - _BackFresnelEmission: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -110,25 +110,25 @@ Material:
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _SeparateEmission: 2
-    - _SeparateFresnel: 0
+    - _SeparateEmission: 3.83
+    - _SeparateFresnel: 1
     - _Sideopacity: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _UseBackFresnel: 1
+    - _UseBackFresnel: 0
     - _UseCustomData: 1
     - _UseFresnel: 0
     - _Usesmoothcorners: 0
     - __dirty: 1
     m_Colors:
     - _BackFacesColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BackFresnelColor: {r: 0.35686278, g: 0.08627448, b: 0.08627448, a: 1}
+    - _BackFresnelColor: {r: 1, g: 0.7783019, b: 0.7783019, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FrontFacesColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FresnelColor: {r: 0.81074834, g: 1, b: 0.37254906, a: 1}
+    - _FrontFacesColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainTexTiling: {r: 1, g: 2, b: 0, a: 0}
     - _NoiseTiling: {r: 2, g: 1, b: 0, a: 0}
     - _SpeedMainTexUVNoiseZW: {r: 0, g: -3.5, b: 0, a: -1}
