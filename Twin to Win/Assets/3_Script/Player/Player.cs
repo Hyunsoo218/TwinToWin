@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
+using static UnityEditor.Rendering.InspectorCurveEditor;
 
 public class Player : MonoBehaviour
 {
@@ -15,6 +19,8 @@ public class Player : MonoBehaviour
     public float fCurrentStamina = 10f;
     public readonly float fMaxStamina = 10f;
     public float fUsingDodgeStamina = 3f;
+
+    public float fMoveSpeed = 3f;
 
     [SerializeField] private float fPlayerMaxHealthPoint = 1000f;
     [SerializeField] private float fPlayerCurrentHealthPoint = 0f;
@@ -36,12 +42,25 @@ public class Player : MonoBehaviour
     #region Move Var
     private Transform tCurrentTrans;
     private bool isHoldingState = false;
+
+    [HideInInspector] public State cMoveState = new State("moveState");
+    [HideInInspector] public bool isMoving = false;
+    [HideInInspector] public Coroutine moveCoroutine = null;
+    #endregion
+
+    #region RSkill Var
+    public float fRedGauge = 0f;
+    public float fBlueGauge = 0f;
+    public float fIncreaseAttackGaugeAmount = 0.02f;
+    public float fIncreaseSkillGaugeAmount = 0.1f; // default 0.1
     #endregion
 
     private void Awake()
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
+
+        cMoveState.onEnter += () => { cCurrentCharacter.ChangeAnimation(cMoveState.strStateName); isMoving = true; };
     }
     public void SetGame() 
     {
@@ -57,6 +76,8 @@ public class Player : MonoBehaviour
         cGreatSword.gameObject.SetActive(false);
 
         cCurrentCharacter = cTwinSword.gameObject.activeSelf ? cTwinSword : cGreatSword;
+
+        ResetAllCharacterRSkillGauge();
     }
     public void ConvertCharacter()
     {
@@ -65,7 +86,6 @@ public class Player : MonoBehaviour
         InActiveCurrentCharacter();
 
         cCurrentCharacter = (cCurrentCharacter == cTwinSword) ? cGreatSword : cTwinSword;
-
         ActiveNextCharacter();
 
         StartCoroutine(cCurrentCharacter.StartTagCoolDown());
@@ -89,7 +109,7 @@ public class Player : MonoBehaviour
     private void ResetWTDRSkillGauge()
     {
         cCurrentCharacter.RestoreCoolDown(cCurrentCharacter.GetCoolDownCutAndRestoreTime());
-        RSkillGauge.Instance.ResetGaugeWhenTag();
+        ResetCurrentCharacterRSkillGauge();
     }
 
     private void ResetPrevAllSkillButton()
@@ -157,6 +177,106 @@ public class Player : MonoBehaviour
             yield return null;
         }
     }
+
+    public void StartMoveCoroutine(Vector3 mousePosOnGround, Quaternion mouseAngle)
+    {
+        moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround, mouseAngle));
+    }
+
+    public void StopPlayerCoroutine(Coroutine coroutine)
+    {
+        StopCoroutine(coroutine);
+    }
+
+    public IEnumerator MoveCoroutine(Vector3 mousePosOnGround, Quaternion mouseAngle)
+    {
+        
+        while (isMoving == true)
+        {
+            if (cCurrentCharacter.GetCurrentStateName() != "moveState")
+            {
+                cCurrentCharacter.ChangeState(cMoveState);
+                
+            }
+            cCurrentCharacter.transform.localRotation = mouseAngle;
+            if (Vector3.Distance(cCurrentCharacter.transform.position, mousePosOnGround) <= 0.1f)
+            {
+                isMoving = false;
+                cCurrentCharacter.eMouseState = mouseState.None;
+                cCurrentCharacter.ChangeState("cIdleState");
+                yield break;
+            }
+            cCurrentCharacter.transform.position = Vector3.MoveTowards(cCurrentCharacter.transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
+
+            yield return null;
+        }
+    }
+
+    public void IncreaseRSkillGaugeUsingAttack()
+    {
+        if (cCurrentCharacter == cTwinSword && cCurrentCharacter.IsRSkillTime() == false && fRedGauge < 1f)
+        {
+            fRedGauge += fIncreaseAttackGaugeAmount;
+        }
+        else if (cCurrentCharacter == cGreatSword && cCurrentCharacter.IsRSkillTime() == false && fBlueGauge < 1f)
+        {
+            fBlueGauge += fIncreaseAttackGaugeAmount;
+        }
+    }
+
+    public void IncreaseRSkillGaugeUsingSkill()
+    {
+        if (cCurrentCharacter == cTwinSword && cCurrentCharacter.IsRSkillTime() == false && fRedGauge < 1f)
+        {
+            fRedGauge += fIncreaseSkillGaugeAmount;
+        }
+        else if (cCurrentCharacter == cGreatSword && cCurrentCharacter.IsRSkillTime() == false && fBlueGauge < 1f)
+        {
+            fBlueGauge += fIncreaseSkillGaugeAmount;
+        }
+    }
+
+    public bool IsRSkillGaugeFull()
+    {
+        return cCurrentCharacter == cTwinSword ? Math.Round(fRedGauge, 2) >= 1f : Math.Round(fBlueGauge, 2) >= 1f;
+    }
+
+    public void ResetCurrentCharacterRSkillGauge()
+    {
+        if (cCurrentCharacter.IsRSkillTime() == true)
+        {
+            if (cCurrentCharacter == cTwinSword)
+            {
+                fRedGauge = 0f;
+            }
+            else if (cCurrentCharacter == cGreatSword)
+            {
+                fBlueGauge = 0f;
+            }
+            cCurrentCharacter.SetIsRSkillTime(false);
+        }
+    }
+
+    public void ResetAllCharacterRSkillGauge()
+    {
+        fRedGauge = 0f;
+        fBlueGauge = 0f;
+        if (cTwinSword.IsRSkillTime() == true)
+        {
+            cTwinSword.SetIsRSkillTime(false);
+        }
+        else if (cGreatSword.IsRSkillTime() == true)
+        {
+            cGreatSword.SetIsRSkillTime(false);
+        }
+    }
+
+
+    public float GetRSkillGauge(PlayerbleCharacter character)
+    {
+        return character == cTwinSword ? fRedGauge : fBlueGauge;
+    }
+
     public void EnablePlayerInput(bool canUseInput)
     {
         cCurrentCharacter.ReturnToIdle();

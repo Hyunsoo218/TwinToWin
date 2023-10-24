@@ -164,7 +164,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 
         if (EnableSkill() == true && context.started && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
         {
-            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
+            Player.instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtQSkill;
             ChangeState(cQSkillState);
         }
@@ -210,7 +210,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         
         if (EnableSkill() == true && context.started && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
         {
-            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
+            Player.instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtWSkill;
             ChangeState(cWSkillState);
         }
@@ -256,7 +256,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         if (EnableSkill() == true && context.started && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f))
         {
             StartWTDESkillCoolDownCoroutine();
-            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
+            Player.instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtESkill;
             ChangeState(cESkillState);
             GameManager.instance.AsynchronousExecution(StartJumpAndRotate());
@@ -342,7 +342,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
     private int fRSkillConsumeTime = 10;
     public void OnRSkill(InputAction.CallbackContext ctx)
     {
-        if (ctx.started && EnableSkill() == true && RSkillGauge.Instance.IsRSkillGaugeFull() == true && IsRSkillTime() == false)
+        if (ctx.started && EnableSkill() == true && Player.instance.IsRSkillGaugeFull() == true && IsRSkillTime() == false)
         {
             UIManager.instance.OnSkillBtn(KeyCode.R, true);
             CutCoolDown(fCoolDownCutAndRestoreTime);
@@ -370,7 +370,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
         }
         UIManager.instance.OnSkillBtn(KeyCode.R, true, true);
         EnemyManager.instance.SlowEndAllEnemy();
-        RSkillGauge.Instance.fRedGauge = 0f;
+        Player.instance.fRedGauge = 0f;
         RestoreCoolDown(fCoolDownCutAndRestoreTime);
         SetIsRSkillTime(false);
     }

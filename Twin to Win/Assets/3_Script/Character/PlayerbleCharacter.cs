@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -52,6 +53,7 @@ public class PlayerbleCharacter : Character
         fQSkillTimer = srtQSkill.fSkillCoolDown;
         fWSkillTimer = srtWSkill.fSkillCoolDown;
         fESkillTimer = srtESkill.fSkillCoolDown;
+        cStateMachine.ChangeState(cIdleState);
     }
     protected virtual void FixedUpdate()
     {
@@ -68,29 +70,23 @@ public class PlayerbleCharacter : Character
 
     #region State Var
     protected State cIdleState = new State("idleState");
-    protected State cMoveState = new State("moveState");
     protected State cDodgeState = new State("dodgeState");
     protected State cToStandState = new State("toStand");
     protected State cQSkillState = new State("qSkill");
     protected State cWSkillState = new State("wSkill");
     protected State cESkillState = new State("eSkill");
     protected State cRSkillState = new State("rSkill");
-    protected State cTagState = new State("tagState");
     protected State cDeadState = new State("deadState");
     protected State[] cNormalAttack = new State[5] { new State("normalAttack1"), new State("normalAttack2"), new State("normalAttack3"), new State("normalAttack4"), new State("normalAttack5") };
     #endregion
 
     #region Move Var
-    protected bool isMoving = false;
     private bool isAttackDuringHoldMove = false;
-
-    Coroutine moveCoroutine;
     InputAction moveAction;
     [HideInInspector]
     public mouseState eMouseState { get; set; }
 
     protected Vector3 mousePosOnVirtualGround;
-    protected Vector3 mousePosOnGround;
     #endregion
 
     #region Skill Var
@@ -159,7 +155,6 @@ public class PlayerbleCharacter : Character
     protected virtual void StateInitalizeOnEnter()
     {
         cIdleState.onEnter += () => { ChangeAnimation(cIdleState.strStateName); };
-        cMoveState.onEnter += () => { ChangeAnimation(cMoveState.strStateName); };
         cDodgeState.onEnter += () => { ChangeAnimation(cDodgeState.strStateName); };
         cToStandState.onEnter += () => { ChangeAnimation(cToStandState.strStateName); };
         cQSkillState.onEnter += () => { ChangeAnimation(cQSkillState.strStateName); Player.instance.canTag = false; transform.localRotation = GetMouseAngle(); };
@@ -175,11 +170,11 @@ public class PlayerbleCharacter : Character
         cWSkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
         cESkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
         cRSkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
-        cNormalAttack[0].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
-        cNormalAttack[1].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
-        cNormalAttack[2].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
-        cNormalAttack[3].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
-        cNormalAttack[4].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[0].onExit += () => { if (Player.instance.isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[1].onExit += () => { if (Player.instance.isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[2].onExit += () => { if (Player.instance.isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[3].onExit += () => { if (Player.instance.isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
+        cNormalAttack[4].onExit += () => { if (Player.instance.isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
     }
 
     private void InitializeRightMouseState()
@@ -193,7 +188,6 @@ public class PlayerbleCharacter : Character
                 (cStateMachine.GetCurrentState() != cESkillState || fESkillHoldTimer > 0f) &&
                 cStateMachine.GetCurrentState() != cRSkillState)
             {
-                isMoving = true;
                 eMouseState = mouseState.Hold;
             }   // 마우스 오른쪽 꾹 누를 때 이동
             else
@@ -210,7 +204,7 @@ public class PlayerbleCharacter : Character
                 isAttackDuringHoldMove == true)
             {
                 isAttackDuringHoldMove = false;
-                isMoving = false;
+                Player.instance.isMoving = false;
                 eMouseState = mouseState.None;
             }   // 스킬 사용 도중 오른쪽 마우스를 땔 때
 
@@ -221,7 +215,7 @@ public class PlayerbleCharacter : Character
                 cStateMachine.GetCurrentState() != cESkillState &&
                 cStateMachine.GetCurrentState() != cRSkillState)
             {
-                isMoving = false;
+                Player.instance.isMoving = false;
                 eMouseState = mouseState.None;
                 ChangeState(cIdleState);
 
@@ -232,17 +226,15 @@ public class PlayerbleCharacter : Character
                 cStateMachine.GetCurrentState() != cDodgeState &&
                 cStateMachine.GetCurrentState() != cQSkillState &&
                 cStateMachine.GetCurrentState() != cWSkillState &&
-                (cStateMachine.GetCurrentState() != cESkillState || fESkillHoldTimer > 0f) &&
+                cStateMachine.GetCurrentState() != cESkillState &&
                 cStateMachine.GetCurrentState() != cRSkillState &&
                 GetPositionOnGround() != Vector3.zero ||
                 (isNormalAttackState == true && fNormalAttackCancelTimer >= 0.2f))
             {
-                if (isMoving == false)
+                if (Player.instance.isMoving == false)
                 {
-                    ChangeState(cMoveState);
+                    ChangeState(Player.instance.cMoveState);
                 }
-
-                isMoving = true;
                 eMouseState = mouseState.Click;
                 ActiveMouseIndicator();
             }   // 오른쪽 마우스 클릭할 때
@@ -267,34 +259,34 @@ public class PlayerbleCharacter : Character
                 fNormalAttackCancelTimer = 0f;
             }
 
-            if (eMouseState == mouseState.None && isAttackDuringHoldMove == false && isMoving == false && canAttack == true)
+            if (eMouseState == mouseState.None && isAttackDuringHoldMove == false && Player.instance.isMoving == false && canAttack == true)
             {
                 transform.localRotation = GetMouseAngle();
-                RSkillGauge.Instance.IncreaseRSkillGaugeUsingAttack();
+                Player.instance.IncreaseRSkillGaugeUsingAttack();
                 ChangeState(cNormalAttack[nNormalAttackCount]);
             }   // 마우스 왼쪽 클릭할 때
             else if ((eMouseState == mouseState.Click || eMouseState == mouseState.None) && isNormalAttackState == false && isAttackDuringHoldMove == false && canAttack == true)
             {
-                isMoving = false;
+                Player.instance.isMoving = false;
                 transform.localRotation = GetMouseAngle();
-                RSkillGauge.Instance.IncreaseRSkillGaugeUsingAttack();
+                Player.instance.IncreaseRSkillGaugeUsingAttack();
                 ChangeState(cNormalAttack[nNormalAttackCount]);
             }   // 마우스 오른쪽 클릭하고 이동하는 도중 공격할 때
 
-            if (eMouseState == mouseState.Hold && cStateMachine.GetCurrentState() == cMoveState && isMoving == true && canAttack == true)
+            if (eMouseState == mouseState.Hold && cStateMachine.GetCurrentState() == Player.instance.cMoveState && Player.instance.isMoving == true && canAttack == true)
             {
                 isAttackDuringHoldMove = true;
                 eMouseState = mouseState.None;
                 transform.localRotation = GetMouseAngle();
-                RSkillGauge.Instance.IncreaseRSkillGaugeUsingAttack();
+                Player.instance.IncreaseRSkillGaugeUsingAttack();
                 ChangeState(cNormalAttack[nNormalAttackCount]);
                 GameManager.instance.AsynchronousExecution(StartAttackCancelTimerWhenHoldMove());
             }   // 마우스 오른쪽 꾹 누른 상태에서 공격할 때
-            else if (eMouseState == mouseState.None && cStateMachine.GetCurrentState() != cMoveState && isAttackDuringHoldMove == true && canAttack == true)
+            else if (eMouseState == mouseState.None && cStateMachine.GetCurrentState() != Player.instance.cMoveState && isAttackDuringHoldMove == true && canAttack == true)
             {
-                isMoving = false;
+                Player.instance.isMoving = false;
                 transform.localRotation = GetMouseAngle();
-                RSkillGauge.Instance.IncreaseRSkillGaugeUsingAttack();
+                Player.instance.IncreaseRSkillGaugeUsingAttack();
                 ChangeState(cNormalAttack[nNormalAttackCount]);
                 GameManager.instance.AsynchronousExecution(StartAttackCancelTimerWhenHoldMove());
             }   // 마우스 오른쪽 꾹 누른 상태에서 마우스 왼쪽 연타할 때
@@ -310,20 +302,17 @@ public class PlayerbleCharacter : Character
         switch (eMouseState)
         {
             case mouseState.Click:
-                if (moveCoroutine != null)
+                if (Player.instance.moveCoroutine != null)
                 {
-                    StopCoroutine(moveCoroutine);
+                    Player.instance.StopPlayerCoroutine(Player.instance.moveCoroutine);
                 }
-                mousePosOnGround = GetPositionOnGround();
-
-                transform.localRotation = GetMouseAngle();
-                moveCoroutine = StartCoroutine(MoveCoroutine(mousePosOnGround));
+                Player.instance.StartMoveCoroutine(GetPositionOnGround(), GetMouseAngle());
                 eMouseState = mouseState.None;
                 break;
             case mouseState.Hold:
-                if (moveCoroutine != null)
+                if (Player.instance.moveCoroutine != null)
                 {
-                    StopCoroutine(moveCoroutine);
+                    Player.instance.StopPlayerCoroutine(Player.instance.moveCoroutine);
                 }
                 if (cStateMachine.GetCurrentState() != cQSkillState &&
                     cStateMachine.GetCurrentState() != cWSkillState &&
@@ -331,33 +320,15 @@ public class PlayerbleCharacter : Character
                     cStateMachine.GetCurrentState() != cRSkillState &&
                     cStateMachine.GetCurrentState() != cDodgeState)
                 {
-                    if (cStateMachine.GetCurrentState() != cMoveState)
+                    if (cStateMachine.GetCurrentState() != Player.instance.cMoveState)
                     {
-                        ChangeState(cMoveState);
+                        ChangeState(Player.instance.cMoveState);
                     }
                     mousePosOnVirtualGround = GetPositionOnVirtualGround();
                     transform.localRotation = GetMouseAngle();
                     transform.position = Vector3.MoveTowards(transform.position, mousePosOnVirtualGround, Time.deltaTime * fMoveSpeed);
                 }
                 break;
-        }
-    }
-
-    private IEnumerator MoveCoroutine(Vector3 mousePosOnGround)
-    {
-        while (cStateMachine.GetCurrentState() == cMoveState)
-        {
-            if (Vector3.Distance(transform.position, mousePosOnGround) <= 0.1f)
-            {
-                isMoving = false;
-                eMouseState = mouseState.None;
-
-                ChangeState(cIdleState);
-                yield break;
-            }
-            transform.position = Vector3.MoveTowards(transform.position, mousePosOnGround, Time.deltaTime * fMoveSpeed);
-
-            yield return null;
         }
     }
 
@@ -404,7 +375,6 @@ public class PlayerbleCharacter : Character
     {
         if (context.started &&
             cStateMachine.GetCurrentState() != cDodgeState &&
-            cStateMachine.GetCurrentState() != cTagState &&
             cStateMachine.GetCurrentState() != cQSkillState &&
             cStateMachine.GetCurrentState() != cWSkillState &&
             (cStateMachine.GetCurrentState() != cESkillState || fESkillHoldTimer > 0f) &&
@@ -634,7 +604,7 @@ public class PlayerbleCharacter : Character
             EnemyManager.instance.SlowEndAllEnemy();
             Player.instance.canTag = false;
             Player.instance.ConvertCharacter();
-            ChangeState(cTagState);
+            ChangeState(cIdleState);
             CameraManager.instance.ResetCamera();
         }
     }
@@ -654,7 +624,6 @@ public class PlayerbleCharacter : Character
     {
         UIManager.instance.ConvertPlayer();
         Player.instance.ConvertCharacter();
-        ChangeState(cTagState);
         CameraManager.instance.ResetCamera();
     }
 
@@ -746,7 +715,26 @@ public class PlayerbleCharacter : Character
         {
             cStateMachine.ChangeState(cNextState);
         }
+    }
+
+    public void ChangeState(string strStateName)
+    {
+        State state;
         
+        switch (strStateName)
+        {
+            case "cIdleState":
+                state = cIdleState;
+                break;
+            default:
+                state = cIdleState;
+                break;
+        }
+            
+        if (cStateMachine.GetCurrentState() != cDeadState)
+        {
+            cStateMachine.ChangeState(state);
+        }
     }
 
     public override void Attack()
@@ -777,12 +765,11 @@ public class PlayerbleCharacter : Character
 
     protected void KeepHoldMove()
     {
-        if (isMoving == true && eMouseState == mouseState.Hold
-            || (isMoving == true && isNormalAttackState == true)
+        if (Player.instance.isMoving == true && eMouseState == mouseState.Hold
+            || (Player.instance.isMoving == true && isNormalAttackState == true)
             || isAttackDuringHoldMove == true)
         {
-            isMoving = true;
-            ChangeState(cMoveState);
+            ChangeState(Player.instance.cMoveState);
             eMouseState = mouseState.Hold;
         }
     }

@@ -141,7 +141,7 @@ public class PlayerStateUI : MonoBehaviour
 		Sprite onImg = (character == Player.instance.GetTwinSword()) ? WTD_R_ON : WGS_R_ON;
 		Sprite offImg = (character == Player.instance.GetTwinSword()) ? WTD_R_OFF : WGS_R_OFF;
 
-		float gauge = RSkillGauge.Instance.GetRSkillGauge(character);
+		float gauge = Player.instance.GetRSkillGauge(character);
         images[(int)type].fillAmount = gauge;
         images[(int)type].sprite = (gauge >= 1f) ? onImg : offImg;
 

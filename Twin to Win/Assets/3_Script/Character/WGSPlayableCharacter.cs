@@ -122,7 +122,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         if (context.started && EnableSkill() == true && (fQSkillTimer >= srtQSkill.fSkillCoolDown || fQSkillTimer == 0f))
         {
             UIManager.instance.OnSkillBtn(KeyCode.Q, true);
-            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
+            Player.instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtQSkill;
             ChangeState(cQSkillState);
         }
@@ -162,7 +162,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         
         if (context.started && EnableSkill() == true && (fWSkillTimer >= srtWSkill.fSkillCoolDown || fWSkillTimer == 0f))
         {
-            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
+            Player.instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtWSkill;
             ChangeState(cWSkillState);
         }
@@ -200,7 +200,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         if (EnableSkill() == true && context.started && (fESkillTimer >= srtESkill.fSkillCoolDown || fESkillTimer == 0f) && Player.instance.cCurrentCharacter == Player.instance.GetGreatSword())
         {
             UIManager.instance.OnSkillBtn(KeyCode.E, true);
-            RSkillGauge.Instance.IncreaseRSkillGaugeUsingSkill();
+            Player.instance.IncreaseRSkillGaugeUsingSkill();
             srtCurrentSkill = srtESkill;
             ChangeState(cESkillState);
         }
@@ -233,7 +233,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             && cStateMachine.GetCurrentState() != cDodgeState
             && cStateMachine.GetCurrentState() != cToStandState
             && cStateMachine.GetCurrentState() != cIdleState
-            && cStateMachine.GetCurrentState() != cMoveState
+            && cStateMachine.GetCurrentState() != Player.instance.cMoveState
             && isNormalAttackState == false)
         {
             Vector3 mousePosOnVirtualGround = GetPositionOnVirtualGround();
@@ -273,9 +273,9 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             UIManager.instance.OnSkillBtn(KeyCode.R);
         }
 
-        if (ctx.started && EnableSkill() == true && RSkillGauge.Instance.IsRSkillGaugeFull() == true)
+        if (ctx.started && EnableSkill() == true && Player.instance.IsRSkillGaugeFull() == true)
         {
-            RSkillGauge.Instance.fBlueGauge = 0f;
+            Player.instance.fBlueGauge = 0f;
             srtCurrentSkill = srtRSkill;
             ChangeState(cRSkillState);
             StartWGSRSkillEffect();
