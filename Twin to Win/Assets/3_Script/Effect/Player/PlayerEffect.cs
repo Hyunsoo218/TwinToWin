@@ -69,9 +69,9 @@ public class PlayerEffect : EffectOverlap
 
     private IEnumerator StartSkillEffectFollowingPlayer(Transform tUser)
     {
-        transform.SetParent(tUser);
         while (Player.instance.cCurrentCharacter.isSkillEffectFollowingPlayer == true)
         {
+            transform.SetParent(tUser);
             transform.localPosition = Vector3.zero;
             transform.localEulerAngles = Vector3.zero;
             yield return null;
