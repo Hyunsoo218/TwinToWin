@@ -42,10 +42,10 @@ public class BossCharacter : MonsterCharacter
 		dAttackEffects.Add(cStateAttack6_Finish, objAttack6FinishEffectPrefab);
 		dAttackEffects.Add(cStateBreakTile, objAttackBreakTilePrefab);
 
-		//bossPatterns.Add(BossPattern.Normal);
-		//bossPatterns.Add(BossPattern.Spin_Internal); 
-		//bossPatterns.Add(BossPattern.Normal);
-		//bossPatterns.Add(BossPattern.Spin_Outside); 
+		bossPatterns.Add(BossPattern.Normal);
+		bossPatterns.Add(BossPattern.Spin_Internal); 
+		bossPatterns.Add(BossPattern.Normal);
+		bossPatterns.Add(BossPattern.Spin_Outside); 
 		bossPatterns.Add(BossPattern.Normal);
 		bossPatterns.Add(BossPattern.Thorn); 
 		bossPatterns.Add(BossPattern.Normal);
