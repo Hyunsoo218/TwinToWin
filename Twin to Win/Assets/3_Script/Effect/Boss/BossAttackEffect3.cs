@@ -49,7 +49,7 @@ public class BossAttackEffect3 : Effect
 				Character cTarget;
 				if (cItem.TryGetComponent<Character>(out cTarget))
 				{
-					cTarget.Damage(fDamage);
+					DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 				}
 			}
 			yield return new WaitForSeconds(0.33f);

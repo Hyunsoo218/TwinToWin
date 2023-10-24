@@ -49,11 +49,11 @@ public class GameManager : MonoBehaviour
 			}
 		}
 	}
-	public void Stage1Start() 
+	public void Stage1Start()
 	{
 		StartCoroutine(Stage1());
 	}
-	private IEnumerator Stage1() 
+	private IEnumerator Stage1()
 	{
 		yield return null;
         List<string> options = new List<string>();
@@ -66,15 +66,11 @@ public class GameManager : MonoBehaviour
         if (playersChoice == 0) 
         {
             yield return StartCoroutine(UIManager.instance.WaitForTutorial());
-            yield return StartCoroutine(WaitForTalk("스칼렛", "으으... 여기가 어디지? 앨리스 무사해?"));
-            yield return StartCoroutine(WaitForTalk("앨리스", "괜찮아. 언니는?"));
-            yield return StartCoroutine(WaitForTalk("스칼렛", "머리가 조금 아프긴 하지만 참을만해. 그런데 앨리스 어디 있어?"));
-            yield return StartCoroutine(WaitForTalk("앨리스", "나 여기 있는데 안 보여?"));
-            yield return StartCoroutine(WaitForTalk("스칼렛", "어어어 이게 어떻게 된 일이지?!"));
-            yield return StartCoroutine(WaitForTalk("앨리스", "흠. 아마도 우리가 하나가 된 거 같아"));
-            yield return StartCoroutine(WaitForTalk("스칼렛", "뭐어어어어어어어어어어?!"));
-            yield return StartCoroutine(WaitForTalk("앨리스", "일단 좀 진정해 언니"));
-            yield return StartCoroutine(WaitForTalk("스칼렛", "어떻게 진정을---", 0.4f));
+            yield return StartCoroutine(WaitForTalk("스칼렛", "드디어 하늘섬에 도착했다!"));
+            yield return StartCoroutine(WaitForTalk("앨리스", "언니. 조심해 떨어지면 위험해"));
+            yield return StartCoroutine(WaitForTalk("스칼렛", "하하. 괜찮아 괜찮아 걱정하지마!"));
+            yield return StartCoroutine(WaitForTalk("앨리스", "하아 이 언니를 어쩌면 좋아"));
+            yield return StartCoroutine(WaitForTalk("스칼렛", "앨리스. 그렇게 한숨만 쉬면 주름살 생긴다?"));
             EnemyManager.instance.OnActiveEnemy(TutorialEnemySet.WTD_tutorial);
             EnemyManager.instance.StopAllEnemy();
             CameraManager.instance.OnCamActive(CamType.WTD_tutorial, 2f);
@@ -127,11 +123,9 @@ public class GameManager : MonoBehaviour
             yield return StartCoroutine(WaitFotInputKey(KeyCode.Tab));
             Player.instance.cCurrentCharacter.UseSkillWithoutPressKey(SkillType.Tag);
             UIManager.instance.OffTutorial();
-            EnemyManager.instance.StartActionAllEnemy();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
 
-            EnemyManager.instance.StopAllEnemy();
             UIManager.instance.OnTutorial(TutorialType.WGS_E);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.E));
             EnemyManager.instance.StartActionAllEnemy();
@@ -161,7 +155,7 @@ public class GameManager : MonoBehaviour
         Player.instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
-	private IEnumerator WaitForTalk(string name, string script, float autoClickTime = -1f) 
+	private IEnumerator WaitForTalk(string name, string script, float autoClickTime = -1f)
 	{
         yield return StartCoroutine(UIManager.instance.WaitForTalk(name, script, autoClickTime));
     }
@@ -170,7 +164,7 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(UIManager.instance.WaitForChoice(name, script, Options));
         Options.Clear();
     }
-    private IEnumerator WaitFotInputKey(KeyCode key) 
+    private IEnumerator WaitFotInputKey(KeyCode key)
 	{
 		bool wait = true;
 		while (wait) 
@@ -180,7 +174,7 @@ public class GameManager : MonoBehaviour
 			yield return null;
 		}
 	}
-    public void GameLose() 
+    public void GameLose()
     {
         StartCoroutine(Lose());
     }
@@ -223,7 +217,7 @@ public class GameManager : MonoBehaviour
         gameStage = GameStage.Title;
         StartCoroutine(GoTitleCo());
     }
-    public void GameStart() 
+    public void GameStart()
     {
         SceneManager.LoadScene(0);
         SceneManager.LoadScene(1);
@@ -239,7 +233,7 @@ public class GameManager : MonoBehaviour
         EffectManager.instance.SetTitle();
         CutSceneManager.instance.SetTitle();
     }
-    private IEnumerator GameStartCo() 
+    private IEnumerator GameStartCo()
     {
         yield return null;
 
@@ -260,7 +254,7 @@ public class GameManager : MonoBehaviour
         gameStage = GameStage.Game;
         Stage1Start();
     }
-    public void StageClear() 
+    public void StageClear()
     {
         EffectManager.instance.DisableAllEffect();
 		switch (phase)
@@ -287,7 +281,7 @@ public class GameManager : MonoBehaviour
                
 		}
 	}
-    private IEnumerator Stage1to2() 
+    private IEnumerator Stage1to2()
     {
         Player.instance.EnablePlayerInput(false);
         yield return new WaitForSeconds(2f);
@@ -304,7 +298,7 @@ public class GameManager : MonoBehaviour
         Player.instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
-    private IEnumerator Stage2to3 ()
+    private IEnumerator Stage2to3()
     {
         Player.instance.EnablePlayerInput(false);
         yield return new WaitForSeconds(2f);
@@ -321,7 +315,7 @@ public class GameManager : MonoBehaviour
         Player.instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
-    private IEnumerator GameClear() 
+    private IEnumerator GameClear()
     {
         Player.instance.EnablePlayerInput(false);
         Time.timeScale = 0.2f; // 타임스케일 줄이기

@@ -65,9 +65,7 @@ public class BossRush : Effect
 			Character cTarget;
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
-				cTarget.Damage(fDamage);
-				print($"{tUser.name}이(가) {cTarget.name}에게 {fDamage}의 데미지 입힘");
-				// 지우지 마영 - 디버그용							  		   
+				DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 			}
 		}
 		if (bPreviewOverlapArea)

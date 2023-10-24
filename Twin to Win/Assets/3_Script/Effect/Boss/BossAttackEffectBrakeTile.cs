@@ -25,6 +25,7 @@ public class BossAttackEffectBrakeTile : Effect
             yield return new WaitForSeconds(2.5f);
             GameObject effect = EffectManager.instance.GetEffect(objEffect);
             effect.GetComponent<Effect>().OnAction(tUser, fDamage, nTargetLayer);
+            effect.transform.eulerAngles = new Vector3(0, 45f, 0);
         }
         bRun = false;
     }

@@ -823,9 +823,10 @@ MonoBehaviour:
   fRunTime: 5
   soundComponent: {fileID: 7950859454236863523}
   clip: {fileID: 8300000, guid: 16bd3619a62aad74cbada644598d3d04, type: 3}
+  criticalHit: 0
   bPreviewOverlapArea: 0
   vAttackAreaCenter: {x: 0, y: 0, z: 2.5}
-  vAttackAreaSize: {x: 3, y: 1, z: 2}
+  vAttackAreaSize: {x: 2, y: 1, z: 2}
   arrExplosionPos:
   - {fileID: 5797452404737325327}
   - {fileID: 5816292500797771313}

@@ -52,7 +52,13 @@ public class MonsterCharacter : Character
         cAgent.isStopped = true;
         StartCoroutine(SetTarget());
         InsertHpbar();
-    }
+		GameObject enableEffect = EffectManager.instance.GetMonsterEnableEffect();
+		enableEffect.transform.SetParent(transform);
+		enableEffect.transform.localPosition = Vector3.zero;
+		enableEffect.transform.localEulerAngles = Vector3.zero;
+		enableEffect.transform.localScale = Vector3.one * 2f;
+		enableEffect.transform.SetParent(null);
+	}
 	protected void OnDisable()
     {
         allMonsterCharacters.Remove(this);

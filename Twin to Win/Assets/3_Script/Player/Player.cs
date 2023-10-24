@@ -159,6 +159,8 @@ public class Player : MonoBehaviour
     }
     public void EnablePlayerInput(bool canUseInput)
     {
+        cCurrentCharacter.ReturnToIdle();
+
         PlayerInput wtdPlayerInput = cTwinSword.GetComponent<PlayerInput>();
         PlayerInput wgsPlayerInput = cGreatSword.GetComponent<PlayerInput>();
         

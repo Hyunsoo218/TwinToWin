@@ -34,8 +34,7 @@ public class BossAttackEffect6Finish : Effect
 			Character cTarget;
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
-				cTarget.Damage(fDamage);
-				// 지우지 마영 - 디버그용							  		   
+				DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 			}
 		}
 		if (GameManager.instance.phase == Phase.Phase_3)
@@ -51,9 +50,8 @@ public class BossAttackEffect6Finish : Effect
 					float dist = Vector3.Distance(transform.position, cTarget.transform.position);
 					if (dist > 5f)
 					{
-						cTarget.Damage(fDamage);
-					}
-					// 지우지 마영 - 디버그용							  		   
+						DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
+					}					  		   
 				}
 			}
 		}

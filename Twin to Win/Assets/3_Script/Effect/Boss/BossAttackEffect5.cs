@@ -83,7 +83,7 @@ public class BossAttackEffect5 : Effect
 		}
 		if (nTargetHitNum > 0 )
 		{
-			cTarget.Damage(fDamage);
+			DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 		}
 	}
 	private IEnumerator MakeParabolicBomb()

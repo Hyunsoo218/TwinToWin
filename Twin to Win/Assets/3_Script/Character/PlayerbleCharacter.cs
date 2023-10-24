@@ -732,7 +732,7 @@ public class PlayerbleCharacter : Character
         cAnimator.SetTrigger(strTrigger);
     }
 
-    protected void ReturnToIdle()
+    public void ReturnToIdle()
     {
         ChangeState(cIdleState);
     }

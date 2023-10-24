@@ -106,8 +106,7 @@ public class ParabolicBomb : Effect
 			Character cTarget;
 			if (cItem.TryGetComponent<Character>(out cTarget))
 			{
-				cTarget.Damage(fDamage);
-				// 지우지 마영 - 디버그용							  		   
+				DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 			}
 		}
 	}

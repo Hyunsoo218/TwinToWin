@@ -9,6 +9,7 @@ public class EffectManager : MonoBehaviour
 	public int poolingObjCount = 0;
 
 	[SerializeField] private Material mHitEffectRed;
+	[SerializeField] private GameObject monsterEnableEffect;
 	[SerializeField] private List<Effect> enemyPoolingEffect;
 	[SerializeField] private List<Effect> enemyPoolingEffectBomb;
 	[SerializeField] private List<Effect> playerPoolingEffect;
@@ -17,6 +18,8 @@ public class EffectManager : MonoBehaviour
 	private Dictionary<GameObject, EffectPooler> dicEnemyBombPoolers = new Dictionary<GameObject, EffectPooler>();
 	private Dictionary<GameObject, EffectPooler> dicPlayerPoolers = new Dictionary<GameObject, EffectPooler>();
 	private List<GameObject> allEffects = new List<GameObject>();
+	private EffectPooler monsterEnableEffects;
+
 	private void Awake()
 	{
         if (instance == null) instance = this;
@@ -24,6 +27,7 @@ public class EffectManager : MonoBehaviour
 		poolingObjCount = enemyPoolingEffect.Count * 5;
 		poolingObjCount += playerPoolingEffect.Count * 5;
 		poolingObjCount += enemyPoolingEffectBomb.Count * 310;
+		poolingObjCount += 10;
 	}
 	public IEnumerator SetGame() 
 	{
@@ -31,6 +35,7 @@ public class EffectManager : MonoBehaviour
 		dicPlayerPoolers.Clear();
 		dicEnemyBombPoolers.Clear();
 		finishedPoolingObjCount = 0;
+		monsterEnableEffects = new EffectPooler(monsterEnableEffect);
 
 		foreach (var item in enemyPoolingEffect)
 		{
@@ -65,10 +70,19 @@ public class EffectManager : MonoBehaviour
 			}
 			dicEnemyBombPoolers.Add(item.gameObject, cAddPooler);
 		}
+		for (int i = 0; i < 10; i++)
+		{
+			monsterEnableEffects.AddObject(1);
+		}
 		DisableAllEffect(); 
 	}
+	public GameObject GetMonsterEnableEffect() 
+	{
+		return monsterEnableEffects.OutPool();
+	}
 
-    public void SetTitle()
+
+	public void SetTitle()
     {
 
     }

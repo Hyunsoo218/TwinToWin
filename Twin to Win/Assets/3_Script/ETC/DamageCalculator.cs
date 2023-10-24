@@ -23,6 +23,6 @@ public class DamageCalculator
         }
         target.Damage(damage);
         UIManager.instance.OnDamageFont(target.transform.position, fontColor, damage);
-        Debug.Log($"{target.gameObject.name}에게 {damage}데미지");
+        //Debug.Log($"{target.gameObject.name}에게 {damage}데미지");
     }
 }

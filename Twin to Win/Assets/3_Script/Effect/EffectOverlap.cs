@@ -7,6 +7,22 @@ public class EffectOverlap : Effect
 	[SerializeField] protected bool bPreviewOverlapArea;
 	[SerializeField] protected Vector3 vAttackAreaCenter;
 	[SerializeField] protected Vector3 vAttackAreaSize;
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+
+		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
+
+		if (bPreviewOverlapArea)
+		{
+			GameObject objPreviewBox = Resources.Load<GameObject>("AttackAreaPreviewCube");
+			GameObject obj = Instantiate(objPreviewBox);
+			obj.transform.position = vOverlapPos;
+			obj.transform.rotation = transform.rotation;
+			obj.transform.localScale = vAttackAreaSize * 2f;
+			Destroy(obj, 1f);
+		}
+	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
 		transform.SetParent(tUser);
