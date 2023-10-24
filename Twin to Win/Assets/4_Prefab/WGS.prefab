@@ -1605,10 +1605,18 @@ MonoBehaviour:
   fHealthPoint: 3000
   fPower: 3
   fMoveSpeed: 3
-  objAttackEffect: {fileID: 7777573416650849465, guid: d05e0fcf47b191c45bf784f0717dad6b,
-    type: 3}
-  objRotationAttackEffect: {fileID: 7777573416650849465, guid: b6b8143a30683f2469e4153318f661e3,
-    type: 3}
+  objAttackEffect:
+  - {fileID: 1687933637933312804, guid: 0c0b86e08154ee144b38139a414cd7dd, type: 3}
+  - {fileID: 1687933637933312804, guid: 8eaafdc1f9fd17644a58eece559649f2, type: 3}
+  - {fileID: 1687933637933312804, guid: 285d99c4ffa9f2b458f0301e65b1fe58, type: 3}
+  - {fileID: 1687933637933312804, guid: 22c32a5ffc4b2924b84b7c2e1e3bbd23, type: 3}
+  - {fileID: 4968920877767275827, guid: 9b712e44afd9ff244a3a6b63ee59f9bf, type: 3}
+  fAttackDamages:
+  - 120
+  - 120
+  - 200
+  - 100
+  - 250
   srtQSkill:
     objSkillEffect: {fileID: 1687933637933312804, guid: 7af160710142b3641a88b97c3a38ecb7,
       type: 3}
@@ -1616,9 +1624,9 @@ MonoBehaviour:
     objSkillArea: []
     fSkillCoolDown: 15
     fSkillDamage:
-    - 200
-    - 200
     - 300
+    - 300
+    - 400
     fMoveTimeOnBySkill: 0
   srtWSkill:
     objSkillEffect: {fileID: 4968920877767275827, guid: 661379ada5f4d9648a4584d4014223d5,
@@ -1627,7 +1635,7 @@ MonoBehaviour:
     objSkillArea: []
     fSkillCoolDown: 15
     fSkillDamage:
-    - 70
+    - 200
     fMoveTimeOnBySkill: 0.2
   srtESkill:
     objSkillEffect: {fileID: 4968920877767275827, guid: edb740669e7386947b5d71e349e7457e,
@@ -1637,7 +1645,7 @@ MonoBehaviour:
     - {fileID: 7777573416650849465, guid: 7ecb3a468d3f0f6498398cd72aaebab9, type: 3}
     fSkillCoolDown: 15
     fSkillDamage:
-    - 90
+    - 150
     fMoveTimeOnBySkill: 0
   srtRSkill:
     objSkillEffect: {fileID: 7124031472308039348, guid: 93b1270768814394391ed4b77062709b,

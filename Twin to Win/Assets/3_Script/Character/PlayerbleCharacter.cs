@@ -29,8 +29,8 @@ public class PlayerbleCharacter : Character
     public float fMoveSpeed = 3f;
 
     [Header("Attack Type Info")]
-    public GameObject objAttackEffect;
-    public GameObject objRotationAttackEffect;
+    public GameObject[] objAttackEffect;
+    public float[] fAttackDamages;
     public Skill srtQSkill;
     public Skill srtWSkill;
     public Skill srtESkill;
@@ -171,10 +171,10 @@ public class PlayerbleCharacter : Character
 
     protected virtual void StateInitalizeOnExit()
     {
-        cQSkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
-        cWSkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
-        cESkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
-        cRSkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cQSkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cWSkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cESkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cRSkillState.onExit += () => { Player.instance.canTag = true; InPoolAddSkillEffect(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
         cNormalAttack[0].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
         cNormalAttack[1].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
         cNormalAttack[2].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
@@ -426,11 +426,21 @@ public class PlayerbleCharacter : Character
     * 데미지 주는 방식은 총 3가지.
     * 1. 이펙트 켬과 동시에 순차적 데미지 : 플레이어 inspector 창에 있는 Damage 배열에 데미지 추가 후 애니메이션 이벤트에는 OnLinearDamage만 추가
     * 2. 이펙트가 플레이어를 따라다니면서 일정 간격 지속 딜 :  OnFollowPlayerSkillDamage를 애니메이션 이벤트에 넣는데 float에 스킬 총 플레이 타임, int에 총 타격 횟수, 데미지는 2와 동일 [문제점: 코루틴이라 독딜처럼 딜이 들어감]
-    * 3. 이펙트와 데미지 따로 분리 : OnDamageWithoutEffect, OnEffectWithoutDamage 애니메이션 이벤트에 추가. [문제점 : 잠깐이지만 Clone 두 개 켜짐]  
+    * 3. 이펙트와 데미지 따로 분리 : OnDamageWithoutEffect, OnEffectWithoutDamage 애니메이션 이벤트에 추가.
     *                               OnDamageWithoutEffect는 inspector에서 스킬 범위를 나타내는 프리펩을 따로 넣어야함
     */
 
-    public virtual void OnLinearDamage()
+    public void OnLinearAttackDamage()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(objAttackEffect[nNormalAttackCount]);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(fAttackDamages[nNormalAttackCount]);
+
+        playerEffect.OnSkillEffect(transform);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+    }
+
+    public virtual void OnLinearSkillDamage()
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
@@ -503,14 +513,6 @@ public class PlayerbleCharacter : Character
             obj.gameObject.SetActive(false);
         }
     }
-
-    protected void EnableRotationAttackEffect(float damage)
-    {
-        GameObject obj = EffectManager.instance.GetEffect(objRotationAttackEffect);
-        float finalDamage = ChangeDamageToRandom(damage);
-        obj.GetComponent<Effect>().OnAction(transform, finalDamage, 1 << 7);
-    }
-
 
     private void OnMoveOnBySkill(AnimationEvent skillEvent)   // 애니메이션 이벤트에서 power 수정
     {

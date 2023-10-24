@@ -71,7 +71,7 @@ public class PlayerEffect : EffectOverlap
     {
         transform.SetParent(tUser);
         transform.localPosition = Vector3.zero;
-        transform.localEulerAngles = Vector3.zero + originSkillObject.transform.localEulerAngles;
+        transform.localEulerAngles = tUser.eulerAngles + originSkillObject.transform.localEulerAngles;
         transform.SetParent(null);
     }
 

@@ -278,8 +278,25 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             RSkillGauge.Instance.fBlueGauge = 0f;
             srtCurrentSkill = srtRSkill;
             ChangeState(cRSkillState);
-            OnWGSRSkill();
+            StartWGSRSkillEffect();
         }
+    }
+
+    private void StartWGSRSkillEffect()
+    {
+        isSkillEffectFollowingPlayer = true;
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        obj.GetComponent<WGSR>().StartWGSREffect();
+        obj.GetComponent<PlayerEffect>().OnSkillEffect(objWeaponPrefab.transform);
+        objWeapon.SetActive(false);
+    }
+
+    public void ResetWGSRSkillEffect()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
+        WGSR wgsr = obj.GetComponent<WGSR>();
+
+        StartCoroutine(wgsr.StartIncreaseTransparency());
     }
 
     private void UseRSkillWithoutKey(Vector3 target)
@@ -317,13 +334,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
         }
     }
 
-    private void OnWGSRSkill()
-    {
-        isSkillEffectFollowingPlayer = true;
-        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
-        obj.GetComponent<WGSR>().StartWGSREffect();
-        obj.GetComponent<PlayerEffect>().OnSkillEffect(objWeaponPrefab.transform);
-        objWeapon.SetActive(false);
-    }
+
 
 }

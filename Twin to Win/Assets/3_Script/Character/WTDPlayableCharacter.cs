@@ -67,7 +67,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
             && cStateMachine.GetCurrentState() != cToStandState;
     }
 
-    public override void OnLinearDamage()
+    public override void OnLinearSkillDamage()
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillEffect);
         PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();

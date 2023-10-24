@@ -96,12 +96,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ed2dacb478d4e4cad0c3f014cc0457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fRunTime: 1
+  fRunTime: 8
   soundComponent: {fileID: 0}
   clip: {fileID: 0}
   criticalHit: 1
   bPreviewOverlapArea: 0
-  vAttackAreaCenter: {x: 0, y: 1, z: 4}
-  vAttackAreaSize: {x: 5, y: 1, z: 7}
+  vAttackAreaCenter: {x: 0, y: 1, z: 16.8}
+  vAttackAreaSize: {x: 5, y: 1, z: 32.2}
   isSphere: 0
   sphereAttackAreaRange: 0

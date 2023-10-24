@@ -18,21 +18,24 @@ public class WGSR : MonoBehaviour
     {
         skinWGSRSkill = GetComponent<SkinnedMeshRenderer>();
         matWGSRSkill = skinWGSRSkill.material;
+        ResetShapeKeys();
+        ResetTransparency();
     }
 
     public void StartWGSREffect()
     {
+        ResetShapeKeys();
         ResetTransparency();
         StartCoroutine(StartDecreaseTransparency());
         StartCoroutine(StartDecreaseShapesKey());
     }
 
-    private void ResetTransparency()
+    public void ResetTransparency()
     {
         matWGSRSkill.SetFloat("_Transparency", maxTransparency);
     }
 
-    private void ResetShapeKeys()
+    public void ResetShapeKeys()
     {
         for (int i = 0; i < iTotalKey; i++)
         {
@@ -40,18 +43,16 @@ public class WGSR : MonoBehaviour
         }
     }
 
-    // 검이 땅에 박힐 때 투명도가 올라가는 방법 찾기
-    private IEnumerator StartIncreaseTransparency()
+    public IEnumerator StartIncreaseTransparency()
     {
-        float transparencyDecreasingSpeed = 1.5f;
+        float transparencyDecreasingSpeed = 10f;
 
         for (float i = matWGSRSkill.GetFloat("_Transparency"); i < maxTransparency; i += Time.deltaTime * transparencyDecreasingSpeed)
         {
+            print(i);
             matWGSRSkill.SetFloat("_Transparency", i);
             yield return null;
         }
-        ResetTransparency();
-        ResetShapeKeys();
     }
 
     private IEnumerator StartDecreaseTransparency()
@@ -64,7 +65,6 @@ public class WGSR : MonoBehaviour
             matWGSRSkill.SetFloat("_Transparency", i);
             yield return null;
         }
-        StartCoroutine(StartIncreaseTransparency());
     }
 
     private IEnumerator StartDecreaseShapesKey()
