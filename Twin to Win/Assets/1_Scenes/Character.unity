@@ -1457,6 +1457,79 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 152053129}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2013483786
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.000000010084625
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8db172bfd640310489b677448f0f410e, type: 2}
+    - target: {fileID: 919132149155446097, guid: 158439d19d8de5448969d87d738d209a,
+        type: 3}
+      propertyPath: m_Name
+      value: WTD Attack 3 Model
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 158439d19d8de5448969d87d738d209a, type: 3}
 --- !u!1 &2084376860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,6 +1635,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1492261417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &3228384950463950595
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944169113163122570, guid: 51324a8707482064495a9c95027e5e6b,
+        type: 3}
+      propertyPath: m_Name
+      value: WTD Attack 2 Effect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 51324a8707482064495a9c95027e5e6b, type: 3}
 --- !u!1001 &3972469169386667141
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1636,6 +1777,74 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3972469169386667141}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5317658260955063951
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806383411407486940, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944169113163122570, guid: 29e99fbb69816604c82974b6913e4f5c,
+        type: 3}
+      propertyPath: m_Name
+      value: WTD Attack 1 Effect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 29e99fbb69816604c82974b6913e4f5c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1652,3 +1861,6 @@ SceneRoots:
   - {fileID: 1463721687}
   - {fileID: 964326126}
   - {fileID: 152053129}
+  - {fileID: 5317658260955063951}
+  - {fileID: 3228384950463950595}
+  - {fileID: 2013483786}

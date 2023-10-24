@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WTD Attack 3 Outer Material
+  m_Shader: {fileID: -6465566751694194690, guid: e8a3358387442654db3edc1f8aa3a7f2,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _SampleTexture2D_2b4d4e1ea7ea4441aa46622b32b12671_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a507b7af396ebb044a2ec20cb049c675, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_4cdb3bffa0fa4418bfd88357bd4ad3b8_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 5d56169b18b169344aac1faf4eea1a53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_953df836baa5469bb6ca9e7d5903da88_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 5d56169b18b169344aac1faf4eea1a53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_df6042b206514013aee6c52b6ac5d164_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: c2a420c227ec51c43aced0a7bbd2cdb8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Emission: 10
+    - _Inner_Emission: 6.01
+    - _Outer_Emission: 4.56
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Root_Emission: 10.97
+    m_Colors:
+    - _Inner_Color: {r: 1, g: 0.39000797, b: 0, a: 0}
+    - _Outer_Color: {r: 0.6415094, g: 0.050669327, b: 0, a: 0}
+    - _Root_Color: {r: 1, g: 0.5502859, b: 0.240566, a: 0}
+  m_BuildTextureStacks: []
+--- !u!114 &2176242581020137058
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7

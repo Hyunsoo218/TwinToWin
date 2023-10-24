@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -36,6 +37,7 @@ public class PlayerbleCharacter : Character
     public Skill srtRSkill;
 
     protected Skill srtCurrentSkill;
+    private Queue<GameObject> queAddSkillEffectList = new Queue<GameObject>();
 
     [Header("Move Info")]
     public GameObject objWGSMouseIndicator;
@@ -96,6 +98,7 @@ public class PlayerbleCharacter : Character
     public struct Skill
     {
         public GameObject objSkillEffect;
+        public GameObject[] objAddSkillEffect;
         public GameObject[] objSkillArea;
         public float fSkillCoolDown;
         public float[] fSkillDamage;
@@ -104,6 +107,7 @@ public class PlayerbleCharacter : Character
     protected float fMoveOnBySkillTimer;
     protected int fSkillDamageLinearCount = 0;
     protected int fSkillAreaCount = 0;
+    protected int fAddEffectCount = 0;
     [HideInInspector] public bool isSkillEffectFollowingPlayer = false;
     #endregion
 
@@ -167,10 +171,10 @@ public class PlayerbleCharacter : Character
 
     protected virtual void StateInitalizeOnExit()
     {
-        cQSkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
-        cWSkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
-        cESkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
-        cRSkillState.onExit += () => { Player.instance.canTag = true; fSkillDamageLinearCount = 0; fSkillAreaCount = 0; };
+        cQSkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cWSkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cESkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
+        cRSkillState.onExit += () => { Player.instance.canTag = true; queAddSkillEffectList.Clear(); fSkillDamageLinearCount = 0; fSkillAreaCount = 0; fAddEffectCount = 0; };
         cNormalAttack[0].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
         cNormalAttack[1].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
         cNormalAttack[2].onExit += () => { if (isMoving == true) { eMouseState = mouseState.Hold; isAttackDuringHoldMove = false; } isNormalAttackState = false; };
@@ -475,6 +479,29 @@ public class PlayerbleCharacter : Character
         PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
 
         playerEffect.OnSkillEffect(transform);
+    }
+
+    public void OnAddSkillEffect()
+    {
+        GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objAddSkillEffect[fAddEffectCount]);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+
+        queAddSkillEffectList.Enqueue(obj);
+        playerEffect.OnAddSkillEffect(transform, obj);
+
+        if (fAddEffectCount != srtCurrentSkill.objAddSkillEffect.Length - 1)
+        {
+            fAddEffectCount++;
+        }
+    }
+
+    private void InPoolAddSkillEffect()
+    {
+        for (int i = 0; i < queAddSkillEffectList.Count; i++)
+        {
+            queAddSkillEffectList.TryDequeue(out GameObject obj);
+            obj.gameObject.SetActive(false);
+        }
     }
 
     protected void EnableRotationAttackEffect(float damage)

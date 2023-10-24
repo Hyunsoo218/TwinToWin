@@ -67,6 +67,14 @@ public class PlayerEffect : EffectOverlap
         }
     }
 
+    public void OnAddSkillEffect(Transform tUser, GameObject originSkillObject)
+    {
+        transform.SetParent(tUser);
+        transform.localPosition = Vector3.zero;
+        transform.localEulerAngles = Vector3.zero + originSkillObject.transform.localEulerAngles;
+        transform.SetParent(null);
+    }
+
     private IEnumerator StartSkillEffectFollowingPlayer(Transform tUser)
     {
         while (Player.instance.cCurrentCharacter.isSkillEffectFollowingPlayer == true)
@@ -77,6 +85,7 @@ public class PlayerEffect : EffectOverlap
             yield return null;
         }
         transform.SetParent(null);
+        InPoolEvent();
     }
 
     public void OnSkillContinueDamage(Transform tUser, float fDamage, int nTargetLayer, float totalSkillTime, int totalAttackCountInSkill)
