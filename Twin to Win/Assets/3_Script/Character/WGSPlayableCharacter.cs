@@ -108,7 +108,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
             || cStateMachine.GetCurrentState() == cWSkillState
             || cStateMachine.GetCurrentState() == cESkillState)
         {
-            Player.instance.SetPlayerHp(currentHp - (fAmount * 0.65f));
+            Player.instance.SetPlayerHp(currentHp - (fAmount * 0.9f));
         }
         else
         {

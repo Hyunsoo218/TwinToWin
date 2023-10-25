@@ -994,7 +994,6 @@ MonoBehaviour:
   - 60
   - 70
   - 80
-  objRotationAttackEffect: {fileID: 0}
   srtQSkill:
     objSkillEffect: {fileID: 5999939274631230217, guid: b7d7a218c7d1bdf42b85c4ffc2c28cdd,
       type: 3}
@@ -1008,10 +1007,10 @@ MonoBehaviour:
     objSkillEffect: {fileID: 3526334955307080371, guid: 409b969e3efeca54fb886b83b9fa1a65,
       type: 3}
     objAddSkillEffect: []
-    objSkillArea: []
+    objSkillArea:
+    - {fileID: 5439367580800748029, guid: 3dc6f1d0fc7b87642a7d986c4ebf3208, type: 3}
     fSkillCoolDown: 10
-    fSkillDamage:
-    - 150
+    fSkillDamage: []
     fMoveTimeOnBySkill: 0.1
   srtESkill:
     objSkillEffect: {fileID: 5459121040908521708, guid: 74454ccceaf83014fab7b945e18c7df9,

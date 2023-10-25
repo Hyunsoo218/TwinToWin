@@ -1960,7 +1960,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.027173942
+        functionName: OnDamageWithoutEffect
+        data: 
+        objectReferenceParameter: {fileID: 7635639825151552177, guid: 9d8ef6d79626df04484e98aeecf163d7,
+          type: 3}
+        floatParameter: 90
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -2245,7 +2253,8 @@ ModelImporter:
       - time: 0.014164306
         functionName: OnDamageWithoutEffect
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 7777573416650849465, guid: 7ecb3a468d3f0f6498398cd72aaebab9,
+          type: 3}
         floatParameter: 400
         intParameter: 0
         messageOptions: 0

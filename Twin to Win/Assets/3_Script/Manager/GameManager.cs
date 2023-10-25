@@ -284,7 +284,6 @@ public class GameManager : MonoBehaviour
     private IEnumerator Stage1to2()
     {
         Player.instance.EnablePlayerInput(false);
-        Player.instance.ResetAllCharacterRSkillGauge();
         yield return new WaitForSeconds(2f);
 
         Player.instance.cCurrentCharacter.gameObject.SetActive(false);
@@ -302,7 +301,6 @@ public class GameManager : MonoBehaviour
     private IEnumerator Stage2to3()
     {
         Player.instance.EnablePlayerInput(false);
-        Player.instance.ResetAllCharacterRSkillGauge();
         yield return new WaitForSeconds(2f);
 
         Player.instance.cCurrentCharacter.gameObject.SetActive(false);
@@ -320,7 +318,6 @@ public class GameManager : MonoBehaviour
     private IEnumerator GameClear()
     {
         Player.instance.EnablePlayerInput(false);
-        Player.instance.ResetAllCharacterRSkillGauge();
         Time.timeScale = 0.2f; // 타임스케일 줄이기
         yield return new WaitForSeconds(1f);
         Time.timeScale = 1f; // 타임스케일 복귀

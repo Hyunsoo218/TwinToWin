@@ -1104,12 +1104,20 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
+      - time: 0.98501873
         functionName: OnFollowPlayerSkillDamage
         data: 
         objectReferenceParameter: {instanceID: 0}
-        floatParameter: 2
-        intParameter: 3
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: OnDamageWithoutEffect
+        data: 
+        objectReferenceParameter: {fileID: 6299766502409164722, guid: b1040c158f9edba4b88f698c31f825d1,
+          type: 3}
+        floatParameter: 200
+        intParameter: 0
         messageOptions: 0
       - time: 1
         functionName: OnMoveOnBySkill

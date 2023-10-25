@@ -13,15 +13,20 @@ public class PlayerEffect : EffectOverlap
 
         if (isSphere == true)
         {
-            Gizmos.DrawWireSphere(transform.position, sphereAttackAreaRange);
+            Gizmos.DrawWireSphere(transform.position, sphereAttackAreaRange * 2f);
         }
         else
         {
-            Gizmos.DrawWireCube(Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position, vAttackAreaSize);
+            Gizmos.DrawWireCube(Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position, vAttackAreaSize * 2f);
         }
 
     }
 #endif
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
 
     public void OnSkillDamage(Transform tUser, float fDamage, int nTargetLayer)
     {

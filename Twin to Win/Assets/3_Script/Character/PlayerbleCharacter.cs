@@ -439,6 +439,14 @@ public class PlayerbleCharacter : Character
         obj.GetComponent<PlayerEffect>().OnSkillContinueDamage(transform, finalDamage, 1 << 7, skillEvent.floatParameter, skillEvent.intParameter);
     }
 
+    public void OnDamageWithoutEffect(AnimationEvent aniEvent)
+    {
+        GameObject obj = EffectManager.instance.GetEffect((GameObject)aniEvent.objectReferenceParameter);
+        PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
+        float finalDamage = ChangeDamageToRandom(aniEvent.floatParameter);
+        playerEffect.OnSkillDamage(transform, finalDamage, 1 << 7);
+    }
+
     public void OnDamageWithoutEffect(float damage)
     {
         GameObject obj = EffectManager.instance.GetEffect(srtCurrentSkill.objSkillArea[fSkillAreaCount]);
@@ -704,6 +712,7 @@ public class PlayerbleCharacter : Character
     {
         if (cStateMachine.GetCurrentState() == cDeadState) return;
         ChangeState(cDeadState);
+        Player.instance.isMoving = false;
         Player.instance.EnablePlayerInput(false);
         GameManager.instance.GameLose();
 

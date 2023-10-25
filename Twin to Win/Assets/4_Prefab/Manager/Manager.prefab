@@ -25109,6 +25109,11 @@ MonoBehaviour:
   - {fileID: 1748445804295810553, guid: 29e99fbb69816604c82974b6913e4f5c, type: 3}
   - {fileID: 1748445804295810553, guid: 51324a8707482064495a9c95027e5e6b, type: 3}
   - {fileID: -8866101624489139095, guid: e0b00bcf763b6424aa93ec8d74d54546, type: 3}
+  - {fileID: 653255277819399266, guid: 9d8ef6d79626df04484e98aeecf163d7, type: 3}
+  - {fileID: -231743587648018086, guid: 7ecb3a468d3f0f6498398cd72aaebab9, type: 3}
+  - {fileID: -231743587648018086, guid: a98047da9a864144ca7c3134e03b2705, type: 3}
+  - {fileID: 203382064456790250, guid: b1040c158f9edba4b88f698c31f825d1, type: 3}
+  - {fileID: 2974948567769614927, guid: 3dc6f1d0fc7b87642a7d986c4ebf3208, type: 3}
 --- !u!1 &8228989012919490815
 GameObject:
   m_ObjectHideFlags: 0
@@ -28360,6 +28365,7 @@ MonoBehaviour:
   objWGS: {fileID: 3200698253786329677, guid: 00db585ca94e45d45ab217c7f3ca0dee, type: 3}
   fCurrentStamina: 10
   fUsingDodgeStamina: 3
+  fMoveSpeed: 3
   fPlayerMaxHealthPoint: 5000
   fPlayerCurrentHealthPoint: 0
   fDodgePower: 30
@@ -28369,6 +28375,11 @@ MonoBehaviour:
   canTag: 1
   fTagTimer: 99
   fTagCoolDown: 2
+  isMoving: 0
+  fRedGauge: 0
+  fBlueGauge: 0
+  fIncreaseAttackGaugeAmount: 0.02
+  fIncreaseSkillGaugeAmount: 0.1
 --- !u!1 &9161524586039057241
 GameObject:
   m_ObjectHideFlags: 0
@@ -28811,7 +28822,7 @@ PrefabInstance:
     - target: {fileID: 180353046399145841, guid: 09a9a1ad0af50294eaee6e798ca8b696,
         type: 3}
       propertyPath: playerPoolingEffect.Array.size
-      value: 23
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 4356526197955133139, guid: 09a9a1ad0af50294eaee6e798ca8b696,
         type: 3}

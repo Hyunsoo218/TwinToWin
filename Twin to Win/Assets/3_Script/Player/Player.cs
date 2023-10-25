@@ -190,7 +190,6 @@ public class Player : MonoBehaviour
 
     public IEnumerator MoveCoroutine(Vector3 mousePosOnGround, Quaternion mouseAngle)
     {
-        
         while (isMoving == true)
         {
             if (cCurrentCharacter.GetCurrentStateName() != "moveState")
