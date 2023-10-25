@@ -40,7 +40,7 @@ public class PlayerEffect : EffectOverlap
 
         if (isSphere == true)
         {
-            arrOverlapObj = Physics.OverlapSphere(transform.position, sphereAttackAreaRange, nTargetLayer);
+            arrOverlapObj = Physics.OverlapSphere(transform.position, sphereAttackAreaRange * 2f, nTargetLayer);
         }
         else
         {
