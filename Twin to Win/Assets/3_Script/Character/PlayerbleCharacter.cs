@@ -439,7 +439,7 @@ public class PlayerbleCharacter : Character
         obj.GetComponent<PlayerEffect>().OnSkillContinueDamage(transform, finalDamage, 1 << 7, skillEvent.floatParameter, skillEvent.intParameter);
     }
 
-    public void OnDamageWithoutEffect(AnimationEvent aniEvent)
+    public void OnDamageUsingEvent(AnimationEvent aniEvent)
     {
         GameObject obj = EffectManager.instance.GetEffect((GameObject)aniEvent.objectReferenceParameter);
         PlayerEffect playerEffect = obj.GetComponent<PlayerEffect>();
