@@ -38,7 +38,8 @@ public class EffectPooler
 	{
 		foreach (var item in arrEffects)
 		{
-			item.SetActive(false);
+			if(item != null)
+				item.SetActive(false);
 		}
 	}
 	public void SlowAllEffect(bool active, float slowAmount)

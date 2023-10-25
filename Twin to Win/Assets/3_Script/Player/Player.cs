@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
-using static UnityEditor.Rendering.InspectorCurveEditor;
+//using static UnityEditor.Rendering.InspectorCurveEditor;
 
 public class Player : MonoBehaviour
 {

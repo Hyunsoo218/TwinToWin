@@ -9,9 +9,14 @@ public class BossAttackEffect6Finish : Effect
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
+	[SerializeField] private GameObject explosion;
+	[SerializeField] private GameObject secondExplosion;
 
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
+		explosion.SetActive(false);
+		secondExplosion.SetActive(false);
+
 		this.tUser = tUser;
 		this.fDamage = fDamage;
 		this.nTargetLayer = nTargetLayer;
@@ -28,6 +33,9 @@ public class BossAttackEffect6Finish : Effect
 	private IEnumerator OnAction() 
 	{
 		yield return new WaitForSeconds(1.5f);
+
+		explosion.SetActive(true);
+
 		Collider[] arrOverlapObj = Physics.OverlapSphere(tUser.position, 5f, nTargetLayer);
 		foreach (Collider cItem in arrOverlapObj)
 		{
@@ -41,6 +49,9 @@ public class BossAttackEffect6Finish : Effect
 		{
 			cDSC2.OnAction(1f, FillType.Alpha);
 			yield return new WaitForSeconds(1f);
+
+			secondExplosion.SetActive(true);
+
 			arrOverlapObj = Physics.OverlapSphere(tUser.position, 8.5f, nTargetLayer);
 			foreach (Collider cItem in arrOverlapObj)
 			{

@@ -17,6 +17,13 @@ public class DamagableSpaceControl : MonoBehaviour
 	public void OnAction(float fTime, FillType eType)
 	{
 		gameObject.SetActive(true);
+		StartCoroutine(OnActionCo(fTime, eType));
+	}
+	private IEnumerator OnActionCo(float fTime, FillType eType) 
+	{
+		cArea.enabled = false;
+		yield return null;
+		cArea.enabled = true;
 		switch (eType)
 		{
 			case FillType.X:
@@ -34,6 +41,7 @@ public class DamagableSpaceControl : MonoBehaviour
 				StartCoroutine(FillingAlpha(fTime));
 				break;
 		}
+
 	}
 	public void Cancel() 
 	{

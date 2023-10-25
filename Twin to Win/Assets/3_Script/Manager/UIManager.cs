@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
     }
 	public void SetGame() 
 	{
+        cPSUI.gameObject.SetActive(false);
         cPSUI.gameObject.SetActive(true);
         cBSUI.gameObject.SetActive(false);
         cSUI.gameObject.SetActive(true);

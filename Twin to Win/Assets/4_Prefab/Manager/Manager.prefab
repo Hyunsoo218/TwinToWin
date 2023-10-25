@@ -3956,7 +3956,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC2A4\uD0AC \uC0AC\uC6A9\uC911, \uBC1B\uB294 \uD53C\uD574\uAC00 65% \uAC10\uC18C
+  m_text: "\uC2A4\uD0AC \uC0AC\uC6A9\uC911, \uBC1B\uB294 \uD53C\uD574\uAC00 90% \uAC10\uC18C
     \uB429\uB2C8\uB2E4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: db3957f464d0a0e4d965a5b68199f573, type: 2}
@@ -28366,8 +28366,8 @@ MonoBehaviour:
   fCurrentStamina: 10
   fUsingDodgeStamina: 3
   fMoveSpeed: 3
-  fPlayerMaxHealthPoint: 5000
-  fPlayerCurrentHealthPoint: 0
+  fPlayerMaxHealthPoint: 10000
+  fPlayerCurrentHealthPoint: 10000
   fDodgePower: 30
   fDodgePlayTime: 0.1
   fDodgePlayTimer: 0

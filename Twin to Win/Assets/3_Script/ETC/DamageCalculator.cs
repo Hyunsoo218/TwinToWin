@@ -11,7 +11,7 @@ public class DamageCalculator
         float damage = defaultDamage * Random.Range(0.8f, 1.2f);
 		if (criticalHit) 
         { 
-            if (Random.Range(0, 100f) < 40f)
+            if (Random.Range(0, 100f) < 71f)
             {
                 if( Player.instance.cCurrentCharacter == Player.instance.GetTwinSword()) 
                     fontColor = DamageType.red; 
