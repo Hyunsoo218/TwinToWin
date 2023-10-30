@@ -14,7 +14,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private GameObject tStage1Enemy1;
     [SerializeField] private GameObject tStage1Enemy2;
     [SerializeField] private GameObject tStage1Enemy3;
-    [SerializeField] private GameObject tStage1Enemy4;
+    //[SerializeField] private GameObject tStage1Enemy4;
     [SerializeField] private GameObject tStage2;
     [SerializeField] private GameObject tStage3;
 
@@ -41,7 +41,7 @@ public class EnemyManager : MonoBehaviour
         stage1Prefabs.Add(tStage1Enemy1);   
         stage1Prefabs.Add(tStage1Enemy2);   
         stage1Prefabs.Add(tStage1Enemy3);
-        stage1Prefabs.Add(tStage1Enemy4);   
+        //stage1Prefabs.Add(tStage1Enemy4);   
     }
     public void SetTitle()
     {

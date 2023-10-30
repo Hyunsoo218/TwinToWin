@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameClear;
     [SerializeField] private Transform canvas;
     [SerializeField] private LodingUI cLUI;
+    [SerializeField] private GameObject stop;
 	private StageUI cSUI;
 	public static UIManager instance;
 	private void Awake()
@@ -39,6 +40,7 @@ public class UIManager : MonoBehaviour
         cSUI = Instantiate(stageUIPrefab, canvas).GetComponent<StageUI>();
         cSUI.gameObject.SetActive(false);
         cLUI.gameObject.SetActive(false);
+        stop.SetActive(false); ;
     }
 	public void SetGame() 
 	{
@@ -53,6 +55,7 @@ public class UIManager : MonoBehaviour
         playerDie.SetActive(false);
         gameClear.SetActive(false);
         cLUI.gameObject.SetActive(false);
+        stop.SetActive(false);
     }
     private void Update()
 	{
@@ -143,5 +146,18 @@ public class UIManager : MonoBehaviour
     public void ActiveLodingUI(bool active) 
     {
         cLUI.gameObject.SetActive(active);
+    }
+    public void ActiveStopUI() 
+    {
+		if (stop.activeSelf)
+		{
+            stop.SetActive(false);
+            Time.timeScale = 1f;
+        }
+		else
+		{
+            stop.SetActive(true);
+            Time.timeScale = 0f;
+        }
     }
 }

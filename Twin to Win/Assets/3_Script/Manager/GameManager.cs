@@ -15,6 +15,23 @@ public class GameManager : MonoBehaviour
 	public GameStage gameStage;
 	private Queue<Action> qAsynchronousAction = new Queue<Action>();
 
+    private Coroutine returnToTitle;
+    private IEnumerator InputAnykey() 
+    {
+        float time = 0;
+		while (true)
+		{
+            time += Time.deltaTime;
+			if (Input.anyKeyDown) time = 0; 
+			if (time > 30f)
+			{
+                GoTitle();
+                break;
+			}
+            yield return null;
+		}
+    }
+
 	private void Awake()
 	{
         if (instance == null) 
@@ -29,6 +46,13 @@ public class GameManager : MonoBehaviour
     {
         //StartCoroutine(CutSceneManager.instance.PlayCutScene(CutSceneType.Stage1to2));
     }
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape) && gameStage == GameStage.Game)
+		{
+            UIManager.instance.ActiveStopUI();
+		}
+	}
 	public void AsynchronousExecution(IEnumerator enumerator) 
 	{
 		StartCoroutine(enumerator);
@@ -52,6 +76,7 @@ public class GameManager : MonoBehaviour
 	public void Stage1Start()
 	{
 		StartCoroutine(Stage1());
+        returnToTitle = StartCoroutine(InputAnykey());
 	}
 	private IEnumerator Stage1()
 	{
@@ -213,12 +238,15 @@ public class GameManager : MonoBehaviour
     }
     public void GoTitle()
     {
+        Time.timeScale = 1f;
+        StopCoroutine(returnToTitle);
         SceneManager.LoadScene(0);
         gameStage = GameStage.Title;
         StartCoroutine(GoTitleCo());
     }
     public void GameStart()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
         SceneManager.LoadScene(1);
         StartCoroutine(GameStartCo());
