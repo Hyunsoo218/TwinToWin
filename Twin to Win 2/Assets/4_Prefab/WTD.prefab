@@ -860,6 +860,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objMouseClickEffect: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}
+  debugAttackEffect: {fileID: 2415721195852585015, guid: 62d0c1e5d3366f34984623774610b165,
+    type: 3}
   Skill_Q:
     effect: {fileID: 0}
     time:
@@ -884,6 +886,10 @@ MonoBehaviour:
       max: 100
       current: 0
       percentage: 0
+  normalAttackEffects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &2372782792756679131
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class EffectOverlap : Effect
 {
-	[SerializeField] protected bool bPreviewOverlapArea;
 	[SerializeField] protected Vector3 vAttackAreaCenter;
 	[SerializeField] protected Vector3 vAttackAreaSize;
-	[SerializeField] bool isSphere = false;
-	[SerializeField] float sphereAttackAreaRange = 0f;
+	[SerializeField] protected bool isSphere = false;
+	[SerializeField] protected float sphereAttackAreaRange = 0f;
 
 #if UNITY_EDITOR
-	private void OnDrawGizmos()
+	protected void OnDrawGizmos()
 	{
 		Gizmos.color = Color.red;
 
 		if (isSphere == true)
 		{
-			Gizmos.DrawWireSphere(transform.position, sphereAttackAreaRange * 2f);
+			Gizmos.DrawWireSphere(transform.position, sphereAttackAreaRange);
 		}
 		else
 		{
@@ -26,22 +25,6 @@ public class EffectOverlap : Effect
 
 	}
 #endif
-	protected override void OnEnable()
-	{
-		base.OnEnable();
-
-		Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
-
-		if (bPreviewOverlapArea)
-		{
-			GameObject objPreviewBox = Resources.Load<GameObject>("AttackAreaPreviewCube");
-			GameObject obj = Instantiate(objPreviewBox);
-			obj.transform.position = vOverlapPos;
-			obj.transform.rotation = transform.rotation;
-			obj.transform.localScale = vAttackAreaSize * 2f;
-			Destroy(obj, 1f);
-		}
-	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
 		transform.SetParent(tUser);
@@ -60,16 +43,6 @@ public class EffectOverlap : Effect
 			{
 				DamageCalculator.OnDamage(cTarget, fDamage, criticalHit);
 			}
-		}
-
-		if (bPreviewOverlapArea)
-		{
-			GameObject objPreviewBox = Resources.Load<GameObject>("AttackAreaPreviewCube");
-			GameObject obj = Instantiate(objPreviewBox);
-			obj.transform.position = vOverlapPos;
-			obj.transform.rotation = transform.rotation;
-			obj.transform.localScale = vAttackAreaSize * 2f;
-			Destroy(obj, 1f);
 		}
 	}
 }

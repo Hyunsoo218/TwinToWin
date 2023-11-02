@@ -1468,19 +1468,22 @@ MonoBehaviour:
   objMouseClickEffect: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}
   Skill_Q:
-    effect: {fileID: 0}
+    effect: {fileID: 2064360356517286236, guid: 16d8fbe49be02604da68517bf0ed8439,
+      type: 3}
     time:
       max: 15
       current: 0
       percentage: 0
   Skill_W:
-    effect: {fileID: 0}
+    effect: {fileID: 3091728532071944071, guid: 26dc52d62ba3db84e9bf766dcf1ddd28,
+      type: 3}
     time:
       max: 15
       current: 0
       percentage: 0
   Skill_E:
-    effect: {fileID: 0}
+    effect: {fileID: 6689812960974169083, guid: 7e07f27798538e44188ffc8737410198,
+      type: 3}
     time:
       max: 20
       current: 0
@@ -1491,6 +1494,12 @@ MonoBehaviour:
       max: 100
       current: 0
       percentage: 0
+  normalAttackEffects:
+  - {fileID: 569494738813587320, guid: 0ccefbd5b99592c499c489ba3d10a3f0, type: 3}
+  - {fileID: 1710579562657049537, guid: a78dc3a0da06c1f469f4c541c2dcd0c9, type: 3}
+  - {fileID: 7590151841977074956, guid: 0080f0dc31db77148ad4dfe690f7af6f, type: 3}
+  - {fileID: 2916078924910215032, guid: 88db20225060e674ea2f6e87e74c0ef9, type: 3}
+  - {fileID: 6987180940435919702, guid: 952ca5f2267b59744b4246f426b3b00f, type: 3}
 --- !u!1 &3461530097919017278
 GameObject:
   m_ObjectHideFlags: 0

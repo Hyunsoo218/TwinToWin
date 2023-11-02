@@ -9,12 +9,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 {
 	private (int max, int current) eSkillEffectCount = (20, 0);
 
-	protected override void StateInitalize()
-	{
-		base.StateInitalize();
-		for (int i = 0; i < 5; i++)
-			normalAttack.Add(new State("Attack_" + i));
-	}
 	protected override void StateInitalizeOnEnter()
 	{
 		base.StateInitalizeOnEnter();
@@ -22,7 +16,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 			agent.isStopped = false;
 		};
 		wSkillState.onEnter += () => {
-			StartCoroutine(LinearMovement(1f, 8f, 0.5f));
+			StartCoroutine(LinearMovement(1f, 12f, 0.5f));
 			canDodge = false;
 		};
 	}
@@ -37,7 +31,8 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 	{
 		base.StateInitalizeOnExit();
 		eSkillState.onExit += () => {
-			if(gameObject.activeSelf)
+			eSkillEffectCount.current = 0;
+			if (gameObject.activeSelf)
 				agent.isStopped = true;
 		};
 	}
@@ -54,11 +49,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 	}
 	public void ESkillEffect()
 	{
+		EnableAttackEffect();
+
 		eSkillEffectCount.current++;
 
 		if (eSkillEffectCount.current >= eSkillEffectCount.max)
 		{
-			eSkillEffectCount.current = 0;
 			ReturnToIdle();
 		}
 	}

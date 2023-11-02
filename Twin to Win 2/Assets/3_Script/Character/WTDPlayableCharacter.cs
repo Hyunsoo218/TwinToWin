@@ -7,12 +7,6 @@ using UnityEngine.AI;
 
 public class WTDPlayableCharacter : PlayerbleCharacter
 {
-	protected override void StateInitalize()
-	{
-		base.StateInitalize();
-		for (int i = 0; i < 3; i++)
-			normalAttack.Add(new State("Attack_" + i));
-	}
 	protected override void StateInitalizeOnEnter()
 	{
 		base.StateInitalizeOnEnter();

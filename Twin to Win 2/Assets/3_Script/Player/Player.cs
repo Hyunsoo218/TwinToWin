@@ -175,11 +175,11 @@ public class Player : MonoBehaviour
     {
         Ray ray;
         NavMeshHit navMeshHit;
-        RaycastHit hit;
         Vector3 pos = Vector3.zero;
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
 
-        if (Physics.Raycast(ray, out hit, 100f))
+        foreach (var hit in hits)
         {
             if (NavMesh.SamplePosition(hit.point, out navMeshHit, 1f, NavMesh.AllAreas))
             {

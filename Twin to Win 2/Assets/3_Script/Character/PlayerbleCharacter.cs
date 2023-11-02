@@ -35,7 +35,8 @@ public class PlayerbleCharacter : Character
     [SerializeField] protected Skill Skill_W;
     [SerializeField] protected Skill Skill_E;
     [SerializeField] protected Skill Skill_R;
-
+    [SerializeField] protected List<GameObject> normalAttackEffects;
+    protected GameObject nextEffect;
     protected State idleState;
     protected State moveState;
     protected State dodgeState;
@@ -50,6 +51,7 @@ public class PlayerbleCharacter : Character
     protected bool canDodge = true;
     protected bool isDie = false;
     protected int attackCount = -1;
+
 
     #region Initalize
     protected void Awake()
@@ -79,6 +81,8 @@ public class PlayerbleCharacter : Character
         eSkillState = new State("Skill_E");
         rSkillState = new State("Skill_R");
         dieState = new State("Die");
+        for (int i = 0; i < normalAttackEffects.Count; i++) 
+            normalAttack.Add(new State("Attack_" + i));
     }
     protected virtual void StateInitalizeOnEnter()
     {
@@ -110,6 +114,7 @@ public class PlayerbleCharacter : Character
             canAttack = false;
             canDodge = true;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_Q));
+            nextEffect = Skill_Q.effect;
         };
         wSkillState.onEnter = () => {
             ChangeAnimation(wSkillState.strStateName);
@@ -117,6 +122,7 @@ public class PlayerbleCharacter : Character
             canAttack = false;
             canDodge = true;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_W));
+            nextEffect = Skill_W.effect;
         };
         eSkillState.onEnter = () => {
             ChangeAnimation(eSkillState.strStateName);
@@ -124,6 +130,7 @@ public class PlayerbleCharacter : Character
             canAttack = false;
             canDodge = true;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_E));
+            nextEffect = Skill_E.effect;
         };
         rSkillState.onEnter = () => {
             ChangeAnimation(rSkillState.strStateName);
@@ -139,13 +146,15 @@ public class PlayerbleCharacter : Character
             isDie = true;
             canDodge = false;
         };
-		foreach (var item in normalAttack)
-		{
-            item.onEnter = () => {
-                ChangeAnimation(item.strStateName);
+        for (int i = 0; i < normalAttack.Count; i++)
+        {
+            int index = i;
+            normalAttack[index].onEnter = () => {
+                ChangeAnimation(normalAttack[index].strStateName);
                 canMove = false;
                 canAttack = false;
                 canDodge = true;
+                nextEffect = normalAttackEffects[index];
             };
         }
     }
@@ -224,6 +233,11 @@ public class PlayerbleCharacter : Character
         if (isDie) return;
         attackCount = -1;
         ChangeState(idleState);
+    }
+    public void EnableAttackEffect()
+    {
+        GameObject effect = EffectManager.instance.GetEffect(nextEffect);
+        effect.GetComponent<Effect>().OnAction(transform, 100f, 1 << 7);
     }
     #endregion Animation Event
 
