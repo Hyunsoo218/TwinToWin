@@ -53,6 +53,7 @@ public class PlayerbleCharacter : Character
     protected bool isDie = false;
     protected bool canTag = true;
     protected bool canDamage = true;
+    protected bool canSkill = true;
     protected int attackCount = -1;
 
 
@@ -97,6 +98,7 @@ public class PlayerbleCharacter : Character
             canTag = true;
             attackCount = -1;
             canDamage = true;
+            canSkill = true;
         };
         moveState.onEnter = () => {
             ChangeAnimation(moveState.strStateName);
@@ -106,6 +108,7 @@ public class PlayerbleCharacter : Character
             agent.isStopped = false;
             canTag = true;
             canDamage = true;
+            canSkill = true;
         };
         dodgeState.onEnter = () => {
             ChangeAnimation(dodgeState.strStateName);
@@ -116,6 +119,7 @@ public class PlayerbleCharacter : Character
             StartCoroutine(LinearMovement(0.15f, 4f, 0, exitEvent));
             canTag = false;
             canDamage = false;
+            canSkill = false;
         };
         qSkillState.onEnter = () => {
             ChangeAnimation(qSkillState.strStateName);
@@ -127,6 +131,7 @@ public class PlayerbleCharacter : Character
             canTag = false;
             canDamage = true;
             AddRSkillTime(10f);
+            canSkill = false;
         };
         wSkillState.onEnter = () => {
             ChangeAnimation(wSkillState.strStateName);
@@ -138,6 +143,7 @@ public class PlayerbleCharacter : Character
             canTag = false;
             canDamage = true;
             AddRSkillTime(10f);
+            canSkill = false;
         };
         eSkillState.onEnter = () => {
             ChangeAnimation(eSkillState.strStateName);
@@ -149,6 +155,7 @@ public class PlayerbleCharacter : Character
             canTag = false;
             canDamage = true;
             AddRSkillTime(10f);
+            canSkill = false;
         };
         rSkillState.onEnter = () => {
             ChangeAnimation(rSkillState.strStateName);
@@ -159,6 +166,7 @@ public class PlayerbleCharacter : Character
             canTag = false;
             canDamage = false;
             Skill_R.time.current = 0;
+            canSkill = false;
         };
         dieState.onEnter = () => {
             ChangeAnimation(dieState.strStateName);
@@ -168,6 +176,7 @@ public class PlayerbleCharacter : Character
             canDodge = false;
             canTag = false;
             canDamage = false;
+            canSkill = false;
         };
         for (int i = 0; i < normalAttack.Count; i++)
         {
@@ -180,6 +189,7 @@ public class PlayerbleCharacter : Character
                 nextEffect = normalAttackEffects[index];
                 canDamage = true;
                 AddRSkillTime(1.3f);
+                canSkill = true;
             };
         }
     }
@@ -235,7 +245,7 @@ public class PlayerbleCharacter : Character
     }
     public void OnSkill(SkillType type, Vector3 targetPos)
     {
-        if (!canAttack || isDie || !CanUseSkill(type)) return;
+        if (!canSkill || isDie || !CanUseSkill(type)) return;
 		Rotate(targetPos);
         switch (type)
 		{

@@ -36,11 +36,11 @@ public class PlayerEffectWTD_W_Skill : PlayerEffect
 			{
 				DamageInfo damageInfo = DamageCalculator.GetDamageInfo(target, damage, criticalHit);
 
-				target.Damage(damageInfo.damage);
-				UIManager.instance.OnDamageFont(target.transform.position, damageInfo.fontColor, damageInfo.damage);
-
 				if (target.GetHP() <= damageInfo.damage)
 					Player.instance.TwinSword.ResetSkillTime();
+				
+				target.Damage(damageInfo.damage);
+				UIManager.instance.OnDamageFont(target.transform.position, damageInfo.fontColor, damageInfo.damage);
 			}
 		}
 	}
