@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
 
     public void OnTag(InputAction.CallbackContext context) 
     {
-        if (context.phase == InputActionPhase.Started) 
+        if (context.phase == InputActionPhase.Started && CurrentCharacter.GetCanTag()) 
         {
             DoTag();
         }

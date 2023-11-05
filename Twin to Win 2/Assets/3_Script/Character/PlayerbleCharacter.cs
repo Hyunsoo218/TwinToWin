@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public enum SkillType
 {
@@ -36,6 +36,7 @@ public class PlayerbleCharacter : Character
     [SerializeField] protected Skill Skill_E;
     [SerializeField] protected Skill Skill_R;
     [SerializeField] protected List<GameObject> normalAttackEffects;
+    [SerializeField] protected Transform modelRoot;
     protected GameObject nextEffect;
     protected State idleState;
     protected State moveState;
@@ -50,6 +51,8 @@ public class PlayerbleCharacter : Character
     protected bool canAttack = true;
     protected bool canDodge = true;
     protected bool isDie = false;
+    protected bool canTag = true;
+    protected bool canDamage = true;
     protected int attackCount = -1;
 
 
@@ -91,7 +94,9 @@ public class PlayerbleCharacter : Character
             canMove = true;
             canAttack = true;
             canDodge = true;
+            canTag = true;
             attackCount = -1;
+            canDamage = true;
         };
         moveState.onEnter = () => {
             ChangeAnimation(moveState.strStateName);
@@ -99,6 +104,8 @@ public class PlayerbleCharacter : Character
             canAttack = true;
             canDodge = true;
             agent.isStopped = false;
+            canTag = true;
+            canDamage = true;
         };
         dodgeState.onEnter = () => {
             ChangeAnimation(dodgeState.strStateName);
@@ -107,6 +114,8 @@ public class PlayerbleCharacter : Character
             canDodge = true;
             Action exitEvent = () => ReturnToIdle();
             StartCoroutine(LinearMovement(0.15f, 4f, 0, exitEvent));
+            canTag = false;
+            canDamage = false;
         };
         qSkillState.onEnter = () => {
             ChangeAnimation(qSkillState.strStateName);
@@ -115,6 +124,9 @@ public class PlayerbleCharacter : Character
             canDodge = true;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_Q));
             nextEffect = Skill_Q.effect;
+            canTag = false;
+            canDamage = true;
+            AddRSkillTime(10f);
         };
         wSkillState.onEnter = () => {
             ChangeAnimation(wSkillState.strStateName);
@@ -123,6 +135,9 @@ public class PlayerbleCharacter : Character
             canDodge = true;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_W));
             nextEffect = Skill_W.effect;
+            canTag = false;
+            canDamage = true;
+            AddRSkillTime(10f);
         };
         eSkillState.onEnter = () => {
             ChangeAnimation(eSkillState.strStateName);
@@ -131,6 +146,9 @@ public class PlayerbleCharacter : Character
             canDodge = true;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_E));
             nextEffect = Skill_E.effect;
+            canTag = false;
+            canDamage = true;
+            AddRSkillTime(10f);
         };
         rSkillState.onEnter = () => {
             ChangeAnimation(rSkillState.strStateName);
@@ -138,6 +156,9 @@ public class PlayerbleCharacter : Character
             canAttack = false;
             canDodge = false;
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_R));
+            canTag = false;
+            canDamage = false;
+            Skill_R.time.current = 0;
         };
         dieState.onEnter = () => {
             ChangeAnimation(dieState.strStateName);
@@ -145,6 +166,8 @@ public class PlayerbleCharacter : Character
             canAttack = false;
             isDie = true;
             canDodge = false;
+            canTag = false;
+            canDamage = false;
         };
         for (int i = 0; i < normalAttack.Count; i++)
         {
@@ -155,6 +178,8 @@ public class PlayerbleCharacter : Character
                 canAttack = false;
                 canDodge = true;
                 nextEffect = normalAttackEffects[index];
+                canDamage = true;
+                AddRSkillTime(1.3f);
             };
         }
     }
@@ -210,7 +235,7 @@ public class PlayerbleCharacter : Character
     }
     public void OnSkill(SkillType type, Vector3 targetPos)
     {
-        if (!canMove || isDie || !CanUseSkill(type)) return;
+        if (!canAttack || isDie || !CanUseSkill(type)) return;
 		Rotate(targetPos);
         switch (type)
 		{
@@ -242,7 +267,11 @@ public class PlayerbleCharacter : Character
     #endregion Animation Event
 
     #region In Game Event
-    public override void Damage(float amount) => Player.instance.CurrentHealthPoint -= amount;
+    public override void Damage(float amount) 
+    {
+        if (!canDamage) return;
+        Player.instance.CurrentHealthPoint -= amount; 
+    }
     public override void Die()
     {
         if (isDie) return;
@@ -283,6 +312,25 @@ public class PlayerbleCharacter : Character
 		}
         exitEvent?.Invoke();
     }
+    protected IEnumerator LinearJumpMovement(float time, float height, float delayTime = 0, Action exitEvent = null)
+    {
+        agent.updatePosition = false;
+        float runTime = 0;
+        time -= delayTime;
+        
+        yield return new WaitForSeconds(delayTime);
+
+        while (runTime <= time)
+        {
+            runTime += Time.deltaTime;
+            transform.position = new Vector3(transform.position.x, height * (float)Math.Sin(180 * runTime / time * Mathf.Deg2Rad), transform.position.z);
+            yield return null;
+        }
+
+        exitEvent?.Invoke();
+        agent.nextPosition = transform.position;
+        agent.updatePosition = true;
+    }
     protected bool CanUseSkill(SkillType type) 
     {
 		switch (type)
@@ -319,6 +367,11 @@ public class PlayerbleCharacter : Character
         usingSkill.time.current = usingSkill.time.max;
     }
     protected void OnDisable() => ChangeState(idleState);
+    protected void AddRSkillTime(float addTime) 
+    {
+        addTime = Random.Range(addTime * 0.8f, addTime * 1.2f);
+        Skill_R.time.current += addTime;
+    }
     #endregion In Game Event
 
     #region Public Event
@@ -345,5 +398,7 @@ public class PlayerbleCharacter : Character
         }
         return new SkillTimeInfo(0, 0);
     }
+    public bool GetCanTag() => canTag;
+    public virtual void ResetSkillTime() => print("override ResetSkillTime()"); 
     #endregion
 }

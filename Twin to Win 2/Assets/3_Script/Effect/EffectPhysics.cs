@@ -6,7 +6,7 @@ public class EffectPhysics : Effect
 {
 	protected Collider cCollider;
 	protected Transform tUser;
-	protected float fDamage;
+	[SerializeField] protected float fDamage;
 	protected int nTargetLayer;
 
 	public override void Initialize()

@@ -124,31 +124,29 @@ public class PlayerStateUI : MonoBehaviour
 		{
 			float remainingTime = info.max - info.current;
 			if (remainingTime > 10f)
-            {
                 text = remainingTime.ToString("N0") + "s";
-            }
 			else if(remainingTime > 0f)
-            {
                 text = remainingTime.ToString("N1") + "s";
-            }
 		}
         times[(int)type].text = text;
     }
     private void SetRSkillInfo(List<Image> images, List<TextMeshProUGUI> times, PlayerbleCharacter character, SkillType type)
     {
-		//Sprite onImg = (character == Player.instance.GetTwinSword()) ? WTD_R_ON : WGS_R_ON;
-		//Sprite offImg = (character == Player.instance.GetTwinSword()) ? WTD_R_OFF : WGS_R_OFF;
+		Sprite onImg = (character == Player.instance.TwinSword) ? WTD_R_ON : WGS_R_ON;
+		Sprite offImg = (character == Player.instance.TwinSword) ? WTD_R_OFF : WGS_R_OFF;
 
-		//float gauge = Player.instance.GetRSkillGauge(character);
-  //      images[(int)type].fillAmount = gauge;
-  //      images[(int)type].sprite = (gauge >= 1f) ? onImg : offImg;
+		float gauge = 1f - character.GetSkillTimer(type).percentage;
+		images[(int)type].fillAmount = gauge;
 
-		//string text = "";
-		//if (images[(int)type].sprite != onImg)
-		//{
-		//	gauge = gauge * 99f;
-		//	text = gauge.ToString("N0") + "%";
-		//}
-  //      times[(int)type].text = text;
-    }
+		if (gauge >= 1f) 
+		{ 
+			images[(int)type].sprite = onImg;
+			times[(int)type].text = "";
+		}
+		else
+		{
+			images[(int)type].sprite = offImg;
+			times[(int)type].text = (gauge * 100f).ToString("N0") + "%";
+		}
+	}
 }

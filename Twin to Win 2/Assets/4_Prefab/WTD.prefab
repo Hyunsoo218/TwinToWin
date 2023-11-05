@@ -732,7 +732,7 @@ Transform:
   m_GameObject: {fileID: 2321357186625340115}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8, y: 2.27, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -860,18 +860,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objMouseClickEffect: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}
-  debugAttackEffect: {fileID: 2415721195852585015, guid: 62d0c1e5d3366f34984623774610b165,
-    type: 3}
   Skill_Q:
-    effect: {fileID: 0}
+    effect: {fileID: 6251284999446369850, guid: 12eb7d42aba5e474da4f3e841ae1ce97,
+      type: 3}
     time:
       max: 10
       current: 0
       percentage: 0
   Skill_W:
-    effect: {fileID: 0}
+    effect: {fileID: 7613491075393581779, guid: 94a31ba2bd10ca64c889402398a0ddcf,
+      type: 3}
     time:
-      max: 10
+      max: 5
       current: 0
       percentage: 0
   Skill_E:
@@ -887,9 +887,13 @@ MonoBehaviour:
       current: 0
       percentage: 0
   normalAttackEffects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4814089198270682894, guid: 2f34f60e3b68b174393133a487876d0b, type: 3}
+  - {fileID: 4589076786889232403, guid: fd474b3b94e01ca458e7c65d2e15b6cd, type: 3}
+  - {fileID: 391835740743265284, guid: e5c04372435e99b4f8d596a62d0209b1, type: 3}
+  - {fileID: 4589076786889232403, guid: fd474b3b94e01ca458e7c65d2e15b6cd, type: 3}
+  - {fileID: 4814089198270682894, guid: 2f34f60e3b68b174393133a487876d0b, type: 3}
+  - {fileID: 7338430111438400705, guid: 6a9e280c790509549bedf87517685453, type: 3}
+  modelRoot: {fileID: 0}
 --- !u!1 &2372782792756679131
 GameObject:
   m_ObjectHideFlags: 0

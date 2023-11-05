@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 public class PlayerEffect : EffectOverlap
 {
-	[SerializeField] float damage;
+	[SerializeField] protected float damage;
     public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
     {
 		transform.position = tUser.transform.position;
