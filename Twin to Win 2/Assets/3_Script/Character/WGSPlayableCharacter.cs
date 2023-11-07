@@ -58,4 +58,6 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 			ReturnToIdle();
 		}
 	}
+
+	public override void ResetSkillTime() { }
 }

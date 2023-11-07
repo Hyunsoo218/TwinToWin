@@ -28,7 +28,7 @@ public struct SkillTimeInfo
     public float current;
     [HideInInspector] public float percentage;
 }
-public class PlayerbleCharacter : Character
+public abstract class PlayerbleCharacter : Character
 {
     [SerializeField] protected GameObject objMouseClickEffect;
     [SerializeField] protected Skill Skill_Q;
@@ -165,7 +165,7 @@ public class PlayerbleCharacter : Character
             GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_R));
             canTag = false;
             canDamage = false;
-            Skill_R.time.current = 0;
+            nextEffect = Skill_R.effect;
             canSkill = false;
         };
         dieState.onEnter = () => {
@@ -263,9 +263,14 @@ public class PlayerbleCharacter : Character
         if (isDie) return;
         canAttack = true;
     }
-    public void ReturnToIdle()
+    public void ReturnToIdle(float delayTime = 0)
     {
         if (isDie) return;
+        StartCoroutine(DoReturnToIdle(delayTime));
+    }
+    protected IEnumerator DoReturnToIdle(float delayTime) 
+    {
+        yield return new WaitForSeconds(delayTime);
         attackCount = -1;
         ChangeState(idleState);
     }
@@ -304,17 +309,12 @@ public class PlayerbleCharacter : Character
         time -= delayTime;
         Vector3 targetPos = transform.position + transform.forward * dist;
         Vector3 startPos = transform.position;
-        yield return new WaitForSeconds(delayTime);
-
-        Ray ray;
         RaycastHit hit;
-        Vector3 pos = Vector3.zero;
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        yield return new WaitForSeconds(delayTime);
 
         while (runTime <= time)
         {
             runTime += Time.deltaTime;
-
             if (!Physics.SphereCast(transform.position + new Vector3(0, 0.6f, 0), 0.25f, transform.forward, out hit, 1f, 1 << 6))
                 transform.position = Vector3.Lerp(startPos, targetPos, runTime / time);
 
@@ -409,6 +409,6 @@ public class PlayerbleCharacter : Character
         return new SkillTimeInfo(0, 0);
     }
     public bool GetCanTag() => canTag;
-    public virtual void ResetSkillTime() => print("override ResetSkillTime()"); 
+    public abstract void ResetSkillTime();
     #endregion
 }

@@ -881,9 +881,10 @@ MonoBehaviour:
       current: 0
       percentage: 0
   Skill_R:
-    effect: {fileID: 0}
+    effect: {fileID: 8621090985553208524, guid: 96ba3799a5cda1b46a8adbc2e7bb57d9,
+      type: 3}
     time:
-      max: 100
+      max: 10
       current: 0
       percentage: 0
   normalAttackEffects:
@@ -894,6 +895,7 @@ MonoBehaviour:
   - {fileID: 4814089198270682894, guid: 2f34f60e3b68b174393133a487876d0b, type: 3}
   - {fileID: 7338430111438400705, guid: 6a9e280c790509549bedf87517685453, type: 3}
   modelRoot: {fileID: 0}
+  root: {fileID: 5354699805058211132}
 --- !u!1 &2372782792756679131
 GameObject:
   m_ObjectHideFlags: 0
