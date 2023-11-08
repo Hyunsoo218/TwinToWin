@@ -10,6 +10,7 @@ using UnityEngine.AI;
 public class MonsterCharacter : Character
 {
 	public static List<MonsterCharacter> allMonsterCharacters = new List<MonsterCharacter>();
+	public static List<MonsterCharacter> canTargetingMonsterCharacters = new List<MonsterCharacter>();
 
 	[SerializeField] protected float fMaxHealthPoint;
 	[SerializeField] protected float fHealthPoint;
@@ -51,6 +52,7 @@ public class MonsterCharacter : Character
         GetComponent<Collider>().enabled = true;
         agent.enabled = true;
         allMonsterCharacters.Add(this);
+		canTargetingMonsterCharacters.Add(this);
         agent.isStopped = true;
         StartCoroutine(SetTarget());
         InsertHpbar();

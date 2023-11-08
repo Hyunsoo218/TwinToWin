@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
+using System.Linq;
+using Random = UnityEngine.Random;
 
 public class WTDPlayableCharacter : PlayerbleCharacter
 {
@@ -33,6 +35,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 			canDamage = false;
 			canSkill = false;
 			GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_R));
+			nextEffect = Skill_R.effect;
 			StartCoroutine(RSkillAction());
 			root.SetActive(false);
 		};
@@ -46,17 +49,29 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 	}
 	private IEnumerator RSkillAction()
 	{
+		float runTime;
 		float time = 0.15f;
-		nextEffect = Skill_W.effect;
+		float randomRange = 3f;
+		MonsterCharacter target;
+		RaycastHit hit;
+		Vector3 targetPos;
+		Vector3 startPos;
+		Vector3 offsetPos;
+		float offsetX;
+		float offsetZ;
 		for (int i = 0; i < 10; i++)
 		{
-			if (MonsterCharacter.allMonsterCharacters.Count == 0) break;
-
-			float runTime = 0;
-			Vector3 targetPos = (MonsterCharacter.allMonsterCharacters[0].transform.position - transform.position).normalized * 4f + MonsterCharacter.allMonsterCharacters[0].transform.position;
-			Vector3 startPos = transform.position;
-			RaycastHit hit;
-			Rotate(targetPos);
+			if (MonsterCharacter.canTargetingMonsterCharacters.Count == 0) break;
+			runTime = 0;
+			target = MonsterCharacter.canTargetingMonsterCharacters.OrderBy(obj => {
+				return Vector3.Distance(transform.position, obj.transform.position);
+			}).FirstOrDefault();
+			offsetX = Math.Clamp(Random.Range(-randomRange, randomRange), 1.5f, 3f);
+			offsetZ = Math.Clamp(Random.Range(-randomRange, randomRange), 1.5f, 3f);
+			offsetPos = new Vector3(offsetX, 0, offsetZ);
+			targetPos = (target.transform.position + offsetPos - transform.position).normalized * 4f + target.transform.position;
+			startPos = transform.position;
+			Rotate(targetPos);  
 			EnableAttackEffect();
 			while (runTime <= time)
 			{
@@ -65,8 +80,6 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 					transform.position = Vector3.Lerp(startPos, targetPos, runTime / time);
 				yield return null;
 			}
-
-			//yield return new WaitForSeconds(0.15f);
 		}
 		ReturnToIdle();
 	}
