@@ -8,6 +8,9 @@ public class Effect : MonoBehaviour
 	[SerializeField] protected AudioSource soundComponent;
 	[SerializeField] protected AudioClip clip;
 	[SerializeField] protected bool criticalHit = false;
+	[SerializeField] protected bool shakeCamera = false;
+	[SerializeField] protected float shakeCameraPower = 0;
+	[SerializeField] protected float shakeCameraTime = 0;
 	
 	protected List<Animator> animators = new List<Animator>();
 	protected List<ParticleSystem> particles = new List<ParticleSystem>();

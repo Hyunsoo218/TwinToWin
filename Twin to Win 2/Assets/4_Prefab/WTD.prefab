@@ -894,8 +894,15 @@ MonoBehaviour:
   - {fileID: 4589076786889232403, guid: fd474b3b94e01ca458e7c65d2e15b6cd, type: 3}
   - {fileID: 4814089198270682894, guid: 2f34f60e3b68b174393133a487876d0b, type: 3}
   - {fileID: 7338430111438400705, guid: 6a9e280c790509549bedf87517685453, type: 3}
-  modelRoot: {fileID: 0}
   root: {fileID: 5354699805058211132}
+  Skill_R_Stay_effect: {fileID: 7613491075393581779, guid: 10ae552223f6a084697e54f6be71b533,
+    type: 3}
+  Skill_R_Stay_Trail_effect: {fileID: 8621090985553208524, guid: c781128ce21062e488f017a01709d568,
+    type: 3}
+  Skill_R_End_effect: {fileID: 8621090985553208524, guid: ac3503efe88940941be72f10e2c391de,
+    type: 3}
+  motionTrail: {fileID: 4498006971705736499, guid: 90e41750efffc164eb488f37ae803c2e,
+    type: 3}
 --- !u!1 &2372782792756679131
 GameObject:
   m_ObjectHideFlags: 0
@@ -4799,6 +4806,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Face_BlendShapes
       objectReference: {fileID: 0}
+    - target: {fileID: 4568109121797955698, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_RootBone
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -4818,6 +4840,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_BlendShapeWeights.Array.size
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7092214933531236639, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[5]
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8850424639446292562, guid: 1970ec7f92222b94d98a2eb4d30ee4f2,
         type: 3}

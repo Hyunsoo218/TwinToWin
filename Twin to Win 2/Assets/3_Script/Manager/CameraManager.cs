@@ -10,6 +10,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private GameObject objCamera;
     private CinemachineVirtualCamera cMainCam;
     private CinemachineBrain brainCam;
+    private Coroutine shakeCamera;
 
     [SerializeField] private CinemachineVirtualCamera WTD_tutorialCam;
     [SerializeField] private CinemachineVirtualCamera PlayerDieCam;
@@ -21,14 +22,8 @@ public class CameraManager : MonoBehaviour
         cams.Add(WTD_tutorialCam);
         cams.Add(PlayerDieCam);
     }
-	private void Start()
-    {
-        SetTitle();
-    }
-	public void SetTitle() 
-    {
-        OffCamActive();
-    }
+	private void Start() => SetTitle(); 
+	public void SetTitle() => OffCamActive(); 
     public void SetGame() 
     {
         GameObject objMainCamera = Instantiate(objCamera);
@@ -39,10 +34,7 @@ public class CameraManager : MonoBehaviour
         OffCamActive();
         ResetCamera();
     }
-    public void ResetCamera() 
-    {
-        cMainCam.Follow = Player.instance.CurrentCharacter.transform;
-    }
+    public void ResetCamera() => cMainCam.Follow = Player.instance.CurrentCharacter.transform; 
     public void OnCamActive(CamType type, float camMoveTime = 0)
     {
         brainCam.m_DefaultBlend.m_Time = camMoveTime;
@@ -68,24 +60,22 @@ public class CameraManager : MonoBehaviour
         if(GameManager.instance.gameStage == GameStage.Game)
             StartCoroutine(ResetBrainCamBlendTime());
     }
-    private IEnumerator ZoomInPlayer() 
-    {
-        float time = 5f;
-        float runTime = 0;
-        float startDist = cMainCam.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance;
-        float targetDist = 3f;
-        float moveDist = startDist - targetDist;
-		while (runTime < time)
-		{
-            runTime += Time.deltaTime;
-            cMainCam.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = startDist - moveDist * runTime / time;
-            yield return null;
-		}
-    }
     private IEnumerator ResetBrainCamBlendTime() 
     {
         yield return new WaitForSeconds(brainCam.m_DefaultBlend.m_Time);
         brainCam.m_DefaultBlend.m_Time = 0;
+    }
+    public void ShakeCamera(float power, float time) 
+    {
+        if (shakeCamera != null)
+            StopCoroutine(shakeCamera);
+        shakeCamera = StartCoroutine(DoShakeCamera(power, time));
+    }
+    private IEnumerator DoShakeCamera(float power, float time) 
+    {
+        cMainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = power;
+        yield return new WaitForSeconds(time);
+        cMainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0f;
     }
 }
 public enum CamType 

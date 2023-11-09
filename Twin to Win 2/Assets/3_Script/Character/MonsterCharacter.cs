@@ -66,6 +66,7 @@ public class MonsterCharacter : Character
 	protected void OnDisable()
     {
         allMonsterCharacters.Remove(this);
+		canTargetingMonsterCharacters.Remove(this);
         UIManager.instance.RemoveHpbar(this);
     }
 	protected virtual void StateInitializeOnEnter()
@@ -228,6 +229,7 @@ public class MonsterCharacter : Character
 	{
         ChangeState(cStateDie);
 		allMonsterCharacters.Remove(this);
+		canTargetingMonsterCharacters.Remove(this);
         agent.enabled = false;
 		GetComponent<Collider>().enabled = false;
         UIManager.instance.RemoveHpbar(this);

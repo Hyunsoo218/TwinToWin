@@ -36,7 +36,6 @@ public abstract class PlayerbleCharacter : Character
     [SerializeField] protected Skill Skill_E;
     [SerializeField] protected Skill Skill_R;
     [SerializeField] protected List<GameObject> normalAttackEffects;
-    [SerializeField] protected Transform modelRoot;
     protected GameObject nextEffect;
     protected State idleState;
     protected State moveState;

@@ -6,6 +6,7 @@ public class PlayerEffectWTD_W_Skill : PlayerEffect
 {
 	private Transform user;
 	[SerializeField] private Collider damageArea;
+	[SerializeField] private float rushTime = 0.15f;
 	public override void Initialize()
 	{
 		base.Initialize();
@@ -13,6 +14,8 @@ public class PlayerEffectWTD_W_Skill : PlayerEffect
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
+		if (shakeCamera)
+			CameraManager.instance.ShakeCamera(shakeCameraPower, shakeCameraTime);
 		user = tUser;
 		StartCoroutine(ChackDamageArea());
 	}
@@ -23,7 +26,7 @@ public class PlayerEffectWTD_W_Skill : PlayerEffect
 		transform.localEulerAngles = Vector3.zero;
 		transform.localScale = Vector3.one;
 		damageArea.enabled = true;
-		yield return new WaitForSeconds(0.15f);
+		yield return new WaitForSeconds(rushTime);
 		transform.SetParent(null);
 		damageArea.enabled = false;
 	}
@@ -31,8 +34,7 @@ public class PlayerEffectWTD_W_Skill : PlayerEffect
 	{
 		if (other.gameObject.layer == 7)
 		{
-			MonsterCharacter target;
-			if (other.TryGetComponent<MonsterCharacter>(out target))
+			if (other.TryGetComponent<MonsterCharacter>(out var target))
 			{
 				DamageInfo damageInfo = DamageCalculator.GetDamageInfo(target, damage, criticalHit);
 
