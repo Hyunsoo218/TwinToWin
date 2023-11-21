@@ -170,25 +170,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    private Vector3 GetRayPos()
-    {
-        Ray ray;
-        NavMeshHit navMeshHit;
-        Vector3 pos = Vector3.zero;
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
-
-        foreach (var hit in hits)
-        {
-            if (NavMesh.SamplePosition(hit.point, out navMeshHit, 1f, NavMesh.AllAreas))
-            {
-                pos = navMeshHit.position;
-            }
-        }
-        return pos;
-    }
-
     public void EnablePlayerInput(bool active)
     {
         playerInput.enabled = active;
@@ -210,7 +191,6 @@ public class Player : MonoBehaviour
         }
         return false;
     }
-
     private void RecoverStamina() 
     {
         if (stamina.current < stamina.max)
@@ -219,5 +199,22 @@ public class Player : MonoBehaviour
 			if (stamina.current > stamina.max)
                 stamina.current = stamina.max;
 		}
+    }
+    private Vector3 GetRayPos()
+    {
+        Ray ray;
+        NavMeshHit navMeshHit;
+        Vector3 pos = Vector3.zero;
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
+
+        foreach (var hit in hits)
+        {
+            if (NavMesh.SamplePosition(hit.point, out navMeshHit, 1f, NavMesh.AllAreas))
+            {
+                pos = navMeshHit.position;
+            }
+        }
+        return pos;
     }
 }

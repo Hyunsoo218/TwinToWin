@@ -359,7 +359,8 @@ public abstract class PlayerbleCharacter : Character
     }
     protected IEnumerator InitializeSkillTime(Skill usingSkill) 
     {
-        usingSkill.time.current = 0;
+        print("스킬쿨 초기화 않함");
+        //usingSkill.time.current = 0;
 
         if (usingSkill.Equals(Skill_R) == false)
         {

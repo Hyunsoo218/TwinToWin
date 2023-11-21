@@ -19,6 +19,9 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 			StartCoroutine(LinearMovement(1f, 12f, 0.5f));
 			canDodge = false;
 		};
+		rSkillState.onEnter += () => {
+			EnableAttackEffect();
+		};
 	}
 	protected override void StateInitalizeOnStay()
 	{
@@ -58,6 +61,5 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 			ReturnToIdle();
 		}
 	}
-
 	public override void ResetSkillTime() { }
 }

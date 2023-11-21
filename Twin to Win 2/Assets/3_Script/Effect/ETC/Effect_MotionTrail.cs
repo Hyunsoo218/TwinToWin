@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Effect_MotionTrail : Effect {
     [SerializeField] private ParticleSystem particle;
@@ -33,6 +34,83 @@ public class Effect_MotionTrail : Effect {
                 pr.SetMeshes(meshes.ToArray());     // 파티클 시스템이 생성하는 메쉬로 Set
                 p.Play();
             }
+        }
+    }
+    public class Solution
+    {
+        public class Data
+        {
+            public Data(string name, int num)
+            {
+                this.name = name;
+                this.num = num;
+            }
+            public Data next;
+            public Data prev;
+            public string name;
+            public int num;
+        }
+        public class DataList
+        {
+            public void Add(Data add)
+            {
+                if (seed == null) seed = add;
+                else
+                {
+                    Data temp = seed;
+                    while (temp.prev != null)
+                        temp = temp.prev;
+                    temp.prev = add;
+                    add.next = temp;
+                }
+            }
+            public Data Get(string name)
+            {
+                Data temp = seed;
+                while (temp != null)
+                {
+                    if (temp.name == name)
+                        break;
+                    temp = temp.prev;
+                }
+                return temp;
+            }
+            public string[] GetAll()
+            {
+                List<string> names = new List<string>();
+                Data temp = seed;
+                while (temp != null)
+                {
+                    names.Add(temp.name);
+                    temp = temp.prev;
+                }
+                return names.ToArray();
+            }
+            private Data seed;
+        }
+        public string[] solution(string[] players, string[] callings)
+        {
+            DataList dataList = new DataList();
+            Data currentData;
+            Data nextData;
+            Data prevData;
+            for (int i = 0; i < players.Length; i++)
+                dataList.Add(new Data(players[i], i));
+            foreach (var name in callings)
+            {
+                currentData = dataList.Get(name);
+                nextData = currentData.next;
+                prevData = currentData.prev;
+                currentData.num--;
+                nextData.num++;
+                currentData.next = nextData.next;
+                currentData.prev = nextData;
+                nextData.next = currentData;
+                nextData.prev = prevData;
+                if(prevData != null)
+                    prevData.next = nextData;
+            }
+            return dataList.GetAll();
         }
     }
 }
