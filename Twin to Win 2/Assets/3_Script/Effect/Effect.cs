@@ -11,7 +11,9 @@ public class Effect : MonoBehaviour
 	[SerializeField] protected bool shakeCamera = false;
 	[SerializeField] protected float shakeCameraPower = 0;
 	[SerializeField] protected float shakeCameraTime = 0;
-	
+	[SerializeField] protected float defaultSimulationSpeed = 1f;
+
+
 	protected List<Animator> animators = new List<Animator>();
 	protected List<ParticleSystem> particles = new List<ParticleSystem>();
 	protected float _MasterSpeed;
@@ -28,7 +30,7 @@ public class Effect : MonoBehaviour
 				item.speed = MasterSpeed;
 			foreach (var item in particles) {
 				ParticleSystem.MainModule targetMain = item.main;
-				targetMain.simulationSpeed = MasterSpeed;
+				targetMain.simulationSpeed = defaultSimulationSpeed * _MasterSpeed;
 			}
 		}
 	}

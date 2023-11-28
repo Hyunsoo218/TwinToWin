@@ -36,6 +36,7 @@ public abstract class PlayerbleCharacter : Character
     [SerializeField] protected Skill Skill_E;
     [SerializeField] protected Skill Skill_R;
     [SerializeField] protected List<GameObject> normalAttackEffects;
+    [SerializeField] protected GameObject[] roots;
     protected GameObject nextEffect;
     protected State idleState;
     protected State moveState;
@@ -84,7 +85,7 @@ public abstract class PlayerbleCharacter : Character
         eSkillState = new State("Skill_E");
         rSkillState = new State("Skill_R");
         dieState = new State("Die");
-        for (int i = 0; i < normalAttackEffects.Count; i++) 
+        for (int i = 0; i < normalAttackEffects.Count; i++)
             normalAttack.Add(new State("Attack_" + i));
     }
     protected virtual void StateInitalizeOnEnter()
@@ -197,21 +198,21 @@ public abstract class PlayerbleCharacter : Character
         float distanceForDestination;
         moveState.onStay = () => {
             distanceForDestination = Vector3.Distance(transform.position, agent.destination);
-			if (distanceForDestination == 0)
-                ChangeState(idleState); 
+            if (distanceForDestination == 0)
+                ChangeState(idleState);
         };
     }
     protected virtual void StateInitalizeOnExit()
     {
         moveState.onExit = () => {
-            if(gameObject.activeSelf)
+            if (gameObject.activeSelf)
                 agent.isStopped = true;
         };
     }
-	#endregion Initalize
+    #endregion Initalize
 
-	#region Input Event
-	public void MoveStart(Vector3 targetPos) 
+    #region Input Event
+    public void MoveStart(Vector3 targetPos)
     {
         if (!canMove || isDie) return;
         agent.SetDestination(targetPos);
@@ -245,15 +246,15 @@ public abstract class PlayerbleCharacter : Character
     public void OnSkill(SkillType type, Vector3 targetPos)
     {
         if (!canSkill || isDie || !CanUseSkill(type)) return;
-		Rotate(targetPos);
+        Rotate(targetPos);
         switch (type)
-		{
-			case SkillType.Q: ChangeState(qSkillState); break;
-			case SkillType.W: ChangeState(wSkillState); break;
+        {
+            case SkillType.Q: ChangeState(qSkillState); break;
+            case SkillType.W: ChangeState(wSkillState); break;
             case SkillType.E: ChangeState(eSkillState); break;
             case SkillType.R: ChangeState(rSkillState); break;
         }
-	}
+    }
     #endregion Input Event
 
     #region Animation Event 
@@ -267,7 +268,7 @@ public abstract class PlayerbleCharacter : Character
         if (isDie) return;
         StartCoroutine(DoReturnToIdle(delayTime));
     }
-    protected IEnumerator DoReturnToIdle(float delayTime) 
+    protected IEnumerator DoReturnToIdle(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         attackCount = -1;
@@ -281,10 +282,10 @@ public abstract class PlayerbleCharacter : Character
     #endregion Animation Event
 
     #region In Game Event
-    public override void Damage(float amount) 
+    public override void Damage(float amount)
     {
         if (!canDamage) return;
-        Player.instance.CurrentHealthPoint -= amount; 
+        Player.instance.CurrentHealthPoint -= amount;
     }
     public override void Die()
     {
@@ -318,7 +319,7 @@ public abstract class PlayerbleCharacter : Character
                 transform.position = Vector3.Lerp(startPos, targetPos, runTime / time);
 
             yield return null;
-		}
+        }
         exitEvent?.Invoke();
     }
     protected IEnumerator LinearJumpMovement(float time, float height, float delayTime = 0, Action exitEvent = null)
@@ -326,7 +327,7 @@ public abstract class PlayerbleCharacter : Character
         agent.updatePosition = false;
         float runTime = 0;
         time -= delayTime;
-        
+
         yield return new WaitForSeconds(delayTime);
 
         while (runTime <= time)
@@ -340,24 +341,24 @@ public abstract class PlayerbleCharacter : Character
         agent.nextPosition = transform.position;
         agent.updatePosition = true;
     }
-    protected bool CanUseSkill(SkillType type) 
+    protected bool CanUseSkill(SkillType type)
     {
-		switch (type)
-		{
-			case SkillType.Q: return (Skill_Q.time.current >= Skill_Q.time.max) ? true : false; 
-			case SkillType.W: return (Skill_W.time.current >= Skill_W.time.max) ? true : false;
+        switch (type)
+        {
+            case SkillType.Q: return (Skill_Q.time.current >= Skill_Q.time.max) ? true : false;
+            case SkillType.W: return (Skill_W.time.current >= Skill_W.time.max) ? true : false;
             case SkillType.E: return (Skill_E.time.current >= Skill_E.time.max) ? true : false;
             case SkillType.R: return (Skill_R.time.current >= Skill_R.time.max) ? true : false;
         }
         return false;
-	}
+    }
     protected void Rotate(Vector3 targetPos)
     {
         targetPos.y = transform.position.y;
         Vector3 dir = targetPos - transform.position;
         transform.rotation = Quaternion.LookRotation(dir.normalized);
     }
-    protected IEnumerator InitializeSkillTime(Skill usingSkill) 
+    protected IEnumerator InitializeSkillTime(Skill usingSkill)
     {
         print("스킬쿨 초기화 않함");
         //usingSkill.time.current = 0;
@@ -377,7 +378,7 @@ public abstract class PlayerbleCharacter : Character
         usingSkill.time.current = usingSkill.time.max;
     }
     protected void OnDisable() => ChangeState(idleState);
-    protected void AddRSkillTime(float addTime) 
+    protected void AddRSkillTime(float addTime)
     {
         addTime = Random.Range(addTime * 0.8f, addTime * 1.2f);
         Skill_R.time.current += addTime;
@@ -410,5 +411,10 @@ public abstract class PlayerbleCharacter : Character
     }
     public bool GetCanTag() => canTag;
     public abstract void ResetSkillTime();
+    public void SetActiveRoot(bool active) 
+    {
+        foreach (var item in roots) 
+            item.SetActive(active); 
+    }
     #endregion
 }

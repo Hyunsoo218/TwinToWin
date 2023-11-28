@@ -9,10 +9,15 @@ public class PlayerEffectWGS_R_Skill : PlayerEffect
 	private int nTargetLayer;
 	private Animator animator;
 	[SerializeField] private CinemachineVirtualCamera cam;
+	[SerializeField] private CollisionObject slash;
 	public override void Initialize()
 	{
 		base.Initialize();
 		animator = GetComponent<Animator>();
+		slash.OnEnterTrigger += (other) => {
+			if (other.TryGetComponent<Character>(out var target))
+				DamageCalculator.OnDamage(target, damage * 0.5f, criticalHit);
+		};
 	}
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
@@ -21,6 +26,7 @@ public class PlayerEffectWGS_R_Skill : PlayerEffect
 		transform.position = tUser.position;
 		transform.rotation = tUser.rotation;
 		cam.m_LookAt = tUser;
+		CameraManager.instance.SetDefaultBlend(0);
 		animator.SetTrigger("Run");
 	}
 	public void ControlTimeScale(float scale)
@@ -50,6 +56,7 @@ public class PlayerEffectWGS_R_Skill : PlayerEffect
 	}
 	public void ResetCharacterState() 
 	{
+		CameraManager.instance.SetDefaultBlend(0.2f);
 		Player.instance.CurrentCharacter.ReturnToIdle();
 	}
 	private void OnDisable()

@@ -34,6 +34,10 @@ public class CameraManager : MonoBehaviour
         OffCamActive();
         ResetCamera();
     }
+    public void SetDefaultBlend(float blend) 
+    {
+        brainCam.m_DefaultBlend.m_Time = blend;
+    }
     public void ResetCamera() => cMainCam.Follow = Player.instance.CurrentCharacter.transform; 
     public void OnCamActive(CamType type, float camMoveTime = 0)
     {

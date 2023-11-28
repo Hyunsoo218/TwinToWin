@@ -180,7 +180,8 @@ public class Player : MonoBehaviour
 	{
 		return CurrentCharacter.GetCurrentStateName();
 	}
-    public SkillTimeInfo GetTagTimer() => new SkillTimeInfo(MaxTagTime, CurrentTagTime); 
+    public SkillTimeInfo GetTagTimer() => new SkillTimeInfo(MaxTagTime, CurrentTagTime);
+    public void SetActiveRoot(bool active) => CurrentCharacter.SetActiveRoot(active);
 
     private bool UseStamina(float usingAmount) 
     {
