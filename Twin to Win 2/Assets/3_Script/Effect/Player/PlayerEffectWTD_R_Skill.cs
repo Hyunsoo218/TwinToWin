@@ -45,9 +45,37 @@ public class PlayerEffectWTD_R_Skill : PlayerEffect
     }
     public void OnActiveRoot() => Player.instance.SetActiveRoot(true);
     public void OffActiveRoot() => Player.instance.SetActiveRoot(false);
+    public void EnableEffect() 
+    {
+        Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
+        Collider[] arrOverlapObj = null;
+        if (isSphere)
+            arrOverlapObj = Physics.OverlapSphere(vOverlapPos, sphereAttackAreaRange, nTargetLayer);
+        else
+            arrOverlapObj = Physics.OverlapBox(vOverlapPos, vAttackAreaSize, tUser.rotation, nTargetLayer);
+        foreach (Collider cItem in arrOverlapObj)
+        {
+            if (cItem.TryGetComponent<Character>(out var target))
+                DamageCalculator.OnDamage(target, damage * 0.05f, criticalHit);
+        }
+        print(damage * 0.05f);
+    }
     public void EnableFinishAttack() 
     {
+        StartCoroutine(DoShakeCamera());
         GameObject effect = Instantiate(flnishAttack, transform.position, transform.rotation);
         effect.transform.position += new Vector3(0, 0.32f, 0);
+        
+        Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
+        Collider[] arrOverlapObj = null;
+        if (isSphere)
+            arrOverlapObj = Physics.OverlapSphere(vOverlapPos, sphereAttackAreaRange, nTargetLayer);
+        else
+            arrOverlapObj = Physics.OverlapBox(vOverlapPos, vAttackAreaSize, tUser.rotation, nTargetLayer);
+        foreach (Collider cItem in arrOverlapObj)
+        {
+            if (cItem.TryGetComponent<Character>(out var target))
+                DamageCalculator.OnDamage(target, damage * 0.5f, criticalHit);
+        }
     }
 }
