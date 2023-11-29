@@ -19,7 +19,7 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 		wSkillState.onEnter += () => {
 			Action exitEvent = () => ReturnToIdle();
 			StartCoroutine(LinearMovement(0.15f, 8f, 0, exitEvent));
-			nextEffect = Skill_W.effect;
+			nextEffect = wSkill.effect;
 			EnableAttackEffect();
 			canDodge = false;
 		};
@@ -88,8 +88,8 @@ public class WTDPlayableCharacter : PlayerbleCharacter
 	//}
 	public override void ResetSkillTime()
 	{
-		Skill_Q.time.current = Skill_Q.time.max;
-		Skill_W.time.current = Skill_W.time.max;
-		Skill_E.time.current = Skill_E.time.max;
+		qSkill.time.current = qSkill.time.max;
+		wSkill.time.current = wSkill.time.max;
+		eSkill.time.current = eSkill.time.max;
 	}
 }

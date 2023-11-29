@@ -860,31 +860,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objMouseClickEffect: {fileID: 1745249769378136, guid: c86683e3f8aad844491d49e0b6f33c7d,
     type: 3}
-  Skill_Q:
+  qSkill:
     effect: {fileID: 6251284999446369850, guid: 12eb7d42aba5e474da4f3e841ae1ce97,
       type: 3}
     time:
       max: 10
       current: 0
       percentage: 0
-  Skill_W:
+  wSkill:
     effect: {fileID: 7613491075393581779, guid: 94a31ba2bd10ca64c889402398a0ddcf,
       type: 3}
     time:
-      max: 5
+      max: 10
       current: 0
       percentage: 0
-  Skill_E:
+  eSkill:
     effect: {fileID: 0}
     time:
       max: 20
       current: 0
       percentage: 0
-  Skill_R:
+  rSkill:
     effect: {fileID: 1069728155188841370, guid: 11858c5488d8ccd4fa0b98e3f62ffbf9,
       type: 3}
     time:
-      max: 10
+      max: 100
       current: 0
       percentage: 0
   normalAttackEffects:

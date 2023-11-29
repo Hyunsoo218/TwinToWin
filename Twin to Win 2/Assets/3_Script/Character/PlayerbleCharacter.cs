@@ -25,19 +25,20 @@ public struct SkillTimeInfo
         percentage = 1f - currentTime / maxTime;
     }
     public float max;
-    public float current;
+    [HideInInspector] public float current;
     [HideInInspector] public float percentage;
 }
 public abstract class PlayerbleCharacter : Character
 {
     [SerializeField] protected GameObject objMouseClickEffect;
-    [SerializeField] protected Skill Skill_Q;
-    [SerializeField] protected Skill Skill_W;
-    [SerializeField] protected Skill Skill_E;
-    [SerializeField] protected Skill Skill_R;
+    [SerializeField] protected Skill qSkill;
+    [SerializeField] protected Skill wSkill;
+    [SerializeField] protected Skill eSkill;
+    [SerializeField] protected Skill rSkill;
     [SerializeField] protected List<GameObject> normalAttackEffects;
     [SerializeField] protected GameObject[] roots;
     protected GameObject nextEffect;
+    protected Dictionary<State, GameObject> effects = new Dictionary<State, GameObject>();
     protected State idleState;
     protected State moveState;
     protected State dodgeState;
@@ -64,9 +65,9 @@ public abstract class PlayerbleCharacter : Character
         cAnimator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
-        Skill_Q.time.current = Skill_Q.time.max;
-        Skill_W.time.current = Skill_W.time.max;
-        Skill_E.time.current = Skill_E.time.max;
+        qSkill.time.current = qSkill.time.max;
+        wSkill.time.current = wSkill.time.max;
+        eSkill.time.current = eSkill.time.max;
 
         StateInitalize();
         StateInitalizeOnEnter();
@@ -85,8 +86,14 @@ public abstract class PlayerbleCharacter : Character
         eSkillState = new State("Skill_E");
         rSkillState = new State("Skill_R");
         dieState = new State("Die");
-        for (int i = 0; i < normalAttackEffects.Count; i++)
+        for (int i = 0; i < normalAttackEffects.Count; i++) { 
             normalAttack.Add(new State("Attack_" + i));
+            effects.Add(normalAttack[i], normalAttackEffects[i]);
+        }
+        effects.Add(qSkillState, qSkill.effect);
+        effects.Add(wSkillState, wSkill.effect);
+        effects.Add(eSkillState, eSkill.effect);
+        effects.Add(rSkillState, rSkill.effect);
     }
     protected virtual void StateInitalizeOnEnter()
     {
@@ -126,8 +133,8 @@ public abstract class PlayerbleCharacter : Character
             canMove = false;
             canAttack = false;
             canDodge = true;
-            GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_Q));
-            nextEffect = Skill_Q.effect;
+            GameManager.instance.AsynchronousExecution(InitializeSkillTime(qSkill));
+            nextEffect = qSkill.effect;
             canTag = false;
             canDamage = true;
             AddRSkillTime(10f);
@@ -138,8 +145,8 @@ public abstract class PlayerbleCharacter : Character
             canMove = false;
             canAttack = false;
             canDodge = true;
-            GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_W));
-            nextEffect = Skill_W.effect;
+            GameManager.instance.AsynchronousExecution(InitializeSkillTime(wSkill));
+            nextEffect = wSkill.effect;
             canTag = false;
             canDamage = true;
             AddRSkillTime(10f);
@@ -150,8 +157,8 @@ public abstract class PlayerbleCharacter : Character
             canMove = false;
             canAttack = false;
             canDodge = true;
-            GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_E));
-            nextEffect = Skill_E.effect;
+            GameManager.instance.AsynchronousExecution(InitializeSkillTime(eSkill));
+            nextEffect = eSkill.effect;
             canTag = false;
             canDamage = true;
             AddRSkillTime(10f);
@@ -162,10 +169,10 @@ public abstract class PlayerbleCharacter : Character
             canMove = false;
             canAttack = false;
             canDodge = false;
-            GameManager.instance.AsynchronousExecution(InitializeSkillTime(Skill_R));
+            GameManager.instance.AsynchronousExecution(InitializeSkillTime(rSkill));
             canTag = false;
             canDamage = false;
-            nextEffect = Skill_R.effect;
+            nextEffect = rSkill.effect;
             canSkill = false;
         };
         dieState.onEnter = () => {
@@ -276,8 +283,13 @@ public abstract class PlayerbleCharacter : Character
     }
     public void EnableAttackEffect()
     {
-        GameObject effect = EffectManager.instance.GetEffect(nextEffect);
-        effect.GetComponent<Effect>().OnAction(transform, 100f, 1 << 7);
+        State currentState = cStateMachine.GetCurrentState();
+        GameObject currentEffect = effects[currentState];
+        if (currentEffect == nextEffect)
+		{
+            GameObject effect = EffectManager.instance.GetEffect(nextEffect);
+            effect.GetComponent<Effect>().OnAction(transform, 100f, 1 << 7);
+        }
     }
     #endregion Animation Event
 
@@ -345,10 +357,10 @@ public abstract class PlayerbleCharacter : Character
     {
         switch (type)
         {
-            case SkillType.Q: return (Skill_Q.time.current >= Skill_Q.time.max) ? true : false;
-            case SkillType.W: return (Skill_W.time.current >= Skill_W.time.max) ? true : false;
-            case SkillType.E: return (Skill_E.time.current >= Skill_E.time.max) ? true : false;
-            case SkillType.R: return (Skill_R.time.current >= Skill_R.time.max) ? true : false;
+            case SkillType.Q: return (qSkill.time.current >= qSkill.time.max) ? true : false;
+            case SkillType.W: return (wSkill.time.current >= wSkill.time.max) ? true : false;
+            case SkillType.E: return (eSkill.time.current >= eSkill.time.max) ? true : false;
+            case SkillType.R: return (rSkill.time.current >= rSkill.time.max) ? true : false;
         }
         return false;
     }
@@ -363,7 +375,7 @@ public abstract class PlayerbleCharacter : Character
         print("스킬쿨 초기화 않함");
         //usingSkill.time.current = 0;
 
-        if (usingSkill.Equals(Skill_R) == false)
+        if (usingSkill.Equals(rSkill) == false)
         {
             while (usingSkill.time.current <= usingSkill.time.max)
             {
@@ -381,7 +393,7 @@ public abstract class PlayerbleCharacter : Character
     protected void AddRSkillTime(float addTime)
     {
         addTime = Random.Range(addTime * 0.8f, addTime * 1.2f);
-        Skill_R.time.current += addTime;
+        rSkill.time.current += addTime;
     }
     #endregion In Game Event
 
@@ -402,10 +414,10 @@ public abstract class PlayerbleCharacter : Character
     {
         switch (skill)
         {
-            case SkillType.Q: return new SkillTimeInfo(Skill_Q.time.max, Skill_Q.time.current);
-            case SkillType.W: return new SkillTimeInfo(Skill_W.time.max, Skill_W.time.current);
-            case SkillType.E: return new SkillTimeInfo(Skill_E.time.max, Skill_E.time.current);
-            case SkillType.R: return new SkillTimeInfo(Skill_R.time.max, Skill_R.time.current);
+            case SkillType.Q: return new SkillTimeInfo(qSkill.time.max, qSkill.time.current);
+            case SkillType.W: return new SkillTimeInfo(wSkill.time.max, wSkill.time.current);
+            case SkillType.E: return new SkillTimeInfo(eSkill.time.max, eSkill.time.current);
+            case SkillType.R: return new SkillTimeInfo(rSkill.time.max, rSkill.time.current);
         }
         return new SkillTimeInfo(0, 0);
     }
