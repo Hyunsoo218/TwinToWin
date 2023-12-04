@@ -14,6 +14,8 @@ public class PlayerStateUI : MonoBehaviour
     [SerializeField] private List<TextMeshProUGUI> skillTimes_WGS;
     [SerializeField] private Animator cConvertUIAnimator;
 	[SerializeField] private Image imgConvertFill;
+	[SerializeField] private Image imgLeft;
+	[SerializeField] private Image imgRigth;
 	[SerializeField] private Transform tWTDState;
 	[SerializeField] private Slider sStamina;
 	[SerializeField] private Sprite WTD_R_OFF;
@@ -114,6 +116,25 @@ public class PlayerStateUI : MonoBehaviour
 	{
 		hpbar.Set(Player.instance.CurrentHealthPoint);
 	}
+	public void SetImage(CharacterType left, CharacterType rigth) 
+	{
+		CharacterInfo lInfo = CharacterManager.instance.GetTypeToInfo(left);
+		arrSkillFill_WTD[0].transform.parent.GetComponent<Image>().sprite = lInfo.QSkillImage;
+		arrSkillFill_WTD[1].transform.parent.GetComponent<Image>().sprite = lInfo.WSkillImage;
+		arrSkillFill_WTD[2].transform.parent.GetComponent<Image>().sprite = lInfo.ESkillImage;
+		arrSkillFill_WTD[3].transform.parent.GetComponent<Image>().sprite = lInfo.ROffSkillImage;
+		WTD_R_OFF = lInfo.RChargeSkillImage;
+		WTD_R_ON = lInfo.RSkillImage;
+		imgLeft.sprite = lInfo.ImagePlay;
+		CharacterInfo rInfo = CharacterManager.instance.GetTypeToInfo(rigth);
+		arrSkillFill_WGS[0].transform.parent.GetComponent<Image>().sprite = rInfo.QSkillImage;
+		arrSkillFill_WGS[1].transform.parent.GetComponent<Image>().sprite = rInfo.WSkillImage;
+		arrSkillFill_WGS[2].transform.parent.GetComponent<Image>().sprite = rInfo.ESkillImage;
+		arrSkillFill_WGS[3].transform.parent.GetComponent<Image>().sprite = rInfo.ROffSkillImage;
+		WGS_R_OFF = rInfo.RChargeSkillImage;
+		WGS_R_ON = rInfo.RSkillImage;
+		imgRigth.sprite = rInfo.ImagePlay;
+	}
 	private void SetSkillInfo(List<Image> images, List<TextMeshProUGUI> times, PlayerbleCharacter character, SkillType type) 
 	{
         SkillTimeInfo info = character.GetSkillTimer(type);
@@ -146,7 +167,7 @@ public class PlayerStateUI : MonoBehaviour
 		else
 		{
 			images[(int)type].sprite = offImg;
-			times[(int)type].text = (gauge * 100f).ToString("N0") + "%";
+			times[(int)type].text = (gauge * 99f).ToString("N0") + "%";
 		}
 	}
 }

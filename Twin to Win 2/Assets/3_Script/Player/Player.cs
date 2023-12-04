@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,13 +9,14 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public static Player instance;
-    [SerializeField] private GameObject objWTD;
-    [SerializeField] private GameObject objWGS;
     
     public PlayerbleCharacter CurrentCharacter { get; private set; }
     public PlayerbleCharacter GreatSword { get; private set; }
     public PlayerbleCharacter TwinSword { get; private set; }
+    public List<CharacterType> MyCharacter { get; private set; }
 
+    public CharacterType LeftType { get; private set; }
+    public CharacterType RigthType { get; private set; }
     private Coroutine movementCo;
     private Coroutine autoAttackCo;
     private PlayerInput playerInput;
@@ -48,6 +50,11 @@ public class Player : MonoBehaviour
         if (instance == null) instance = this;
         else Destroy(gameObject);
         playerInput = GetComponent<PlayerInput>();
+        MyCharacter = new List<CharacterType>();
+        MyCharacter.Add(CharacterType.temp);
+        MyCharacter.Add(CharacterType.temp);
+        MyCharacter.Add(CharacterType.wtd);
+        MyCharacter.Add(CharacterType.wgs);
     }
     
 	private void Update()
@@ -61,8 +68,11 @@ public class Player : MonoBehaviour
     {
         UIManager.instance.SetPlayerHealthPoint();
 
-        GameObject wtd = Instantiate(objWTD, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
-        GameObject wgs = Instantiate(objWGS, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
+        GameObject wtd = CharacterManager.instance.GetTypeToObj(LeftType);
+        GameObject wgs = CharacterManager.instance.GetTypeToObj(RigthType);
+
+        wtd = Instantiate(wtd, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
+        wgs = Instantiate(wgs, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
 
         TwinSword = wtd.GetComponent<PlayerbleCharacter>();
         GreatSword = wgs.GetComponent<PlayerbleCharacter>();
@@ -182,7 +192,11 @@ public class Player : MonoBehaviour
 	}
     public SkillTimeInfo GetTagTimer() => new SkillTimeInfo(MaxTagTime, CurrentTagTime);
     public void SetActiveRoot(bool active) => CurrentCharacter.SetActiveRoot(active);
-
+    public void SetCharacterType(CharacterType leftType, CharacterType rigthType) 
+    {
+        this.LeftType = leftType;
+        this.RigthType = rigthType;
+    }
     private bool UseStamina(float usingAmount) 
     {
         if (stamina.current >= usingAmount)

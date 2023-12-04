@@ -258,7 +258,7 @@ public class BossCharacter : MonsterCharacter
 	}
 	public override void EnableEffect()
 	{
-		State cCurrentState = cStateMachine.GetCurrentState();
+		State cCurrentState = cStateMachine.CurrentState;
 
 		if (cCurrentState == cStateAttack3)
 		{
@@ -314,7 +314,7 @@ public class BossCharacter : MonsterCharacter
 	}
 	public override void Damage(float fAmount)
 	{
-		if (cStateMachine.GetCurrentState() == cStateDie) return;
+		if (cStateMachine.CurrentState == cStateDie) return;
 
 		fHealthPoint -= fAmount;
 		SetHp();

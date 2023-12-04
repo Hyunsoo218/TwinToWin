@@ -41,12 +41,12 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 	}
 	public override void Move(Vector3 targetPos)
 	{
-		if (cStateMachine.GetCurrentState() == eSkillState)
+		if (cStateMachine.CurrentState == eSkillState)
 			agent.SetDestination(targetPos);
 		else {
 			if (!canMove || isDie) return;
 			agent.SetDestination(targetPos);
-			if (cStateMachine.GetCurrentState() != moveState)
+			if (cStateMachine.CurrentState != moveState)
 				ChangeState(moveState);
 		}
 	}

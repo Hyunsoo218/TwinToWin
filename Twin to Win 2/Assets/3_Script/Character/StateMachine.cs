@@ -4,28 +4,20 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-	private State cCurrentState;
-	private State cPrevState;
+	public State CurrentState { get; private set; }
+	public State PrevState { get; private set; }
 
 	private void Update()
 	{
-		cCurrentState?.onStay?.Invoke();
+		CurrentState?.onStay?.Invoke();
 	}
 	public void ChangeState(State cNextState)
 	{
-		if (cCurrentState != null) {
-			cCurrentState?.onExit?.Invoke();
-			cPrevState = cCurrentState;
+		if (CurrentState != null) {
+			CurrentState?.onExit?.Invoke();
+			PrevState = CurrentState;
 		}
-		cCurrentState = cNextState;
-		cCurrentState?.onEnter?.Invoke();
-	}
-	public State GetCurrentState()
-	{
-		return cCurrentState;
-	}
-	public State GetPrevState()
-	{
-		return cPrevState;
+		CurrentState = cNextState;
+		CurrentState?.onEnter?.Invoke();
 	}
 }

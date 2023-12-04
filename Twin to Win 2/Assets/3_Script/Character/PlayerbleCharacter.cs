@@ -30,6 +30,11 @@ public struct SkillTimeInfo
 }
 public abstract class PlayerbleCharacter : Character
 {
+
+    [SerializeField] private CharacterType type;
+
+    [SerializeField] public CharacterType Type { get { return type; } }
+
     [SerializeField] protected GameObject objMouseClickEffect;
     [SerializeField] protected Skill qSkill;
     [SerializeField] protected Skill wSkill;
@@ -232,7 +237,7 @@ public abstract class PlayerbleCharacter : Character
     {
         if (!canMove || isDie) return;
         agent.SetDestination(targetPos);
-        if (cStateMachine.GetCurrentState() != moveState)
+        if (cStateMachine.CurrentState != moveState)
             ChangeState(moveState);
     }
     public override void Attack(Vector3 targetPos)
@@ -283,7 +288,7 @@ public abstract class PlayerbleCharacter : Character
     }
     public void EnableAttackEffect()
     {
-        State currentState = cStateMachine.GetCurrentState();
+        State currentState = cStateMachine.CurrentState;
         GameObject currentEffect = effects[currentState];
         if (currentEffect == nextEffect)
 		{
@@ -311,8 +316,8 @@ public abstract class PlayerbleCharacter : Character
     }
     protected override void ChangeAnimation(string strTrigger)
     {
-        if (cStateMachine.GetPrevState() != null)
-            cAnimator.ResetTrigger(cStateMachine.GetPrevState().strStateName);
+        if (cStateMachine.PrevState != null)
+            cAnimator.ResetTrigger(cStateMachine.PrevState.strStateName);
         cAnimator.SetTrigger(strTrigger);
     }
     protected IEnumerator LinearMovement(float time, float dist, float delayTime = 0, Action exitEvent = null)
@@ -398,7 +403,7 @@ public abstract class PlayerbleCharacter : Character
     #endregion In Game Event
 
     #region Public Event
-    public string GetCurrentStateName() => cStateMachine.GetCurrentState().strStateName;
+    public string GetCurrentStateName() => cStateMachine.CurrentState.strStateName;
     public void UseSkillWithoutPressKey(SkillType skillType, Vector3 target)
     {
         transform.LookAt(target);

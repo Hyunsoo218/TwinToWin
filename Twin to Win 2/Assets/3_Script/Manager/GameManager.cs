@@ -41,11 +41,12 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(transform.parent.gameObject);
         }
-        else Destroy(transform.parent.gameObject); 
+        else Destroy(transform.parent.gameObject);
     }
     private void Start()
     {
         Player.instance.EnablePlayerInput(false);
+        GoTitle();
     }
 	private void Update()
 	{
@@ -240,7 +241,8 @@ public class GameManager : MonoBehaviour
     public void GoTitle()
     {
         Time.timeScale = 1f;
-        StopCoroutine(returnToTitle);
+        if(returnToTitle != null)
+            StopCoroutine(returnToTitle);
         SceneManager.LoadScene(0);
         gameStage = GameStage.Title;
         StartCoroutine(GoTitleCo());

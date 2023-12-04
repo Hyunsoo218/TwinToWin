@@ -174,7 +174,7 @@ public class MonsterCharacter : Character
 	}
 	public virtual void EnableEffect()
 	{
-		if (cStateMachine.GetCurrentState() != cStateAttack) return;
+		if (cStateMachine.CurrentState != cStateAttack) return;
 		GameObject objEffect = EffectManager.instance.GetEffect(objAttackEffectPrefab);
 		objEffect.GetComponent<Effect>().OnAction(transform, fPower, 1 << 8);
 	}
@@ -206,12 +206,12 @@ public class MonsterCharacter : Character
 	}
 	protected override void ChangeState(State cNextState)
 	{
-		if (cStateMachine.GetCurrentState() == cStateDie) return;
+		if (cStateMachine.CurrentState == cStateDie) return;
 		cStateMachine.ChangeState(cNextState);
 	}
 	public override void Damage(float fAmount)
 	{
-		if (cStateMachine.GetCurrentState() == cStateDie) return;
+		if (cStateMachine.CurrentState == cStateDie) return;
 
 		fHealthPoint -= fAmount;
 		SetHp();
@@ -248,8 +248,8 @@ public class MonsterCharacter : Character
 	}
 	protected override void ChangeAnimation(string strTrigger)
 	{
-		if (cStateMachine.GetPrevState() != null)
-			cAnimator.ResetTrigger(cStateMachine.GetPrevState().strStateName);
+		if (cStateMachine.PrevState != null)
+			cAnimator.ResetTrigger(cStateMachine.PrevState.strStateName);
 		cAnimator.SetTrigger(strTrigger);
 	}
 	protected virtual void InsertHpbar() 

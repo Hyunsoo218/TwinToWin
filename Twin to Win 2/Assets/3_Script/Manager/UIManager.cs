@@ -160,4 +160,8 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 0f;
         }
     }
+    public void SetSkillImage(CharacterType left, CharacterType rigth) 
+    {
+        cPSUI.SetImage(left, rigth);
+    }
 }
