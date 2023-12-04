@@ -51,8 +51,6 @@ public class Player : MonoBehaviour
         else Destroy(gameObject);
         playerInput = GetComponent<PlayerInput>();
         MyCharacter = new List<CharacterType>();
-        MyCharacter.Add(CharacterType.temp);
-        MyCharacter.Add(CharacterType.temp);
         MyCharacter.Add(CharacterType.wtd);
         MyCharacter.Add(CharacterType.wgs);
     }
@@ -169,7 +167,8 @@ public class Player : MonoBehaviour
         if (context.phase == InputActionPhase.Started)
             autoAttackCo = StartCoroutine(AutoAttack());
         else if (context.phase == InputActionPhase.Canceled)
-            StopCoroutine(autoAttackCo);
+			if (autoAttackCo != null)
+                StopCoroutine(autoAttackCo);
     }
     private IEnumerator AutoAttack()
     {

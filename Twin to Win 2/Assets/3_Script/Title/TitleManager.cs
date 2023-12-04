@@ -15,6 +15,7 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private Animator uiMainAnimator;
     [SerializeField] private Animator uiSelectedAnimator;
     [SerializeField] private Animator uiInfoAnimator;
+    [SerializeField] private Animator background;
     [SerializeField] private Image leftBtnImg;
     [SerializeField] private Image rigthBtnImg;
     [SerializeField] private Transform characterBtnParent;
@@ -90,20 +91,8 @@ public class TitleManager : MonoBehaviour
 	private void Start()
 	{
         SetGame();
-        CharacterInfo info;
-        leftCharacter = Player.instance.LeftType;
-        rigthCharacter = Player.instance.RigthType;
-		if (leftCharacter != CharacterType.none)
-		{
-            info = CharacterManager.instance.GetTypeToInfo(leftCharacter);
-            Instantiate(info.gameObject, characterLeft);
-        }
-        if (rigthCharacter != CharacterType.none)
-        {
-            info = CharacterManager.instance.GetTypeToInfo(rigthCharacter);
-            Instantiate(info.gameObject, characterRigth);
-        }
-        SetTitle();
+        background.SetBool("Fade", true);
+        StartCoroutine(DelayEvent(1f, () => { SetTitle(); }));
     }
 	public void SelectLeft() 
     {
@@ -143,16 +132,29 @@ public class TitleManager : MonoBehaviour
         StartCoroutine(DelayAction(5f));
         Player.instance.SetCharacterType(leftCharacter, rigthCharacter);
         UIManager.instance.SetSkillImage(leftCharacter, rigthCharacter);
-        GameManager.instance.GameStart();
+        background.SetBool("Fade", false);
+        StartCoroutine(DelayEvent(1f, () => { GameManager.instance.GameStart(); }));
     }
     public void SetGame()
     {
-        gameObject.SetActive(false);
         for (int i = 0; i < characterBtnParent.childCount; i++)
             Destroy(characterBtnParent.GetChild(0).gameObject);
     }
     public void SetTitle()
     {
+        leftCharacter = Player.instance.LeftType;
+        rigthCharacter = Player.instance.RigthType;
+        if (leftCharacter != CharacterType.none)
+        {
+            CharacterInfo info = CharacterManager.instance.GetTypeToInfo(leftCharacter);
+            Instantiate(info.gameObject, characterLeft);
+        }
+        if (rigthCharacter != CharacterType.none)
+        {
+            CharacterInfo info = CharacterManager.instance.GetTypeToInfo(rigthCharacter);
+            Instantiate(info.gameObject, characterRigth);
+        }
+
         gameObject.SetActive(true);
         uiMainAnimator.gameObject.SetActive(true);
         uiSelectedAnimator.gameObject.SetActive(true);
@@ -161,11 +163,12 @@ public class TitleManager : MonoBehaviour
 		foreach (var type in Player.instance.MyCharacter)
 		{
 			if (CharacterManager.instance.ContainsKeyTypeToInfo(type))
-            { 
+            {
                 GameObject obj = Instantiate(characterBtn, characterBtnParent);
                 CharacterSelectBtn btn = obj.GetComponent<CharacterSelectBtn>();
                 CharacterType temp = type;
                 CharacterInfo info = CharacterManager.instance.GetTypeToInfo(type);
+
                 btn.Image = info.Image;
                 btn.Name = info.Name;
                 btn.OnClick = () => {
@@ -221,5 +224,10 @@ public class TitleManager : MonoBehaviour
         canAction = false;
         yield return new WaitForSeconds(time);
         canAction = true;
+    }
+    private IEnumerator DelayEvent(float time, Action e)
+    {
+        yield return new WaitForSeconds(time);
+        e?.Invoke();
     }
 }

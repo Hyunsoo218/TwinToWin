@@ -9,7 +9,6 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] private List<GameObject> character_play;
     [SerializeField] private List<GameObject> character_title;
 
-
     private Dictionary<CharacterType, CharacterInfo> typeToTitle =
         new Dictionary<CharacterType, CharacterInfo>();
     private Dictionary<CharacterType, GameObject> typeToObj =
