@@ -38,7 +38,7 @@ public class CameraManager : MonoBehaviour
     {
         brainCam.m_DefaultBlend.m_Time = blend;
     }
-    public void ResetCamera() => cMainCam.Follow = Player.instance.CurrentCharacter.transform; 
+    public void ResetCamera() => cMainCam.Follow = Player.Instance.CurrentCharacter.transform; 
     public void OnCamActive(CamType type, float camMoveTime = 0)
     {
         brainCam.m_DefaultBlend.m_Time = camMoveTime;
@@ -52,9 +52,9 @@ public class CameraManager : MonoBehaviour
                 break;
             case CamType.PlayerDie: 
                 PlayerDieCam.gameObject.SetActive(true); 
-                PlayerDieCam.transform.position = Player.instance.CurrentCharacter.transform.position;
-                PlayerDieCam.m_LookAt = Player.instance.CurrentCharacter.transform;
-                PlayerDieCam.m_Follow = Player.instance.CurrentCharacter.transform;
+                PlayerDieCam.transform.position = Player.Instance.CurrentCharacter.transform.position;
+                PlayerDieCam.m_LookAt = Player.Instance.CurrentCharacter.transform;
+                PlayerDieCam.m_Follow = Player.Instance.CurrentCharacter.transform;
                 break;
         }
     }

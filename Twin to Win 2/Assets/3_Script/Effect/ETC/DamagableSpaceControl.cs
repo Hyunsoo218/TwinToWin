@@ -22,7 +22,6 @@ public class DamagableSpaceControl : MonoBehaviour
 	private IEnumerator OnActionCo(float fTime, FillType eType) 
 	{
 		cArea.enabled = false;
-		yield return null;
 		cArea.enabled = true;
 		switch (eType)
 		{
@@ -42,6 +41,7 @@ public class DamagableSpaceControl : MonoBehaviour
 				break;
 		}
 
+		yield return null;
 	}
 	public void Cancel() 
 	{

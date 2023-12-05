@@ -48,7 +48,7 @@ public class RangedMonsterCharacter : MonsterCharacter
 			}
 		};
 		cStateCasting.onStay = () => {
-			transform.LookAt(Player.instance.CurrentCharacter.transform);
+			transform.LookAt(Player.Instance.CurrentCharacter.transform);
 			transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 		};
 	}

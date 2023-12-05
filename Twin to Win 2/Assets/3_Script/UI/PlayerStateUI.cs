@@ -31,18 +31,18 @@ public class PlayerStateUI : MonoBehaviour
 	}
     private void Start()
     {
-        sStamina.maxValue = Player.instance.MaxStamina;
+        sStamina.maxValue = Player.Instance.MaxStamina;
         sStamina.minValue = 0;
-        sStamina.value = Player.instance.CurrentStamina;
+        sStamina.value = Player.Instance.CurrentStamina;
 
-		float maxHp = Player.instance.MaxHealthPoint;
-		float hp = Player.instance.CurrentHealthPoint;
+		float maxHp = Player.Instance.MaxHealthPoint;
+		float hp = Player.Instance.CurrentHealthPoint;
 		hpbar.Initialize(maxHp, 0 , hp);
 	}
 	private void OnEnable()
 	{
-		PlayerbleCharacter cWTD = Player.instance.TwinSword;
-		PlayerbleCharacter cCur = Player.instance.CurrentCharacter;
+		PlayerbleCharacter cWTD = Player.Instance.SecondCharacter;
+		PlayerbleCharacter cCur = Player.Instance.CurrentCharacter;
 		string animationTrigger = (cCur == cWTD) ? "ToWTD" : "ToWGS";
 		cAnimator.SetTrigger(animationTrigger);
 	}
@@ -50,8 +50,8 @@ public class PlayerStateUI : MonoBehaviour
 	{
 		cConvertUIAnimator.SetTrigger("On");
 
-		PlayerbleCharacter cWTD = Player.instance.TwinSword;
-		PlayerbleCharacter cCur = Player.instance.CurrentCharacter;
+		PlayerbleCharacter cWTD = Player.Instance.SecondCharacter;
+		PlayerbleCharacter cCur = Player.Instance.CurrentCharacter;
 		string animationTrigger = "";
 
 		if (cCur == cWTD)
@@ -69,8 +69,8 @@ public class PlayerStateUI : MonoBehaviour
 	}
 	public void OnButton(KeyCode key, bool stay = false, bool stayEnd = false)
 	{
-		PlayerbleCharacter cWTD = Player.instance.TwinSword;
-		PlayerbleCharacter cCur = Player.instance.CurrentCharacter;
+		PlayerbleCharacter cWTD = Player.Instance.SecondCharacter;
+		PlayerbleCharacter cCur = Player.Instance.CurrentCharacter;
 
 		List<Animator> animators = (cCur == cWTD) ? arrWTDSkills : arrWGSSkills;
 
@@ -95,26 +95,26 @@ public class PlayerStateUI : MonoBehaviour
 	{
 		PlayerbleCharacter character;
 		// WTD part
-        character = Player.instance.TwinSword;
+        character = Player.Instance.SecondCharacter;
 		SetSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.Q);
         SetSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.W);
         SetSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.E);
         SetRSkillInfo(arrSkillFill_WTD, skillTimes_WTD, character, SkillType.R);
 
 		// WGS part
-        character = Player.instance.GreatSword;
+        character = Player.Instance.FirstCharacter;
 		SetSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.Q);
 		SetSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.W);
         SetSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.E);
         SetRSkillInfo(arrSkillFill_WGS, skillTimes_WGS, character, SkillType.R);
 
 		// etc
-        imgConvertFill.fillAmount = Player.instance.GetTagTimer().percentage;
-		sStamina.value = Player.instance.CurrentStamina;
+        imgConvertFill.fillAmount = Player.Instance.GetTagTimer().percentage;
+		sStamina.value = Player.Instance.CurrentStamina;
     }
 	public void SetPlayerHealthPoint() 
 	{
-		hpbar.Set(Player.instance.CurrentHealthPoint);
+		hpbar.Set(Player.Instance.CurrentHealthPoint);
 	}
 	public void SetImage(CharacterType left, CharacterType rigth) 
 	{
@@ -153,8 +153,8 @@ public class PlayerStateUI : MonoBehaviour
     }
     private void SetRSkillInfo(List<Image> images, List<TextMeshProUGUI> times, PlayerbleCharacter character, SkillType type)
     {
-		Sprite onImg = (character == Player.instance.TwinSword) ? WTD_R_ON : WGS_R_ON;
-		Sprite offImg = (character == Player.instance.TwinSword) ? WTD_R_OFF : WGS_R_OFF;
+		Sprite onImg = (character == Player.Instance.SecondCharacter) ? WTD_R_ON : WGS_R_ON;
+		Sprite offImg = (character == Player.Instance.SecondCharacter) ? WTD_R_OFF : WGS_R_OFF;
 
 		float gauge = 1f - character.GetSkillTimer(type).percentage;
 		images[(int)type].fillAmount = gauge;

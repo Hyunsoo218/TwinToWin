@@ -28,7 +28,7 @@ public class ParabolicBomb : Effect
 	}
 	private IEnumerator MoveToTarget()
 	{
-		Transform tPlayer = Player.instance.CurrentCharacter.transform;
+		Transform tPlayer = Player.Instance.CurrentCharacter.transform;
 
 		Vector3 v3TargetPos = Vector3.zero;
 		Vector3 v3Target;
@@ -50,7 +50,7 @@ public class ParabolicBomb : Effect
 				v3TargetPos = new Vector3(fX, 0, fZ);
 				break;
 			case TargetType.Player_look:
-				string strPlayerState = Player.instance.GetCurrentCharacterStateName();
+				string strPlayerState = Player.Instance.GetCurrentCharacterStateName();
 
 				if (strPlayerState.Equals("moveState"))
 				{

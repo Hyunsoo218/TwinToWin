@@ -27,8 +27,8 @@ public class BossRush : Effect
 		Vector3 v3Direction = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
 		transform.position = Quaternion.LookRotation(v3Direction, Vector3.up) * Vector3.forward * 30f + new Vector3(14f, 0, 14f);
 
-		string strPlayerState = Player.instance.GetCurrentCharacterStateName();
-		Transform tPlayer = Player.instance.CurrentCharacter.transform;
+		string strPlayerState = Player.Instance.GetCurrentCharacterStateName();
+		Transform tPlayer = Player.Instance.CurrentCharacter.transform;
 		Vector3 v3Target, v3TargetPos;
 		float fZ, fX;
 		if (strPlayerState.Equals("moveState"))

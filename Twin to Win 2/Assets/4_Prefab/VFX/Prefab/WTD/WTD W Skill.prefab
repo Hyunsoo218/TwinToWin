@@ -63859,12 +63859,17 @@ MonoBehaviour:
   soundComponent: {fileID: 0}
   clip: {fileID: 0}
   criticalHit: 1
+  shakeCamera: 0
+  shakeCameraPower: 0
+  shakeCameraTime: 0
+  defaultSimulationSpeed: 1
   vAttackAreaCenter: {x: 0, y: 0, z: 0}
   vAttackAreaSize: {x: 0, y: 0, z: 0}
   isSphere: 0
   sphereAttackAreaRange: 0
-  damage: 1000
+  damage: 700
   damageArea: {fileID: 1697686985522502308}
+  rushTime: 0.15
 --- !u!1 &8179369119198192119
 GameObject:
   m_ObjectHideFlags: 0

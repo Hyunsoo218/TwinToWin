@@ -272,7 +272,7 @@ public class BossCharacter : MonsterCharacter
 	{
 		while (true)
 		{
-			tRoot.LookAt(Player.instance.CurrentCharacter.transform);
+			tRoot.LookAt(Player.Instance.CurrentCharacter.transform);
 			tRoot.localEulerAngles = new Vector3(0, tRoot.localEulerAngles.y, 0);
 			yield return null;
 		}

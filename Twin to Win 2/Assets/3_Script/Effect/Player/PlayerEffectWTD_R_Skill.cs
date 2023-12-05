@@ -37,14 +37,14 @@ public class PlayerEffectWTD_R_Skill : PlayerEffect
     public void ResetCharacterState()
     {
         CameraManager.instance.SetDefaultBlend(0.2f);
-        Player.instance.CurrentCharacter.ReturnToIdle();
+        Player.Instance.CurrentCharacter.ReturnToIdle();
     }
     private void OnDisable()
     {
         cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0f;
     }
-    public void OnActiveRoot() => Player.instance.SetActiveRoot(true);
-    public void OffActiveRoot() => Player.instance.SetActiveRoot(false);
+    public void OnActiveRoot() => Player.Instance.SetActiveRoot(true);
+    public void OffActiveRoot() => Player.Instance.SetActiveRoot(false);
     public void EnableEffect() 
     {
         Vector3 vOverlapPos = Quaternion.LookRotation(transform.forward, Vector3.up) * vAttackAreaCenter + transform.position;
@@ -56,9 +56,8 @@ public class PlayerEffectWTD_R_Skill : PlayerEffect
         foreach (Collider cItem in arrOverlapObj)
         {
             if (cItem.TryGetComponent<Character>(out var target))
-                DamageCalculator.OnDamage(target, damage * 0.05f, criticalHit);
+                DamageCalculator.OnDamage(target, damage * 0.02f, criticalHit);
         }
-        print(damage * 0.05f);
     }
     public void EnableFinishAttack() 
     {
@@ -75,7 +74,7 @@ public class PlayerEffectWTD_R_Skill : PlayerEffect
         foreach (Collider cItem in arrOverlapObj)
         {
             if (cItem.TryGetComponent<Character>(out var target))
-                DamageCalculator.OnDamage(target, damage * 0.5f, criticalHit);
+                DamageCalculator.OnDamage(target, damage * 0.8f, criticalHit);
         }
     }
 }

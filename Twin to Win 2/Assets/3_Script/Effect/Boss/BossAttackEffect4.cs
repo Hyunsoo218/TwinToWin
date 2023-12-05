@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class BossAttackEffect4 : Effect
 {
-	[SerializeField] private GameObject objParabolicBomb;
-	private Animator cAnimator;
+	[SerializeField] private DamagableSpaceControl dsc;
+	[SerializeField] private float sphereAttackAreaRange = 0f;
+	[SerializeField] private GameObject explotions;
 	private Transform tUser;
 	private float fDamage;
 	private int nTargetLayer;
-	public override void Initialize()
-	{
-		base.Initialize();
-		cAnimator = GetComponent<Animator>();
+    private void Start()
+    {
+		dsc.OnAction(2f, FillType.Alpha);
 	}
-	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
+    protected override void OnEnable()
+    {
+        base.OnEnable(); 
+		explotions.SetActive(false);
+	}
+    public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
 	{
 		this.tUser = tUser;
 		this.fDamage = fDamage;
@@ -26,23 +31,26 @@ public class BossAttackEffect4 : Effect
 		transform.SetParent(null);
 		transform.localScale = Vector3.one;
 		//transform.position = tUser.position;
-
-		StartCoroutine(MakeParabolicBomb());
-		//if (GameManager.instance.phase == Phase.Phase_3)
-		//	cAnimator.SetTrigger("Action");
+		dsc.OnAction(2f,FillType.Alpha);
+		StartCoroutine(DoAction());
 	}
-	private IEnumerator MakeParabolicBomb()
+	private IEnumerator DoAction() 
 	{
-		for (int i = 0; i < 44; i++)
+		yield return new WaitForSeconds(2f);
+		explotions.SetActive(true);
+		Collider[] arrOverlapObj = Physics.OverlapSphere(transform.position, sphereAttackAreaRange, nTargetLayer);
+		foreach (Collider cItem in arrOverlapObj)
 		{
-			GameObject objEffect;
-
-			for (int j = 0; j < 7; j++)
+			if (cItem.TryGetComponent<Character>(out var target)) 
 			{
-				objEffect = EffectManager.instance.GetEffect(objParabolicBomb);
-				objEffect.GetComponent<Effect>().OnAction(tUser, fDamage, nTargetLayer);
+				float dist = Vector3.Distance(target.transform.position, transform.position);
+                if (dist > 4f)
+					DamageCalculator.OnDamage(target, fDamage, criticalHit);
 			}
-			yield return null;
 		}
+	}
+    private void OnDrawGizmos()
+    {
+		Gizmos.DrawWireSphere(transform.position, sphereAttackAreaRange);
 	}
 }

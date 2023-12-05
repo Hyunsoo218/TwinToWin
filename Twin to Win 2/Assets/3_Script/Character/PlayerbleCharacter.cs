@@ -288,10 +288,29 @@ public abstract class PlayerbleCharacter : Character
     }
     public void EnableAttackEffect()
     {
+        if (cStateMachine.CurrentState == qSkillState ||
+            cStateMachine.CurrentState == wSkillState ||
+            cStateMachine.CurrentState == eSkillState ||
+            cStateMachine.CurrentState == rSkillState)
+        {
+            return;
+        }
         State currentState = cStateMachine.CurrentState;
         GameObject currentEffect = effects[currentState];
         if (currentEffect == nextEffect)
-		{
+        {
+            GameObject effect = EffectManager.instance.GetEffect(nextEffect);
+            effect.GetComponent<Effect>().OnAction(transform, 100f, 1 << 7);
+        }
+    }
+    public void EnableAttackEffectSkill()
+    {
+        foreach (var item in normalAttack)
+            if (cStateMachine.CurrentState == item) return;
+        State currentState = cStateMachine.CurrentState;
+        GameObject currentEffect = effects[currentState];
+        if (currentEffect == nextEffect)
+        {
             GameObject effect = EffectManager.instance.GetEffect(nextEffect);
             effect.GetComponent<Effect>().OnAction(transform, 100f, 1 << 7);
         }
@@ -302,7 +321,7 @@ public abstract class PlayerbleCharacter : Character
     public override void Damage(float amount)
     {
         if (!canDamage) return;
-        Player.instance.CurrentHealthPoint -= amount;
+        Player.Instance.CurrentHealthPoint -= amount;
     }
     public override void Die()
     {
@@ -377,8 +396,7 @@ public abstract class PlayerbleCharacter : Character
     }
     protected IEnumerator InitializeSkillTime(Skill usingSkill)
     {
-        print("스킬쿨 초기화 않함");
-        //usingSkill.time.current = 0;
+        usingSkill.time.current = 0;
 
         if (usingSkill.Equals(rSkill) == false)
         {

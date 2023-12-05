@@ -14,7 +14,7 @@ public class BrakeTileBomb : Effect
 	public override void OnAction(Transform tUser, float fDamage, int nTargetLayer)
     {
         cAnimator.SetTrigger("Action");
-        Vector3 pos = Player.instance.CurrentCharacter.transform.position;
+        Vector3 pos = Player.Instance.CurrentCharacter.transform.position;
         pos.y = 0;
         transform.position = pos;
         StartCoroutine(LateOverlap());

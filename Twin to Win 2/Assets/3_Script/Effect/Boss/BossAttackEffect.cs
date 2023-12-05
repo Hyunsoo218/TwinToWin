@@ -47,7 +47,7 @@ public class BossAttackEffect : Effect
 	private IEnumerator MoveToTarget()
 	{
 		Vector3 v3CurrtPos = tProjectile.position;
-		Vector3 v3TargetPos = Player.instance.CurrentCharacter.transform.position;
+		Vector3 v3TargetPos = Player.Instance.CurrentCharacter.transform.position;
 
 		float runTime = 0;
 		float duration = 0.5f;

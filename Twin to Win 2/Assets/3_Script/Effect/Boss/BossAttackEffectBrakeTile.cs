@@ -33,7 +33,7 @@ public class BossAttackEffectBrakeTile : Effect
     {
         while (bRun) 
         {
-            transform.position = Player.instance.CurrentCharacter.transform.position;
+            transform.position = Player.Instance.CurrentCharacter.transform.position;
             yield return null;
         }
     }

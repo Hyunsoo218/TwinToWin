@@ -24,11 +24,13 @@ public class DamageCalculator
         { 
             if (Random.Range(0, 100f) < 71f)
             {
-                if( Player.instance.CurrentCharacter == Player.instance.TwinSword) 
-                    fontColor = DamageType.red; 
-			    else
-                    fontColor = DamageType.blue; 
-            
+                CharacterType type = Player.Instance.CurrentCharacter.Type;
+                switch (type)
+                {
+                    case CharacterType.wtd:     fontColor = DamageType.red; break;
+                    case CharacterType.wgs:     fontColor = DamageType.blue; break;
+                    default:                    fontColor = DamageType.normal; break;
+                }
                 damage = damage * Random.Range(1.3f, 1.8f);
             }
         }
@@ -44,11 +46,13 @@ public class DamageCalculator
         {
             if (Random.Range(0, 100f) < 71f)
             {
-                if (Player.instance.CurrentCharacter == Player.instance.TwinSword)
-                    fontColor = DamageType.red;
-                else
-                    fontColor = DamageType.blue;
-
+                CharacterType type = Player.Instance.CurrentCharacter.Type;
+                switch (type)
+                {
+                    case CharacterType.wtd: fontColor = DamageType.red; break;
+                    case CharacterType.wgs: fontColor = DamageType.blue; break;
+                    default: fontColor = DamageType.normal; break;
+                }
                 damage = damage * Random.Range(1.3f, 1.8f);
             }
         }

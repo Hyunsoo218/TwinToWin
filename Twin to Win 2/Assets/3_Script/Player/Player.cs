@@ -6,17 +6,21 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : SingletonClass<Player>
 {
-    public static Player instance;
-    
     public PlayerbleCharacter CurrentCharacter { get; private set; }
-    public PlayerbleCharacter GreatSword { get; private set; }
-    public PlayerbleCharacter TwinSword { get; private set; }
     public List<CharacterType> MyCharacter { get; private set; }
 
-    public CharacterType LeftType { get; private set; }
-    public CharacterType RigthType { get; private set; }
+    public PlayerbleCharacter FirstCharacter { get; private set; }
+    public PlayerbleCharacter SecondCharacter { get; private set; }
+    public PlayerbleCharacter ThirdCharacter { get; private set; }
+    public PlayerbleCharacter FourthCharacter { get; private set; }
+
+    public CharacterType FirstCharacterType { get; private set; }
+    public CharacterType SecondCharacterType { get; private set; }
+    public CharacterType ThirdCharacterType { get; private set; }
+    public CharacterType FourthCharacterType { get; private set; }
+
     private Coroutine movementCo;
     private Coroutine autoAttackCo;
     private PlayerInput playerInput;
@@ -45,17 +49,15 @@ public class Player : MonoBehaviour
     public float MaxTagTime => tagTime.max;
     public float CurrentTagTime => tagTime.current;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
+        base.Awake();
         playerInput = GetComponent<PlayerInput>();
         MyCharacter = new List<CharacterType>();
         MyCharacter.Add(CharacterType.wtd);
         MyCharacter.Add(CharacterType.wgs);
     }
-    
-	private void Update()
+    private void Update()
 	{
 		if (GameManager.instance.gameStage == GameStage.Game)
 		{
@@ -66,18 +68,18 @@ public class Player : MonoBehaviour
     {
         UIManager.instance.SetPlayerHealthPoint();
 
-        GameObject wtd = CharacterManager.instance.GetTypeToObj(LeftType);
-        GameObject wgs = CharacterManager.instance.GetTypeToObj(RigthType);
+        GameObject wtd = CharacterManager.instance.GetTypeToObj(FirstCharacterType);
+        GameObject wgs = CharacterManager.instance.GetTypeToObj(SecondCharacterType);
 
         wtd = Instantiate(wtd, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
         wgs = Instantiate(wgs, new Vector3(4f, 0.5f, 4f), Quaternion.Euler(0, 45f, 0));
 
-        TwinSword = wtd.GetComponent<PlayerbleCharacter>();
-        GreatSword = wgs.GetComponent<PlayerbleCharacter>();
+        SecondCharacter = wtd.GetComponent<PlayerbleCharacter>();
+        FirstCharacter = wgs.GetComponent<PlayerbleCharacter>();
 
-        GreatSword.gameObject.SetActive(false);
+        FirstCharacter.gameObject.SetActive(false);
 
-        CurrentCharacter = TwinSword.gameObject.activeSelf ? TwinSword : GreatSword;
+        CurrentCharacter = SecondCharacter.gameObject.activeSelf ? SecondCharacter : FirstCharacter;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -138,8 +140,8 @@ public class Player : MonoBehaviour
         UIManager.instance.ConvertPlayer();
 
         PlayerbleCharacter currentCharacter = CurrentCharacter;
-        PlayerbleCharacter nextCharacter = (CurrentCharacter == TwinSword) ? GreatSword : TwinSword;
-
+        PlayerbleCharacter nextCharacter = (CurrentCharacter == SecondCharacter) ? FirstCharacter : SecondCharacter;
+        print(currentCharacter.gameObject.name + " > " + nextCharacter.gameObject.name);
         nextCharacter.transform.position = currentCharacter.transform.position;
         nextCharacter.transform.eulerAngles = currentCharacter.transform.eulerAngles;
 
@@ -193,8 +195,8 @@ public class Player : MonoBehaviour
     public void SetActiveRoot(bool active) => CurrentCharacter.SetActiveRoot(active);
     public void SetCharacterType(CharacterType leftType, CharacterType rigthType) 
     {
-        this.LeftType = leftType;
-        this.RigthType = rigthType;
+        this.FirstCharacterType = leftType;
+        this.SecondCharacterType = rigthType;
     }
     private bool UseStamina(float usingAmount) 
     {

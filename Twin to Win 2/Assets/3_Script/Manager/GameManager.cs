@@ -16,23 +16,6 @@ public class GameManager : MonoBehaviour
 	public GameStage gameStage;
 	private Queue<Action> qAsynchronousAction = new Queue<Action>();
 
-    private Coroutine returnToTitle;
-    private IEnumerator InputAnykey() 
-    {
-        float time = 0;
-		while (true)
-		{
-            time += Time.deltaTime;
-			if (Input.anyKeyDown) time = 0; 
-			if (time > 30f)
-			{
-                GoTitle();
-                break;
-			}
-            yield return null;
-		}
-    }
-
 	private void Awake()
 	{
         if (instance == null) 
@@ -45,7 +28,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        Player.instance.EnablePlayerInput(false);
+        Player.Instance.EnablePlayerInput(false);
         GoTitle();
     }
 	private void Update()
@@ -78,7 +61,6 @@ public class GameManager : MonoBehaviour
 	public void Stage1Start()
 	{
 		StartCoroutine(Stage1());
-        returnToTitle = StartCoroutine(InputAnykey());
 	}
 	private IEnumerator Stage1()
 	{
@@ -108,13 +90,13 @@ public class GameManager : MonoBehaviour
 
 		    UIManager.instance.OnTutorial(TutorialType.WTD_W);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.W));
-            Player.instance.CurrentCharacter.UseSkillWithoutPressKey(SkillType.W, new Vector3(8f, 0, 8f));
+            Player.Instance.CurrentCharacter.UseSkillWithoutPressKey(SkillType.W, new Vector3(8f, 0, 8f));
 		    UIManager.instance.OffTutorial();
 		    yield return new WaitForSeconds(0.3f);
 
             UIManager.instance.OnTutorial(TutorialType.WTD_Q);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.Q));
-            Player.instance.CurrentCharacter.UseSkillWithoutPressKey(SkillType.Q, new Vector3(8f, 0, 8f));
+            Player.Instance.CurrentCharacter.UseSkillWithoutPressKey(SkillType.Q, new Vector3(8f, 0, 8f));
             UIManager.instance.OffTutorial();
             yield return new WaitForSeconds(0.7f);
 
@@ -148,7 +130,7 @@ public class GameManager : MonoBehaviour
 
             UIManager.instance.OnTutorial(TutorialType.WGS_Tag);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.Tab));
-            Player.instance.DoTag();
+            Player.Instance.DoTag();
             UIManager.instance.OffTutorial();
 
             yield return new WaitForSeconds(0.2f);
@@ -156,7 +138,7 @@ public class GameManager : MonoBehaviour
             UIManager.instance.OnTutorial(TutorialType.WGS_E);
             yield return StartCoroutine(WaitFotInputKey(KeyCode.E));
             EnemyManager.instance.StartActionAllEnemy();
-            Player.instance.CurrentCharacter.UseSkillWithoutPressKey(SkillType.E, new Vector3(8f, 0, 8f));
+            Player.Instance.CurrentCharacter.UseSkillWithoutPressKey(SkillType.E, new Vector3(8f, 0, 8f));
             UIManager.instance.OffTutorial();
             yield return new WaitForSeconds(5f);
 
@@ -179,7 +161,7 @@ public class GameManager : MonoBehaviour
         EnemyManager.instance.OnActiveEnemy(Stage1EnemySet.Stage1_1);
         EnemyManager.instance.StopAllEnemy();
         yield return new WaitForSeconds(3.5f);
-        Player.instance.EnablePlayerInput(true);
+        Player.Instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
 	private IEnumerator WaitForTalk(string name, string script, float autoClickTime = -1f)
@@ -241,8 +223,6 @@ public class GameManager : MonoBehaviour
     public void GoTitle()
     {
         Time.timeScale = 1f;
-        if(returnToTitle != null)
-            StopCoroutine(returnToTitle);
         SceneManager.LoadScene(0);
         gameStage = GameStage.Title;
         StartCoroutine(GoTitleCo());
@@ -271,13 +251,13 @@ public class GameManager : MonoBehaviour
         phase = Phase.Tutorial;
         StageManager.instance.UpdateNavMeshOne();
         UIManager.instance.SetGame();
-        Player.instance.SetGame();
+        Player.Instance.SetGame();
         CameraManager.instance.SetGame();
         EnemyManager.instance.SetGame();
         EnemyManager.instance.SetStage(phase);
         CutSceneManager.instance.SetGame();
 
-        Player.instance.EnablePlayerInput(false);
+        Player.Instance.EnablePlayerInput(false);
 
         UIManager.instance.ActiveLodingUI(true);
         yield return StartCoroutine(EffectManager.instance.SetGame());
@@ -314,41 +294,41 @@ public class GameManager : MonoBehaviour
 	}
     private IEnumerator Stage1to2()
     {
-        Player.instance.EnablePlayerInput(false);
+        Player.Instance.EnablePlayerInput(false);
         yield return new WaitForSeconds(2f);
 
-        Player.instance.CurrentCharacter.gameObject.SetActive(false);
+        Player.Instance.CurrentCharacter.gameObject.SetActive(false);
         yield return StartCoroutine(CutSceneManager.instance.PlayCutScene(CutSceneType.Stage1to2));
 
         UIManager.instance.OnStageUI(StageNumber.twe);
-        Player.instance.CurrentCharacter.gameObject.SetActive(true);
+        Player.Instance.CurrentCharacter.gameObject.SetActive(true);
         EnemyManager.instance.OnActiveEnemy(Stage2EnemySet.Boss_normal);
         EnemyManager.instance.StopAllEnemy();
         yield return new WaitForSeconds(3.5f);
 
-        Player.instance.EnablePlayerInput(true);
+        Player.Instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
     private IEnumerator Stage2to3()
     {
-        Player.instance.EnablePlayerInput(false);
+        Player.Instance.EnablePlayerInput(false);
         yield return new WaitForSeconds(2f);
 
-        Player.instance.CurrentCharacter.gameObject.SetActive(false);
+        Player.Instance.CurrentCharacter.gameObject.SetActive(false);
         yield return StartCoroutine(CutSceneManager.instance.PlayCutScene(CutSceneType.Stage2to3));
 
         UIManager.instance.OnStageUI(StageNumber.three);
-        Player.instance.CurrentCharacter.gameObject.SetActive(true);
+        Player.Instance.CurrentCharacter.gameObject.SetActive(true);
         EnemyManager.instance.OnActiveEnemy(Stage3EnemySet.Boss_angry);
         EnemyManager.instance.StopAllEnemy();
         yield return new WaitForSeconds(3.5f);
 
-        Player.instance.EnablePlayerInput(true);
+        Player.Instance.EnablePlayerInput(true);
         EnemyManager.instance.StartActionAllEnemy();
     }
     private IEnumerator GameClear()
     {
-        Player.instance.EnablePlayerInput(false);
+        Player.Instance.EnablePlayerInput(false);
         Time.timeScale = 0.2f; // 타임스케일 줄이기
         yield return new WaitForSeconds(1f);
         Time.timeScale = 1f; // 타임스케일 복귀

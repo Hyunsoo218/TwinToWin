@@ -57,7 +57,7 @@ public class PlayerEffectWGS_R_Skill : PlayerEffect
 	public void ResetCharacterState() 
 	{
 		CameraManager.instance.SetDefaultBlend(0.2f);
-		Player.instance.CurrentCharacter.ReturnToIdle();
+		Player.Instance.CurrentCharacter.ReturnToIdle();
 	}
 	private void OnDisable()
 	{

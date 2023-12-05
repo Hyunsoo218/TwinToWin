@@ -22,9 +22,10 @@ public class PlayerEffectWTD_Q_Skill : PlayerEffect
 			{
 				DamageInfo damageInfo = DamageCalculator.GetDamageInfo(target, damage, criticalHit);
 				if (target.GetHP() <= damageInfo.damage) 
-					Player.instance.TwinSword.ResetSkillTime(); 
+					Player.Instance.CurrentCharacter.ResetSkillTime(); 
 				target.Damage(damageInfo.damage);
 				UIManager.instance.OnDamageFont(target.transform.position, damageInfo.fontColor, damageInfo.damage);
+				break;
 			}
 		}
 	}

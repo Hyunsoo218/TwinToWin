@@ -130,7 +130,7 @@ public class TitleManager : MonoBehaviour
             return;
 		}
         StartCoroutine(DelayAction(5f));
-        Player.instance.SetCharacterType(leftCharacter, rigthCharacter);
+        Player.Instance.SetCharacterType(leftCharacter, rigthCharacter);
         UIManager.instance.SetSkillImage(leftCharacter, rigthCharacter);
         background.SetBool("Fade", false);
         StartCoroutine(DelayEvent(1f, () => { GameManager.instance.GameStart(); }));
@@ -142,8 +142,8 @@ public class TitleManager : MonoBehaviour
     }
     public void SetTitle()
     {
-        leftCharacter = Player.instance.LeftType;
-        rigthCharacter = Player.instance.RigthType;
+        leftCharacter = Player.Instance.FirstCharacterType;
+        rigthCharacter = Player.Instance.SecondCharacterType;
         if (leftCharacter != CharacterType.none)
         {
             CharacterInfo info = CharacterManager.instance.GetTypeToInfo(leftCharacter);
@@ -160,7 +160,7 @@ public class TitleManager : MonoBehaviour
         uiSelectedAnimator.gameObject.SetActive(true);
         uiInfoAnimator.gameObject.SetActive(true); 
         uiAnimatorCmd.ChangeState(uiMainState);
-		foreach (var type in Player.instance.MyCharacter)
+		foreach (var type in Player.Instance.MyCharacter)
 		{
 			if (CharacterManager.instance.ContainsKeyTypeToInfo(type))
             {

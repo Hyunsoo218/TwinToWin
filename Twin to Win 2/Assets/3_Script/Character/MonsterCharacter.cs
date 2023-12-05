@@ -35,7 +35,7 @@ public class MonsterCharacter : Character
 
 	private bool isEnterMonsterDeath = false;
 
-	protected virtual void Awake()
+    protected virtual void Awake()
 	{
         cSMR = GetComponentInChildren<SkinnedMeshRenderer>();
 		cStateMachine = GetComponent<StateMachine>();
@@ -76,6 +76,7 @@ public class MonsterCharacter : Character
 		};
 		cStateMove.onEnter = () => {
 			ChangeAnimation(cStateMove.strStateName);
+			agent.isStopped = false;
 		};
 		cStateAttack.onEnter = () => {
 			ChangeAnimation(cStateAttack.strStateName);
@@ -183,7 +184,7 @@ public class MonsterCharacter : Character
 	{
 		while (true)
 		{
-			vTargetPos = Player.instance.CurrentCharacter.transform.position;
+			vTargetPos = Player.Instance.CurrentCharacter.transform.position;
 			vTargetPos.y = 0;
 			if (agent.enabled)
 				agent.SetDestination(vTargetPos);

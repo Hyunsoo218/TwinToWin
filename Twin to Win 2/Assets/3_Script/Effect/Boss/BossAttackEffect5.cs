@@ -107,7 +107,7 @@ public class BossAttackEffect5 : Effect
 		while (fTime < fRunTime)
 		{
 			fTime += Time.deltaTime;
-			transform.LookAt(Player.instance.CurrentCharacter.transform);
+			transform.LookAt(Player.Instance.CurrentCharacter.transform);
 			v3TempRot = transform.eulerAngles;
 			v3TempRot.x = v3TempRot.z = 0;
 			transform.eulerAngles = v3TempRot;

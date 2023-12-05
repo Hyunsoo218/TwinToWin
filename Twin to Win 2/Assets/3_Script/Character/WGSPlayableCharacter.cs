@@ -20,7 +20,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 			canDodge = false;
 		};
 		rSkillState.onEnter += () => {
-			EnableAttackEffect();
+			EnableAttackEffectSkill();
 		};
 	}
 	protected override void StateInitalizeOnStay()
@@ -52,7 +52,7 @@ public class WGSPlayableCharacter : PlayerbleCharacter
 	}
 	public void ESkillEffect()
 	{
-		EnableAttackEffect();
+		EnableAttackEffectSkill();
 
 		eSkillEffectCount.current++;
 
