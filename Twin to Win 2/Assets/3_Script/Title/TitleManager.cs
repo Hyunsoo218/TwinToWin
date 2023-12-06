@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using System;
 using Cinemachine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+
 public enum CharacterType 
 {
     none, wtd, wgs, temp
@@ -32,9 +35,27 @@ public class TitleManager : MonoBehaviour
     private State uiInfoState = new State("info");
     private bool canAction = true;
     private bool selectLeft = true;
+    [SerializeField] private Volume globalVolume;
+    private DepthOfField depthOfField;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (depthOfField.focusDistance.value == 0.1f)
+            {
+                depthOfField.focusDistance.value = 3f;
+            }
+            else
+            {
+                depthOfField.focusDistance.value = 0.1f;
+            }
+        }
+    }
 
     private void Awake()
     {
+        globalVolume.profile.TryGet<DepthOfField>(out depthOfField);
+
         uiMainState.onEnter = () => {
             StartCoroutine(DelayAction(0.5f));
             camAnimator.SetTrigger("reture");

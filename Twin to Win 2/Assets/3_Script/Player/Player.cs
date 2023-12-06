@@ -141,7 +141,7 @@ public class Player : SingletonClass<Player>
 
         PlayerbleCharacter currentCharacter = CurrentCharacter;
         PlayerbleCharacter nextCharacter = (CurrentCharacter == SecondCharacter) ? FirstCharacter : SecondCharacter;
-        print(currentCharacter.gameObject.name + " > " + nextCharacter.gameObject.name);
+        
         nextCharacter.transform.position = currentCharacter.transform.position;
         nextCharacter.transform.eulerAngles = currentCharacter.transform.eulerAngles;
 
